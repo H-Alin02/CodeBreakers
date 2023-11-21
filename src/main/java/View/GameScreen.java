@@ -1,3 +1,7 @@
+package View;
+
+import Controller.PlayerInputManager;
+import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -14,6 +18,8 @@ public class GameScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private World world;
     private Box2DDebugRenderer box2DDebugRenderer;
+    private Player player;
+    private PlayerInputManager playerInputManager;
 
     public GameScreen(OrthographicCamera camera) {
         this.camera = camera;
@@ -21,8 +27,13 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.world = new World(new Vector2(0,0), false);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
+        this.playerInputManager = new PlayerInputManager(player);
     }
 
+    @Override
+    public void show(){
+        player = new Player();
+    }
     public void update(){
         world.step(1/60f, 6, 2);
         batch.setProjectionMatrix(camera.combined);
@@ -34,12 +45,15 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta){
         update();
+        player.update(delta);
+        playerInputManager.update(delta);
+
         //clear the screen
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-
+        batch.draw(player.getCurrentFrame(),player.getPlayerX(), player.getPlayerY(), player.getPLAYER_WIDTH(), player.getPLAYER_HEIGHT());
         batch.end();
     }
 }

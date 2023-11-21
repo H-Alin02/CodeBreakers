@@ -85,7 +85,7 @@
                             <archive>
                                 <manifest>
                                     <addClasspath>true</addClasspath>
-                                    <mainClass>DesktopLauncher</mainClass>
+                                    <mainClass>View.DesktopLauncher</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
