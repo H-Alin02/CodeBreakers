@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayerAnimationManager {
-    private Animation<TextureRegion> walkUpAnimation;
-    private Animation<TextureRegion> walkDownAnimation;
-    private Animation<TextureRegion> walkLeftAnimation;
-    private Animation<TextureRegion> walkRightAnimation;
+    private final Animation<TextureRegion> walkUpAnimation;
+    private final Animation<TextureRegion> walkDownAnimation;
+    private final Animation<TextureRegion> walkLeftAnimation;
+    private final Animation<TextureRegion> walkRightAnimation;
 
     // Add more animations for shooting, melee attacks, etc.
 

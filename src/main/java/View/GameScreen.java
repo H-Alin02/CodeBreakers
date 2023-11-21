@@ -14,12 +14,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import org.lwjgl.opengl.GL20;
 
 public class GameScreen extends ScreenAdapter {
-    private OrthographicCamera camera;
-    private SpriteBatch batch;
-    private World world;
-    private Box2DDebugRenderer box2DDebugRenderer;
+    private final OrthographicCamera camera;
+    private final SpriteBatch batch;
+    private final World world;
+    private final Box2DDebugRenderer box2DDebugRenderer;
     private Player player;
-    private PlayerInputManager playerInputManager;
+    private final PlayerInputManager playerInputManager;
 
     public GameScreen(OrthographicCamera camera) {
         this.camera = camera;

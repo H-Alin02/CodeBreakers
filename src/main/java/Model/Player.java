@@ -1,9 +1,8 @@
 package Model;
 
 import Controller.PlayerInputManager;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 
 public class Player{
     private static Player INSTANCE;
@@ -11,11 +10,12 @@ public class Player{
     private final int PLAYER_HEIGHT = 32;
     private final int SCALE = 3;
     private final int SPEED = 3;
-    private PlayerState currentState;
-    private PlayerInputManager inputManager;
-    private PlayerAnimationManager animationManager;
+    public PlayerState currentState;
+    private final PlayerInputManager inputManager;
+    private final PlayerAnimationManager animationManager;
     private int playerX = 300;
     private int playerY = 300;
+
 
     public Player() {
         currentState = PlayerState.STANDING;
@@ -31,11 +31,11 @@ public class Player{
     }
 
     public void update(float delta) {
-        handleInput();
+        inputManager.handleInput();
         animationManager.update(delta);
     }
 
-    private void handleInput() {
+    /*private void handleInput() {
         // Update the player state based on input
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             moveUp();
@@ -50,6 +50,7 @@ public class Player{
             currentState = PlayerState.STANDING;
         }
     }
+     */
 
     public void moveUp() {
         currentState = PlayerState.WALK_UP;
