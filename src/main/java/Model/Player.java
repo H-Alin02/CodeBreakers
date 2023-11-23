@@ -9,18 +9,21 @@ public class Player{
     private final int PLAYER_WIDTH = 32;
     private final int PLAYER_HEIGHT = 32;
     private final int SCALE = 3;
-    private final int SPEED = 3;
+    private final int SPEED = 5;
     public PlayerState currentState;
     private final PlayerInputManager inputManager;
     private final PlayerAnimationManager animationManager;
-    private int playerX = 300;
-    private int playerY = 300;
+    private final MapModel mapModel;
+    private int playerX = 500;
+    private int playerY = 500;
 
 
     public Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
+        mapModel = new MapModel();
+
     }
 
     public static Player getInstance() {
@@ -35,40 +38,30 @@ public class Player{
         animationManager.update(delta);
     }
 
-    /*private void handleInput() {
-        // Update the player state based on input
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            moveUp();
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            moveDown();
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            moveLeft();
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            moveRight();
-        } else {
-            // If no movement keys are pressed, set the player to standing
-            currentState = PlayerState.STANDING;
-        }
+    public boolean isCollision(float x, float y){
+        //check for collision with map object
+        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH+15, PLAYER_HEIGHT*2);
     }
-     */
 
     public void moveUp() {
+        System.out.println("MOVE UP");
         currentState = PlayerState.WALK_UP;
         playerY += SPEED;
     }
 
     public void moveDown() {
+        System.out.println("MOVE DOWN");
         currentState = PlayerState.WALK_DOWN;
-        // Update player position
         playerY -= SPEED;
     }
 
     public void moveLeft() {
+        System.out.println("MOVE LEFT");
         currentState = PlayerState.WALK_LEFT;
         playerX -= SPEED;
     }
-
     public void moveRight() {
+        System.out.println("MOVE RIGHT");
         currentState = PlayerState.WALK_RIGHT;
         playerX += SPEED;
     }
@@ -90,6 +83,10 @@ public class Player{
 
     public int getPLAYER_WIDTH() {
         return PLAYER_WIDTH * SCALE;
+    }
+
+    public int getSPEED() {
+        return SPEED;
     }
 }
 
