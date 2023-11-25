@@ -9,9 +9,6 @@ public class Player{
     private final int PLAYER_WIDTH = 32;
     private final int PLAYER_HEIGHT = 32;
     private final int SCALE = 3;
-
-
-
     private int SPEED = 5;
     public PlayerState currentState;
     private final PlayerInputManager inputManager;
@@ -19,6 +16,7 @@ public class Player{
     private final MapModel mapModel;
     private int playerX = 64;
     private int playerY = 64;
+    private boolean isSprinting = false;
 
 
     public Player() {
@@ -26,7 +24,6 @@ public class Player{
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
         mapModel = new MapModel();
-
     }
 
     public static Player getInstance() {
@@ -39,6 +36,7 @@ public class Player{
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
+        System.out.println(isSprinting);
     }
 
     public boolean isCollision(float x, float y){
@@ -89,6 +87,20 @@ public class Player{
     }
     public void setSPEED(int SPEED) {
         this.SPEED = SPEED;
+    }
+
+    public void setIsSprinting ( boolean isSprinting){
+        this.isSprinting = isSprinting;
+        if(this.isSprinting) setSPEED(10);
+        else setSPEED(5);
+    }
+
+    public void changeSpeed(){
+        if (this.isSprinting){
+            setIsSprinting(false);
+        } else if (! this.isSprinting) {
+            setIsSprinting(true);
+        }
     }
 }
 
