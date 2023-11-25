@@ -11,8 +11,10 @@ public class PlayerAnimationManager {
     private final Animation<TextureRegion> walkDownAnimation;
     private final Animation<TextureRegion> walkLeftAnimation;
     private final Animation<TextureRegion> walkRightAnimation;
+    private float animSpeed = 0.1f;
 
-    // Add more animations for shooting, melee attacks, etc.
+
+// Add more animations for shooting, melee attacks, etc.
 
     private float stateTime;
 
@@ -32,28 +34,28 @@ public class PlayerAnimationManager {
         for (int i = 1; i<=8; i++){
             walkDownFrames.add(new TextureRegion(new Texture("player/RunDown/RunDown" + i + ".png")));
         }
-        walkDownAnimation = new Animation<>(0.1f, walkDownFrames, Animation.PlayMode.LOOP);
+        walkDownAnimation = new Animation<>(animSpeed, walkDownFrames, Animation.PlayMode.LOOP);
 
         //Animation Run Right
         Array<TextureRegion> walkRightFrames = new Array<>();
         for (int i = 1; i<=8; i++){
             walkRightFrames.add(new TextureRegion(new Texture("player/RunRight/RunRight" + i + ".png")));
         }
-        walkRightAnimation = new Animation<>(0.1f, walkRightFrames, Animation.PlayMode.LOOP);
+        walkRightAnimation = new Animation<>(animSpeed, walkRightFrames, Animation.PlayMode.LOOP);
 
         //Animation Run Left
         Array<TextureRegion> walkLeftFrames = new Array<>();
         for (int i = 1; i<=8; i++){
             walkLeftFrames.add(new TextureRegion(new Texture("player/RunLeft/RunLeft" + i + ".png")));
         }
-        walkLeftAnimation = new Animation<>(0.1f, walkLeftFrames, Animation.PlayMode.LOOP);
+        walkLeftAnimation = new Animation<>(animSpeed, walkLeftFrames, Animation.PlayMode.LOOP);
 
         //Animation Run Up
         Array<TextureRegion> walkUpFrames = new Array<>();
         for (int i = 1; i<=8; i++){
             walkUpFrames.add(new TextureRegion(new Texture("player/RunUp/RunUp" + i + ".png")));
         }
-        walkUpAnimation = new Animation<>(0.1f, walkUpFrames, Animation.PlayMode.LOOP);
+        walkUpAnimation = new Animation<>(animSpeed, walkUpFrames, Animation.PlayMode.LOOP);
     }
 
     public TextureRegion getKeyFrame(PlayerState state) {
@@ -81,6 +83,23 @@ public class PlayerAnimationManager {
 
     public void update(float delta) {
         stateTime += delta;
+    }
+
+    public void updateAnimSpeed(float newSpeed) {
+        // Update the animation speed for all animations
+        walkUpAnimation.setFrameDuration(newSpeed);
+        walkDownAnimation.setFrameDuration(newSpeed);
+        walkLeftAnimation.setFrameDuration(newSpeed);
+        walkRightAnimation.setFrameDuration(newSpeed);
+
+        // Update the stored animSpeed value
+        animSpeed = newSpeed;
+    }
+    public float getAnimSpeed() {
+        return animSpeed;
+    }
+    public void setAnimSpeed(float animSpeed) {
+        this.animSpeed = animSpeed;
     }
 }
 

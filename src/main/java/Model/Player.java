@@ -36,7 +36,7 @@ public class Player{
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
-        System.out.println(isSprinting);
+        System.out.println(animationManager.getAnimSpeed());
     }
 
     public boolean isCollision(float x, float y){
@@ -91,16 +91,19 @@ public class Player{
 
     public void setIsSprinting ( boolean isSprinting){
         this.isSprinting = isSprinting;
-        if(this.isSprinting) setSPEED(10);
-        else setSPEED(5);
+        if(this.isSprinting) {
+            setSPEED(8);
+            animationManager.updateAnimSpeed(0.07f);
+
+        }
+        else {
+            setSPEED(4);
+            animationManager.updateAnimSpeed(0.1f);
+        }
     }
 
     public void changeSpeed(){
-        if (this.isSprinting){
-            setIsSprinting(false);
-        } else if (! this.isSprinting) {
-            setIsSprinting(true);
-        }
+        setIsSprinting(!this.isSprinting);
     }
 }
 

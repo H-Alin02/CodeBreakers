@@ -71,8 +71,8 @@ public class GameScreen extends ScreenAdapter {
         batch.end();
 
         //DEBUG
-        renderDebug();
-        renderPlayerCollisionDebug();
+        //renderDebug();
+        //renderPlayerCollisionDebug();
     }
 
     private void renderPlayerCollisionDebug() {
