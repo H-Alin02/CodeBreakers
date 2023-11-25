@@ -9,13 +9,16 @@ public class Player{
     private final int PLAYER_WIDTH = 32;
     private final int PLAYER_HEIGHT = 32;
     private final int SCALE = 3;
-    private final int SPEED = 5;
+
+
+
+    private int SPEED = 5;
     public PlayerState currentState;
     private final PlayerInputManager inputManager;
     private final PlayerAnimationManager animationManager;
     private final MapModel mapModel;
-    private int playerX = 500;
-    private int playerY = 500;
+    private int playerX = 64;
+    private int playerY = 64;
 
 
     public Player() {
@@ -40,28 +43,24 @@ public class Player{
 
     public boolean isCollision(float x, float y){
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH+15, PLAYER_HEIGHT*2);
+        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH+15, PLAYER_HEIGHT+15);
     }
 
     public void moveUp() {
-        System.out.println("MOVE UP");
         currentState = PlayerState.WALK_UP;
         playerY += SPEED;
     }
 
     public void moveDown() {
-        System.out.println("MOVE DOWN");
         currentState = PlayerState.WALK_DOWN;
         playerY -= SPEED;
     }
 
     public void moveLeft() {
-        System.out.println("MOVE LEFT");
         currentState = PlayerState.WALK_LEFT;
         playerX -= SPEED;
     }
     public void moveRight() {
-        System.out.println("MOVE RIGHT");
         currentState = PlayerState.WALK_RIGHT;
         playerX += SPEED;
     }
@@ -87,6 +86,9 @@ public class Player{
 
     public int getSPEED() {
         return SPEED;
+    }
+    public void setSPEED(int SPEED) {
+        this.SPEED = SPEED;
     }
 }
 

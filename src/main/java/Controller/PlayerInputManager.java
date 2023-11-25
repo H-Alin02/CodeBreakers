@@ -30,7 +30,7 @@ public class PlayerInputManager {
                 player.moveLeft();
             }
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH()/4) + player.getSPEED(), player.getPlayerY())) {
+            if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4) + player.getSPEED(), player.getPlayerY())) {
                 player.moveRight();
             }
         } else {

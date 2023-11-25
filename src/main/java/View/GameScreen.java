@@ -86,7 +86,7 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.setColor(Color.MAGENTA);
 
         // Draw a rectangle around the player's collision box
-        shapeRenderer.rect(player.getPlayerX() + (player.getPLAYER_WIDTH()/4) , player.getPlayerY() , player.getPLAYER_WIDTH()/2+15, player.getPLAYER_HEIGHT());
+        shapeRenderer.rect(player.getPlayerX() + (player.getPLAYER_WIDTH()/4) , player.getPlayerY() , player.getPLAYER_WIDTH()/2+15, player.getPLAYER_HEIGHT()/2+15);
 
         // End drawing shapes
         shapeRenderer.end();

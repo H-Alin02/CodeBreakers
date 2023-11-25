@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayerAnimationManager {
+    private final Animation<TextureRegion> idleAnimation;
     private final Animation<TextureRegion> walkUpAnimation;
     private final Animation<TextureRegion> walkDownAnimation;
     private final Animation<TextureRegion> walkLeftAnimation;
@@ -18,34 +19,47 @@ public class PlayerAnimationManager {
     public PlayerAnimationManager() {
         // Initialize your animations here
         stateTime = 0;
-        //Animation walk Down
+
+        //Animation Idle
+        Array<TextureRegion> idleFrames = new Array<>();
+        for (int i = 1; i<=4; i++){
+            idleFrames.add(new TextureRegion(new Texture("player/Idle/Idle" + i + ".png")));
+        }
+        idleAnimation = new Animation<>(0.15f, idleFrames, Animation.PlayMode.LOOP);
+
+        //Animation Run Down
         Array<TextureRegion> walkDownFrames = new Array<>();
-        for (int i = 1; i<=4; i++){
-            walkDownFrames.add(new TextureRegion(new Texture("player/walkDown" + i + ".png")));
+        for (int i = 1; i<=8; i++){
+            walkDownFrames.add(new TextureRegion(new Texture("player/RunDown/RunDown" + i + ".png")));
         }
-        walkDownAnimation = new Animation<>(0.2f, walkDownFrames, Animation.PlayMode.LOOP);
-        //Animation walk Right
+        walkDownAnimation = new Animation<>(0.1f, walkDownFrames, Animation.PlayMode.LOOP);
+
+        //Animation Run Right
         Array<TextureRegion> walkRightFrames = new Array<>();
-        for (int i = 1; i<=4; i++){
-            walkRightFrames.add(new TextureRegion(new Texture("player/walkRight" + i + ".png")));
+        for (int i = 1; i<=8; i++){
+            walkRightFrames.add(new TextureRegion(new Texture("player/RunRight/RunRight" + i + ".png")));
         }
-        walkRightAnimation = new Animation<>(0.2f, walkRightFrames, Animation.PlayMode.LOOP);
-        //Animation walk Left
+        walkRightAnimation = new Animation<>(0.1f, walkRightFrames, Animation.PlayMode.LOOP);
+
+        //Animation Run Left
         Array<TextureRegion> walkLeftFrames = new Array<>();
-        for (int i = 1; i<=4; i++){
-            walkLeftFrames.add(new TextureRegion(new Texture("player/walkLeft" + i + ".png")));
+        for (int i = 1; i<=8; i++){
+            walkLeftFrames.add(new TextureRegion(new Texture("player/RunLeft/RunLeft" + i + ".png")));
         }
-        walkLeftAnimation = new Animation<>(0.2f, walkLeftFrames, Animation.PlayMode.LOOP);
-        //Animation walk Up
+        walkLeftAnimation = new Animation<>(0.1f, walkLeftFrames, Animation.PlayMode.LOOP);
+
+        //Animation Run Up
         Array<TextureRegion> walkUpFrames = new Array<>();
-        for (int i = 1; i<=4; i++){
-            walkUpFrames.add(new TextureRegion(new Texture("player/walkUp" + i + ".png")));
+        for (int i = 1; i<=8; i++){
+            walkUpFrames.add(new TextureRegion(new Texture("player/RunUp/RunUp" + i + ".png")));
         }
-        walkUpAnimation = new Animation<>(0.2f, walkUpFrames, Animation.PlayMode.LOOP);
+        walkUpAnimation = new Animation<>(0.1f, walkUpFrames, Animation.PlayMode.LOOP);
     }
 
     public TextureRegion getKeyFrame(PlayerState state) {
         switch (state) {
+            case STANDING:
+                return idleAnimation.getKeyFrame(stateTime,true);
             case WALK_UP:
                 return walkUpAnimation.getKeyFrame(stateTime, true);
             case WALK_DOWN:
@@ -62,7 +76,7 @@ public class PlayerAnimationManager {
 
     private TextureRegion getDefaultFrame() {
         // Return a default frame or standing animation
-        return walkDownAnimation.getKeyFrame(0);
+        return idleAnimation.getKeyFrame(0);
     }
 
     public void update(float delta) {
