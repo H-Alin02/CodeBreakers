@@ -14,8 +14,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class MapModel {
     private TiledMap map;
-    private OrthogonalTiledMapRenderer mapRenderer;
-    private MapObjects scaledCollisionObjects;
+    private final OrthogonalTiledMapRenderer mapRenderer;
+    private final MapObjects scaledCollisionObjects;
     private float mapScale = 2.0f;
 
     public MapModel(){

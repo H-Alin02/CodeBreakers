@@ -18,7 +18,6 @@ public class Player{
     private int playerY = 64;
     private boolean isSprinting = false;
 
-
     public Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
@@ -36,7 +35,6 @@ public class Player{
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
-        System.out.println(animationManager.getAnimSpeed());
     }
 
     public boolean isCollision(float x, float y){
@@ -61,6 +59,30 @@ public class Player{
     public void moveRight() {
         currentState = PlayerState.WALK_RIGHT;
         playerX += SPEED;
+    }
+
+    public void attackUp(){
+        currentState = PlayerState.ATTACK_UP;
+        System.out.println("ATTACK_UP");
+        animationManager.resetAttack();
+    }
+
+    public void attackDown(){
+        currentState = PlayerState.ATTACK_DOWN;
+        System.out.println("ATTACK_DOWN");
+        animationManager.resetAttack();
+    }
+
+    public void attackRight(){
+        currentState = PlayerState.ATTACK_RIGHT;
+        System.out.println("ATTACK_RIGHT");
+        animationManager.resetAttack();
+    }
+
+    public void attackLeft(){
+        currentState = PlayerState.ATTACK_LEFT;
+        System.out.println("ATTACK_LEFT");
+        animationManager.resetAttack();
     }
 
     public TextureRegion getCurrentFrame() {
@@ -101,9 +123,8 @@ public class Player{
             animationManager.updateAnimSpeed(0.1f);
         }
     }
-
-    public void changeSpeed(){
-        setIsSprinting(!this.isSprinting);
+    public PlayerAnimationManager getAnimationManager() {
+        return animationManager;
     }
 }
 

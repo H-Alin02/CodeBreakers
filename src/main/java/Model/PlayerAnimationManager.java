@@ -1,5 +1,4 @@
 package Model;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,11 +10,12 @@ public class PlayerAnimationManager {
     private final Animation<TextureRegion> walkDownAnimation;
     private final Animation<TextureRegion> walkLeftAnimation;
     private final Animation<TextureRegion> walkRightAnimation;
+    private final Animation<TextureRegion> attackDownAnimation;
+    private final Animation<TextureRegion> attackUpAnimation;
+    private final Animation<TextureRegion> attackRightAnimation;
+    private final Animation<TextureRegion> attackLeftAnimation;
+
     private float animSpeed = 0.1f;
-
-
-// Add more animations for shooting, melee attacks, etc.
-
     private float stateTime;
 
     public PlayerAnimationManager() {
@@ -56,24 +56,50 @@ public class PlayerAnimationManager {
             walkUpFrames.add(new TextureRegion(new Texture("player/RunUp/RunUp" + i + ".png")));
         }
         walkUpAnimation = new Animation<>(animSpeed, walkUpFrames, Animation.PlayMode.LOOP);
+
+        //Animation Attack Up
+        Array<TextureRegion> attackUpFrames = new Array<>();
+        for (int i = 1; i<=4; i++){
+            attackUpFrames.add(new TextureRegion(new Texture("player/AttackUp/AttackUp" + i + ".png")));
+        }
+        attackUpAnimation = new Animation<>(0.15f, attackUpFrames, Animation.PlayMode.NORMAL);
+
+        //Animation AttackDown
+        Array<TextureRegion> attackDownFrames = new Array<>();
+        for (int i = 1; i<=4; i++){
+            attackDownFrames.add(new TextureRegion(new Texture("player/AttackDown/AttackDown" + i + ".png")));
+        }
+        attackDownAnimation = new Animation<>(0.15f, attackDownFrames, Animation.PlayMode.NORMAL);
+
+        //Animation AttackRight
+        Array<TextureRegion> attackRightFrames = new Array<>();
+        for (int i = 1; i<=4; i++){
+            attackRightFrames.add(new TextureRegion(new Texture("player/AttackRight/AttackRight" + i + ".png")));
+        }
+        attackRightAnimation = new Animation<>(0.15f, attackRightFrames, Animation.PlayMode.NORMAL);
+
+        //Animation AttackLeft
+        Array<TextureRegion> attackLeftFrames = new Array<>();
+        for (int i = 1; i<=4; i++){
+            attackLeftFrames.add(new TextureRegion(new Texture("player/AttackLeft/AttackLeft" + i + ".png")));
+        }
+        attackLeftAnimation = new Animation<>(0.15f, attackLeftFrames, Animation.PlayMode.NORMAL);
     }
 
     public TextureRegion getKeyFrame(PlayerState state) {
-        switch (state) {
-            case STANDING:
-                return idleAnimation.getKeyFrame(stateTime,true);
-            case WALK_UP:
-                return walkUpAnimation.getKeyFrame(stateTime, true);
-            case WALK_DOWN:
-                return walkDownAnimation.getKeyFrame(stateTime, true);
-            case WALK_LEFT:
-                return walkLeftAnimation.getKeyFrame(stateTime, true);
-            case WALK_RIGHT:
-                return walkRightAnimation.getKeyFrame(stateTime, true);
+        return switch (state) {
+            case STANDING -> idleAnimation.getKeyFrame(stateTime, true);
+            case WALK_UP -> walkUpAnimation.getKeyFrame(stateTime, true);
+            case WALK_DOWN -> walkDownAnimation.getKeyFrame(stateTime, true);
+            case WALK_LEFT -> walkLeftAnimation.getKeyFrame(stateTime, true);
+            case WALK_RIGHT -> walkRightAnimation.getKeyFrame(stateTime, true);
+            case ATTACK_DOWN -> attackDownAnimation.getKeyFrame(stateTime, false);
+            case ATTACK_UP -> attackUpAnimation.getKeyFrame(stateTime, false);
+            case ATTACK_LEFT -> attackLeftAnimation.getKeyFrame(stateTime, false);
+            case ATTACK_RIGHT -> attackRightAnimation.getKeyFrame(stateTime, false);
             // Add more cases for other states
-            default:
-                return getDefaultFrame();
-        }
+            default -> getDefaultFrame();
+        };
     }
 
     private TextureRegion getDefaultFrame() {
@@ -100,6 +126,14 @@ public class PlayerAnimationManager {
     }
     public void setAnimSpeed(float animSpeed) {
         this.animSpeed = animSpeed;
+    }
+
+    public float getAnimTime() {
+        return stateTime;
+    }
+
+    public void resetAttack(){
+        this.stateTime = 0;
     }
 }
 
