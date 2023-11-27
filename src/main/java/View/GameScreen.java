@@ -2,6 +2,8 @@ package View;
 
 import Controller.PlayerInputManager;
 import Model.MapModel;
+import Model.Object.GameObject;
+import Model.Object.ObjectManager;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -29,6 +31,8 @@ public class GameScreen extends ScreenAdapter {
     private MapModel mapModel;
 
     private ShapeRenderer shapeRenderer;
+    private ObjectManager objects;
+    private GameObject gameObject;
 
     public GameScreen(OrthographicCamera camera) {
         this.camera = camera;
@@ -38,6 +42,7 @@ public class GameScreen extends ScreenAdapter {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.playerInputManager = new PlayerInputManager(player);
         this.mapModel = new MapModel();
+        this.objects = new ObjectManager();
     }
 
     @Override
@@ -67,6 +72,7 @@ public class GameScreen extends ScreenAdapter {
 
         batch.begin();
         mapModel.render(batch,camera);
+        objects.draw(batch);
         batch.draw(player.getCurrentFrame(),player.getPlayerX(), player.getPlayerY(), player.getPLAYER_WIDTH(), player.getPLAYER_HEIGHT());
         batch.end();
 
