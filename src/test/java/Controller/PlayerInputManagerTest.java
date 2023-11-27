@@ -8,16 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerInputManagerTest {
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void handleInput() {
+
     }
 
     @Test

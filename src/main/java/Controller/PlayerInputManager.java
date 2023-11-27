@@ -15,13 +15,6 @@ public class PlayerInputManager {
 
     public void handleInput()
     {
-        //System.out.println(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT));
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
-            {player.setSPEED(10);}
-        else
-            {player.setSPEED(5);}
-
         // Update the player state based on input
         // If no movement keys are pressed, set the player to standing
         player.setSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
@@ -33,11 +26,8 @@ public class PlayerInputManager {
 
         // Check attack key separately
         if (Gdx.input.isKeyPressed(Input.Keys.K)) {
-
             // Handle attack only once when the key is pressed and released
             if (Gdx.input.isKeyJustPressed(Input.Keys.K))
-
-
                 if (player.getDirection() == 'w') {
                     player.attackUp();
                 } else if (player.getDirection() == 's') {
@@ -48,7 +38,6 @@ public class PlayerInputManager {
                     player.attackRight();
                 }
         } else {
-            // If no attack key is pressed, check movement keys
             if((up == down) || (left == right) || (!up && !down && !left && !right))
             {
                 // If no movement keys are pressed, set the player to standing
@@ -56,7 +45,7 @@ public class PlayerInputManager {
             }
 
             if((up && left) || (left && down) || (down & right) || (right && up))
-                player.setSPEED(3);
+                player.setSPEED(4);
             else
                 player.setSPEED(5);
 

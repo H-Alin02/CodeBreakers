@@ -1,7 +1,13 @@
 package Model;
 
 import Controller.PlayerInputManager;
+import Model.Enemies.Enemy;
+import Model.Enemies.EnemyManager;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.List;
 
 
 public class Player{
@@ -10,21 +16,26 @@ public class Player{
     private final int PLAYER_HEIGHT = 32;
     private final int SCALE = 3;
     private int SPEED = 5;
+    private static final int ATTACK_WIDTH = 32;
+    private static final int ATTACK_HEIGHT = 32;
     public PlayerState currentState;
     private final PlayerInputManager inputManager;
     private final PlayerAnimationManager animationManager;
     private final MapModel mapModel;
+    private final EnemyManager enemyManager;
     private int playerX = 64;
     private int playerY = 64;
     private boolean isSprinting = false;
-
     private char direction = 's';
+
+    private List<Enemy> enemies;
 
     public Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
         mapModel = new MapModel();
+        enemyManager = new EnemyManager();
     }
 
     public static Player getInstance() {
@@ -34,10 +45,37 @@ public class Player{
         return INSTANCE;
     }
 
+    public void setEnemies(List<Enemy> enemies){
+        this.enemies = enemies;
+    }
+
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
+
+        // Check for melee attack and collisions with enemies
     }
+
+    public void checkMeleeAttack(){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+            // Handle melee attacks in the direction the player is facing
+            switch (getDirection()) {
+                case 'w':
+                    attackUp();
+                    break;
+                case 's':
+                    attackDown();
+                    break;
+                case 'a':
+                    attackLeft();
+                    break;
+                case 'd':
+                    attackRight();
+                    break;
+            }
+        }
+    }
+
 
     public boolean isCollision(float x, float y){
         //check for collision with map object
@@ -94,6 +132,21 @@ public class Player{
         System.out.println("ATTACK_LEFT");
         animationManager.resetAttack();
     }
+
+    private boolean checkCollision(float x, float y, float width, float height, Enemy enemy) {
+        // Implement collision detection logic
+        // Check if the attack area overlaps with the enemy's position
+        float enemyX = enemy.getEnemyX();
+        float enemyY = enemy.getEnemyY();
+        float enemyWidth = enemy.getEnemyWidth();
+        float enemyHeight = enemy.getEnemyHeight();
+
+        return (x < enemyX + enemyWidth &&
+                x + width > enemyX &&
+                y < enemyY + enemyHeight &&
+                y + height > enemyY);
+    }
+
     public Boolean upColliding()
     {
         return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() + getSPEED());
@@ -137,10 +190,14 @@ public class Player{
         return SPEED;
     }
     public void setSPEED(int SPEED) {
-        if(isSprinting)
-            SPEED *= 2;
 
-        animationManager.updateAnimSpeed(0.5f/SPEED);
+        if(isSprinting) {
+            SPEED *= 1.5;
+            animationManager.updateAnimSpeed(0.07f);
+        }
+        else
+            animationManager.updateAnimSpeed(0.1f);
+
         this.SPEED = SPEED;
     }
 

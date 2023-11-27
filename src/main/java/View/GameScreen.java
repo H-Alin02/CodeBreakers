@@ -1,6 +1,8 @@
 package View;
 
 import Controller.PlayerInputManager;
+import Model.Enemies.Enemy;
+import Model.Enemies.EnemyManager;
 import Model.MapModel;
 import Model.Object.GameObject;
 import Model.Object.ObjectManager;
@@ -29,6 +31,7 @@ public class GameScreen extends ScreenAdapter {
     private Player player;
     private final PlayerInputManager playerInputManager;
     private MapModel mapModel;
+    private EnemyManager enemyManager;
 
     private ShapeRenderer shapeRenderer;
     private ObjectManager objects;
@@ -43,29 +46,36 @@ public class GameScreen extends ScreenAdapter {
         this.playerInputManager = new PlayerInputManager(player);
         this.mapModel = new MapModel();
         this.objects = new ObjectManager();
+        this.enemyManager = new EnemyManager();
     }
 
     @Override
     public void show(){
         player = new Player();
         shapeRenderer = new ShapeRenderer();
+        enemyManager.initializeEnemies();
+
+        //Set the player's enemies
+        player.setEnemies(enemyManager.getEnemies());
 
     }
-    public void update(){
+    public void update(float delta){
         world.step(1/60f, 6, 2);
         batch.setProjectionMatrix(camera.combined);
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
         }
+        enemyManager.update(delta);
     }
 
     @Override
     public void render(float delta){
-        update();
+        update(delta);
         player.update(delta);
         playerInputManager.update(delta);
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         camera.update();
+
         //clear the screen
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -73,6 +83,10 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         mapModel.render(batch,camera);
         objects.draw(batch);
+
+        for (Enemy enemy : enemyManager.getEnemies()){
+            batch.draw(enemy.getCurrentFrame(), enemy.getEnemyX(), enemy.getEnemyY(), enemy.getEnemyWidth(), enemy.getEnemyHeight());
+        }
         batch.draw(player.getCurrentFrame(),player.getPlayerX(), player.getPlayerY(), player.getPLAYER_WIDTH(), player.getPLAYER_HEIGHT());
         batch.end();
 
