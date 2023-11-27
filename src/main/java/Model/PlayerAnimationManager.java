@@ -62,28 +62,28 @@ public class PlayerAnimationManager {
         for (int i = 1; i<=4; i++){
             attackUpFrames.add(new TextureRegion(new Texture("player/AttackUp/AttackUp" + i + ".png")));
         }
-        attackUpAnimation = new Animation<>(0.15f, attackUpFrames, Animation.PlayMode.NORMAL);
+        attackUpAnimation = new Animation<>(0.1f, attackUpFrames, Animation.PlayMode.NORMAL);
 
         //Animation AttackDown
         Array<TextureRegion> attackDownFrames = new Array<>();
         for (int i = 1; i<=4; i++){
             attackDownFrames.add(new TextureRegion(new Texture("player/AttackDown/AttackDown" + i + ".png")));
         }
-        attackDownAnimation = new Animation<>(0.15f, attackDownFrames, Animation.PlayMode.NORMAL);
+        attackDownAnimation = new Animation<>(0.1f, attackDownFrames, Animation.PlayMode.NORMAL);
 
         //Animation AttackRight
         Array<TextureRegion> attackRightFrames = new Array<>();
         for (int i = 1; i<=4; i++){
             attackRightFrames.add(new TextureRegion(new Texture("player/AttackRight/AttackRight" + i + ".png")));
         }
-        attackRightAnimation = new Animation<>(0.15f, attackRightFrames, Animation.PlayMode.NORMAL);
+        attackRightAnimation = new Animation<>(0.1f, attackRightFrames, Animation.PlayMode.NORMAL);
 
         //Animation AttackLeft
         Array<TextureRegion> attackLeftFrames = new Array<>();
         for (int i = 1; i<=4; i++){
             attackLeftFrames.add(new TextureRegion(new Texture("player/AttackLeft/AttackLeft" + i + ".png")));
         }
-        attackLeftAnimation = new Animation<>(0.15f, attackLeftFrames, Animation.PlayMode.NORMAL);
+        attackLeftAnimation = new Animation<>(0.1f, attackLeftFrames, Animation.PlayMode.NORMAL);
     }
 
     public TextureRegion getKeyFrame(PlayerState state) {

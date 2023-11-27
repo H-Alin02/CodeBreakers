@@ -16,8 +16,6 @@ public class Player{
     private final int PLAYER_HEIGHT = 32;
     private final int SCALE = 3;
     private int SPEED = 5;
-    private static final int ATTACK_WIDTH = 32;
-    private static final int ATTACK_HEIGHT = 32;
     public PlayerState currentState;
     private final PlayerInputManager inputManager;
     private final PlayerAnimationManager animationManager;
@@ -27,6 +25,9 @@ public class Player{
     private int playerY = 64;
     private boolean isSprinting = false;
     private char direction = 's';
+    private boolean isAttacking = false;
+    private float attackTimer = 0f;
+    private static final float ATTACK_DURATION = 0.4f;
 
     private List<Enemy> enemies;
 
@@ -52,8 +53,8 @@ public class Player{
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
-
         // Check for melee attack and collisions with enemies
+        updateAttackTimer(delta);
     }
 
     public void checkMeleeAttack(){
@@ -72,6 +73,18 @@ public class Player{
                 case 'd':
                     attackRight();
                     break;
+            }
+        }
+    }
+
+    private void updateAttackTimer(float delta) {
+        if (isAttacking) {
+            attackTimer += delta;
+            if (attackTimer >= ATTACK_DURATION) {
+                isAttacking = false;
+                attackTimer = 0f;
+                currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
+                animationManager.resetAttack();
             }
         }
     }
@@ -112,39 +125,29 @@ public class Player{
     public void attackUp(){
         currentState = PlayerState.ATTACK_UP;
         System.out.println("ATTACK_UP");
+        isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackDown(){
         currentState = PlayerState.ATTACK_DOWN;
         System.out.println("ATTACK_DOWN");
+        isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackRight(){
         currentState = PlayerState.ATTACK_RIGHT;
         System.out.println("ATTACK_RIGHT");
+        isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackLeft(){
         currentState = PlayerState.ATTACK_LEFT;
         System.out.println("ATTACK_LEFT");
+        isAttacking = true;
         animationManager.resetAttack();
-    }
-
-    private boolean checkCollision(float x, float y, float width, float height, Enemy enemy) {
-        // Implement collision detection logic
-        // Check if the attack area overlaps with the enemy's position
-        float enemyX = enemy.getEnemyX();
-        float enemyY = enemy.getEnemyY();
-        float enemyWidth = enemy.getEnemyWidth();
-        float enemyHeight = enemy.getEnemyHeight();
-
-        return (x < enemyX + enemyWidth &&
-                x + width > enemyX &&
-                y < enemyY + enemyHeight &&
-                y + height > enemyY);
     }
 
     public Boolean upColliding()
@@ -211,6 +214,10 @@ public class Player{
 
     public boolean isSprinting() {
         return isSprinting;
+    }
+
+    public boolean isAttacking(){
+        return isAttacking;
     }
 
     public void setSprinting(Boolean isSprinting) {
