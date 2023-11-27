@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class GameObject {
     private float x, y;
     private Texture texture;
+    private final int OBJECT_HEIGHT = 32;
+    private final int OBJECT_WIDTH = 32;
+
 
     public GameObject(float x, float y, Texture texture){
         this.x = x;
@@ -14,6 +17,6 @@ public class GameObject {
     }
 
     public void draw(SpriteBatch batch){
-        batch.draw(texture,x,y);
+        batch.draw(texture,x,y,OBJECT_HEIGHT,OBJECT_WIDTH);
     }
 }
