@@ -18,6 +18,8 @@ public class Player{
     private int playerY = 64;
     private boolean isSprinting = false;
 
+    private char direction = 's';
+
     public Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
@@ -45,20 +47,28 @@ public class Player{
     public void moveUp() {
         currentState = PlayerState.WALK_UP;
         playerY += SPEED;
+
+        setDirection('w');
     }
 
     public void moveDown() {
         currentState = PlayerState.WALK_DOWN;
         playerY -= SPEED;
+
+        setDirection('s');
     }
 
     public void moveLeft() {
         currentState = PlayerState.WALK_LEFT;
         playerX -= SPEED;
+
+        setDirection('a');
     }
     public void moveRight() {
         currentState = PlayerState.WALK_RIGHT;
         playerX += SPEED;
+
+        setDirection('d');
     }
 
     public void attackUp(){
@@ -83,6 +93,25 @@ public class Player{
         currentState = PlayerState.ATTACK_LEFT;
         System.out.println("ATTACK_LEFT");
         animationManager.resetAttack();
+    }
+    public Boolean upColliding()
+    {
+        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() + getSPEED());
+    }
+
+    public Boolean downColliding()
+    {
+        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() - getSPEED());
+    }
+
+    public Boolean leftColliding()
+    {
+        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4) - getSPEED(), getPlayerY());
+    }
+
+    public Boolean rightColliding()
+    {
+        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4) + getSPEED(), getPlayerY());
     }
 
     public TextureRegion getCurrentFrame() {
@@ -111,7 +140,15 @@ public class Player{
         this.SPEED = SPEED;
     }
 
-    public void setIsSprinting ( boolean isSprinting){
+    public char getDirection() {
+        return direction;
+    }
+
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
+
+    public void setIsSprinting (boolean isSprinting){
         this.isSprinting = isSprinting;
         if(this.isSprinting) {
             setSPEED(8);
@@ -123,6 +160,11 @@ public class Player{
             animationManager.updateAnimSpeed(0.1f);
         }
     }
+
+    public boolean isSprinting() {
+        return isSprinting;
+    }
+
     public PlayerAnimationManager getAnimationManager() {
         return animationManager;
     }

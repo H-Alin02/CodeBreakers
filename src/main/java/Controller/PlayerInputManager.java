@@ -20,39 +20,58 @@ public class PlayerInputManager {
 
         // Check attack key separately
         if (Gdx.input.isKeyPressed(Input.Keys.K)) {
+
             // Handle attack only once when the key is pressed and released
-            if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.K))
+
+
+                if (player.getDirection() == 'w') {
                     player.attackUp();
-                } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                } else if (player.getDirection() == 's') {
                     player.attackDown();
-                } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                } else if (player.getDirection() == 'a') {
                     player.attackLeft();
-                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                } else if (player.getDirection() == 'd') {
                     player.attackRight();
                 }
-            }
         } else {
             // If no attack key is pressed, check movement keys
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4), player.getPlayerY() + player.getSPEED())) {
-                    player.moveUp();
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4), player.getPlayerY() - player.getSPEED())) {
-                    player.moveDown();
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4) - player.getSPEED(), player.getPlayerY())) {
-                    player.moveLeft();
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4) + player.getSPEED(), player.getPlayerY())) {
-                    player.moveRight();
-                }
-            } else {
+            Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
+            Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
+            Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
+            Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
+
+            if((up == down) || (left == right) || (!up && !down && !left && !right))
+            {
                 // If no movement keys are pressed, set the player to standing
                 player.currentState = PlayerState.STANDING;
+            }
+
+            int k = 1;
+            if(player.isSprinting())
+                k = 2;
+
+            if((up && left) || (left && down) || (down & right) || (right && up))
+                player.setSPEED(2*k);
+            else
+                player.setSPEED(5*k);
+
+            if (up) {
+                if (!player.upColliding()) {
+                    player.moveUp();
+                }
+            } if (down) {
+                if (!player.downColliding()) {
+                    player.moveDown();
+                }
+            } if (left) {
+                if (!player.leftColliding()) {
+                    player.moveLeft();
+                }
+            } if (right) {
+                if (!player.rightColliding()) {
+                    player.moveRight();
+                }
             }
         }
     }
