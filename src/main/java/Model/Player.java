@@ -58,7 +58,7 @@ public class Player{
     }
 
     public void checkMeleeAttack(){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.K) && !isAttacking) {
             // Handle melee attacks in the direction the player is facing
             switch (getDirection()) {
                 case 'w':
@@ -211,6 +211,11 @@ public class Player{
     public void setDirection(char direction) {
         this.direction = direction;
     }
+
+    public float getAttackTimer() {
+        return attackTimer;
+    }
+
 
     public boolean isSprinting() {
         return isSprinting;

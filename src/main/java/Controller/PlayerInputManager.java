@@ -27,10 +27,6 @@ public class PlayerInputManager {
 
         // Check attack key separately
         if (Gdx.input.isKeyPressed(Input.Keys.K)) {
-
-            // Handle attack only once when the key is pressed and released
-            if (Gdx.input.isKeyJustPressed(Input.Keys.K))
-
                 player.checkMeleeAttack();
         } else {
             // If no attack key is pressed, check movement keys
