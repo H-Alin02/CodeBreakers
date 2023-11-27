@@ -137,6 +137,10 @@ public class Player{
         return SPEED;
     }
     public void setSPEED(int SPEED) {
+        if(isSprinting)
+            SPEED *= 2;
+
+        animationManager.updateAnimSpeed(0.5f/SPEED);
         this.SPEED = SPEED;
     }
 
@@ -148,21 +152,12 @@ public class Player{
         this.direction = direction;
     }
 
-    public void setIsSprinting (boolean isSprinting){
-        this.isSprinting = isSprinting;
-        if(this.isSprinting) {
-            setSPEED(8);
-            animationManager.updateAnimSpeed(0.07f);
-
-        }
-        else {
-            setSPEED(4);
-            animationManager.updateAnimSpeed(0.1f);
-        }
-    }
-
     public boolean isSprinting() {
         return isSprinting;
+    }
+
+    public void setSprinting(Boolean isSprinting) {
+        this.isSprinting = isSprinting;
     }
 
     public PlayerAnimationManager getAnimationManager() {

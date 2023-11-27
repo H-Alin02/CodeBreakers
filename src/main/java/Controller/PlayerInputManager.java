@@ -13,10 +13,23 @@ public class PlayerInputManager {
         this.player = player;
     }
 
-    public void handleInput() {
+    public void handleInput()
+    {
+        //System.out.println(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT));
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
+            {player.setSPEED(10);}
+        else
+            {player.setSPEED(5);}
+
         // Update the player state based on input
         // If no movement keys are pressed, set the player to standing
-        player.setIsSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
+        player.setSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
+
+        Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
+        Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
+        Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
+        Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
 
         // Check attack key separately
         if (Gdx.input.isKeyPressed(Input.Keys.K)) {
@@ -36,25 +49,16 @@ public class PlayerInputManager {
                 }
         } else {
             // If no attack key is pressed, check movement keys
-            Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
-            Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
-            Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
-            Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
-
             if((up == down) || (left == right) || (!up && !down && !left && !right))
             {
                 // If no movement keys are pressed, set the player to standing
                 player.currentState = PlayerState.STANDING;
             }
 
-            int k = 1;
-            if(player.isSprinting())
-                k = 2;
-
             if((up && left) || (left && down) || (down & right) || (right && up))
-                player.setSPEED(2*k);
+                player.setSPEED(3);
             else
-                player.setSPEED(5*k);
+                player.setSPEED(5);
 
             if (up) {
                 if (!player.upColliding()) {
