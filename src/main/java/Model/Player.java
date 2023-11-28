@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.List;
 
 
-public class Player{
+public class Player {
     private static Player INSTANCE;
     private final int PLAYER_WIDTH = 32;
     private final int PLAYER_HEIGHT = 32;
@@ -46,7 +46,7 @@ public class Player{
         return INSTANCE;
     }
 
-    public void setEnemies(List<Enemy> enemies){
+    public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;
     }
 
@@ -57,7 +57,7 @@ public class Player{
         updateAttackTimer(delta);
     }
 
-    public void checkMeleeAttack(){
+    public void checkMeleeAttack() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.K) && !isAttacking) {
             // Handle melee attacks in the direction the player is facing
             switch (getDirection()) {
@@ -90,9 +90,9 @@ public class Player{
     }
 
 
-    public boolean isCollision(float x, float y){
+    public boolean isCollision(float x, float y) {
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH+15, PLAYER_HEIGHT+15);
+        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15);
     }
 
     public void moveUp() {
@@ -115,6 +115,7 @@ public class Player{
 
         setDirection('a');
     }
+
     public void moveRight() {
         currentState = PlayerState.WALK_RIGHT;
         playerX += SPEED;
@@ -122,51 +123,47 @@ public class Player{
         setDirection('d');
     }
 
-    public void attackUp(){
+    public void attackUp() {
         currentState = PlayerState.ATTACK_UP;
         System.out.println("ATTACK_UP");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
-    public void attackDown(){
+    public void attackDown() {
         currentState = PlayerState.ATTACK_DOWN;
         System.out.println("ATTACK_DOWN");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
-    public void attackRight(){
+    public void attackRight() {
         currentState = PlayerState.ATTACK_RIGHT;
         System.out.println("ATTACK_RIGHT");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
-    public void attackLeft(){
+    public void attackLeft() {
         currentState = PlayerState.ATTACK_LEFT;
         System.out.println("ATTACK_LEFT");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
-    public Boolean upColliding()
-    {
+    public Boolean upColliding() {
         return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() + getSPEED());
     }
 
-    public Boolean downColliding()
-    {
+    public Boolean downColliding() {
         return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() - getSPEED());
     }
 
-    public Boolean leftColliding()
-    {
+    public Boolean leftColliding() {
         return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4) - getSPEED(), getPlayerY());
     }
 
-    public Boolean rightColliding()
-    {
+    public Boolean rightColliding() {
         return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4) + getSPEED(), getPlayerY());
     }
 
@@ -178,9 +175,10 @@ public class Player{
         return playerX;
     }
 
-    public int getPlayerY(){
+    public int getPlayerY() {
         return playerY;
     }
+
     public int getPLAYER_HEIGHT() {
         return PLAYER_HEIGHT * SCALE;
     }
@@ -192,13 +190,13 @@ public class Player{
     public int getSPEED() {
         return SPEED;
     }
+
     public void setSPEED(int SPEED) {
 
-        if(isSprinting) {
+        if (isSprinting) {
             SPEED *= 1.5;
             animationManager.updateAnimSpeed(0.07f);
-        }
-        else
+        } else
             animationManager.updateAnimSpeed(0.1f);
 
         this.SPEED = SPEED;
@@ -221,7 +219,7 @@ public class Player{
         return isSprinting;
     }
 
-    public boolean isAttacking(){
+    public boolean isAttacking() {
         return isAttacking;
     }
 

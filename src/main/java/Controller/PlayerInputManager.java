@@ -35,26 +35,27 @@ public class PlayerInputManager {
                 if(!player.isAttacking()) player.currentState = PlayerState.STANDING;
                 return;
             }
+            if(!player.isAttacking()){
+                if ((up || down) && (left || right))
+                    player.setSPEED(4);
+                else
+                    player.setSPEED(5);
 
-            if ((up || down) && (left || right))
-                player.setSPEED(4);
-            else
-                player.setSPEED(5);
+                if (up && !player.upColliding()) {
+                    player.moveUp();
+                }
 
-            if (up && !player.upColliding()) {
-                player.moveUp();
-            }
+                if (down && !player.downColliding()) {
+                    player.moveDown();
+                }
 
-            if (down && !player.downColliding()) {
-                player.moveDown();
-            }
+                if (left && !player.leftColliding()) {
+                    player.moveLeft();
+                }
 
-            if (left && !player.leftColliding()) {
-                player.moveLeft();
-            }
-
-            if (right && !player.rightColliding()) {
-                player.moveRight();
+                if (right && !player.rightColliding()) {
+                    player.moveRight();
+                }
             }
         }
     }
