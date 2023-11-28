@@ -132,6 +132,7 @@ public class PlayerAnimationManager {
         return stateTime;
     }
 
+
     public void resetAttack(){
         this.stateTime = 0;
     }

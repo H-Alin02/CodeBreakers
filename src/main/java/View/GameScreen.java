@@ -1,6 +1,8 @@
 package View;
 
 import Controller.PlayerInputManager;
+import Model.Enemies.Enemy;
+import Model.Enemies.EnemyManager;
 import Model.MapModel;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +29,7 @@ public class GameScreen extends ScreenAdapter {
     private Player player;
     private final PlayerInputManager playerInputManager;
     private MapModel mapModel;
+    private EnemyManager enemyManager;
 
     private ShapeRenderer shapeRenderer;
 
@@ -36,29 +39,37 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.world = new World(new Vector2(0,0), false);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
+        this.player = new Player();
         this.playerInputManager = new PlayerInputManager(player);
         this.mapModel = new MapModel();
+        this.enemyManager = new EnemyManager();
+        this.enemyManager.initializeEnemies();
+        this.player.setEnemies(enemyManager.getEnemies());
+        this.shapeRenderer = new ShapeRenderer();
+
     }
 
     @Override
     public void show(){
-        player = new Player();
-        shapeRenderer = new ShapeRenderer();
+
+
+
 
     }
-    public void update(){
+    public void update(float delta){
         world.step(1/60f, 6, 2);
         batch.setProjectionMatrix(camera.combined);
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
         }
+        player.update(delta);
+        playerInputManager.update(delta);
+        enemyManager.update(delta);
     }
 
     @Override
     public void render(float delta){
-        update();
-        player.update(delta);
-        playerInputManager.update(delta);
+        update(delta);
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         camera.update();
         //clear the screen
@@ -67,6 +78,11 @@ public class GameScreen extends ScreenAdapter {
 
         batch.begin();
         mapModel.render(batch,camera);
+        //Disegna i nemici
+        for (Enemy enemy : enemyManager.getEnemies()) {
+            batch.draw(enemy.getCurrentFrame(), enemy.getEnemyX(), enemy.getEnemyY(), enemy.getEnemyWidth(), enemy.getEnemyHeight());
+        }
+        //Disegna il giocatore
         batch.draw(player.getCurrentFrame(),player.getPlayerX(), player.getPlayerY(), player.getPLAYER_WIDTH(), player.getPLAYER_HEIGHT());
         batch.end();
 

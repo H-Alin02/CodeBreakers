@@ -21,13 +21,14 @@ public class Player {
     private final PlayerAnimationManager animationManager;
     private final MapModel mapModel;
     private final EnemyManager enemyManager;
-    private int playerX = 64;
-    private int playerY = 64;
+    private int playerX = 832;
+    private int playerY = 1408;
     private boolean isSprinting = false;
     private char direction = 's';
     private boolean isAttacking = false;
     private float attackTimer = 0f;
     private static final float ATTACK_DURATION = 0.4f;
+    private final int PLAYER_DAMAGE = 10;
 
     private List<Enemy> enemies;
 
@@ -85,8 +86,56 @@ public class Player {
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
+
+                inflictDamageToEnemies();
             }
         }
+    }
+
+    private void inflictDamageToEnemies() {
+        // Get the attack direction and calculate the attack area
+        float attackX = playerX;
+        float attackY = playerY;
+        float attackWidth = PLAYER_WIDTH;
+        float attackHeight = PLAYER_HEIGHT;
+
+        switch (getDirection()) {
+            case 'w':
+                attackY += PLAYER_HEIGHT;
+                attackHeight *= 2;
+                break;
+            case 's':
+                attackHeight *= 2;
+                break;
+            case 'a':
+                attackX -= PLAYER_WIDTH/2;
+                attackWidth *= 2;
+                break;
+            case 'd':
+                attackX += PLAYER_WIDTH;
+                attackWidth *= 2;
+                break;
+        }
+
+        // Iterate through enemies and check for collision with the attack area
+        for (Enemy enemy : enemies) {
+            if (isCollisionWithAttackArea(attackX, attackY, attackWidth, attackHeight, enemy)) {
+                // Inflict damage to the enemy
+                enemy.takeDamage(PLAYER_DAMAGE);
+            }
+        }
+    }
+
+    private boolean isCollisionWithAttackArea(float x, float y, float width, float height, Enemy enemy) {
+        float enemyX = enemy.getEnemyX();
+        float enemyY = enemy.getEnemyY();
+        float enemyWidth = enemy.getEnemyWidth();
+        float enemyHeight = enemy.getEnemyHeight();
+
+        return x < enemyX + enemyWidth &&
+                x + width > enemyX &&
+                y < enemyY + enemyHeight &&
+                y + height > enemyY;
     }
 
 
@@ -125,28 +174,28 @@ public class Player {
 
     public void attackUp() {
         currentState = PlayerState.ATTACK_UP;
-        System.out.println("ATTACK_UP");
+        //System.out.println("ATTACK_UP");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackDown() {
         currentState = PlayerState.ATTACK_DOWN;
-        System.out.println("ATTACK_DOWN");
+        //System.out.println("ATTACK_DOWN");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackRight() {
         currentState = PlayerState.ATTACK_RIGHT;
-        System.out.println("ATTACK_RIGHT");
+        //System.out.println("ATTACK_RIGHT");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackLeft() {
         currentState = PlayerState.ATTACK_LEFT;
-        System.out.println("ATTACK_LEFT");
+        //System.out.println("ATTACK_LEFT");
         isAttacking = true;
         animationManager.resetAttack();
     }

@@ -28,7 +28,7 @@ public class EnemyAnimationManager {
         for (int i = 1; i<=4; i++){
             damageFrames.add(new TextureRegion(new Texture("enemies/Hit" + i + ".png")));
         }
-        damageAnimation = new Animation<>(0.15f, damageFrames, Animation.PlayMode.LOOP);
+        damageAnimation = new Animation<>(0.15f, damageFrames, Animation.PlayMode.NORMAL);
     }
 
     public void update(float delta){
@@ -40,7 +40,7 @@ public class EnemyAnimationManager {
         // Similar to how you did for the player
         return switch (state) {
             case IDLE -> idleAnimation.getKeyFrame(stateTime, true);
-            case DAMAGE -> damageAnimation.getKeyFrame(stateTime, true);
+            case DAMAGE -> damageAnimation.getKeyFrame(stateTime, false);
             // Add more cases for other states
             default -> getDefaultFrame();
         };
@@ -49,5 +49,12 @@ public class EnemyAnimationManager {
 
     private TextureRegion getDefaultFrame() {
         return idleAnimation.getKeyFrame(0);
+    }
+
+    public boolean isDamageAnimationFinished(){
+        return damageAnimation.isAnimationFinished(stateTime);
+    }
+    public void resetDamage(){
+        this.stateTime = 0;
     }
 }
