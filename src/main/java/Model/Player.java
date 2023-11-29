@@ -6,6 +6,7 @@ import Model.Enemies.EnemyManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.List;
 
@@ -278,6 +279,9 @@ public class Player {
 
     public PlayerAnimationManager getAnimationManager() {
         return animationManager;
+    }
+    public Rectangle getArea(){
+        return new Rectangle(getPlayerX(), getPlayerY(),getPLAYER_WIDTH(),getPLAYER_HEIGHT());
     }
 }
 
