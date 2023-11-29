@@ -6,15 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
+
 public class ObjectManager {
     private Array<GameObject> objects = new Array<>();
 
     private Player player;
     private float delta;
 
-
     public ObjectManager(){
-        player = new Player();
+        player = Player.getInstance();
         Texture texture = new Texture(Gdx.files.internal("object/frame0000.png"));
         GameObject object1 = new GameObject("money",100,100,texture);
         objects.add(object1);
@@ -46,8 +46,6 @@ public class ObjectManager {
     public void update() {
         for (int i = 0; i < objects.size; i++){
             GameObject obj = objects.get(i);
-
-            player.update(delta);
             if (obj.isRemove()){
                 objects.removeIndex(i);
             }

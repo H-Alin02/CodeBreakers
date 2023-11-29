@@ -21,14 +21,14 @@ public class EnemyAnimationManager {
         for (int i = 1; i<=1; i++){
             idleFrames.add(new TextureRegion(new Texture("enemies/Idle" + i + ".png")));
         }
-        idleAnimation = new Animation<>(1f, idleFrames, Animation.PlayMode.LOOP);
+        idleAnimation = new Animation<>(0.1f, idleFrames, Animation.PlayMode.LOOP);
 
         //Damage animation
         Array<TextureRegion> damageFrames = new Array<>();
         for (int i = 1; i<=4; i++){
             damageFrames.add(new TextureRegion(new Texture("enemies/Hit" + i + ".png")));
         }
-        damageAnimation = new Animation<>(0.15f, damageFrames, Animation.PlayMode.NORMAL);
+        damageAnimation = new Animation<>(0.1f, damageFrames, Animation.PlayMode.NORMAL);
     }
 
     public void update(float delta){

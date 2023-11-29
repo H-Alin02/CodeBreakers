@@ -12,8 +12,7 @@ public class GameObject {
     private final int OBJECT_HEIGHT = 32;
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
-    private boolean hit ;
-
+    private boolean hit;
 
     public GameObject(String name,float x, float y, Texture texture){
         this.name = name;

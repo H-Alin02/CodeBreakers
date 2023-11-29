@@ -33,12 +33,13 @@ public class Player {
 
     private List<Enemy> enemies;
 
-    public Player() {
+    private Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
         mapModel = new MapModel();
         enemyManager = new EnemyManager();
+        setEnemies(enemyManager.getEnemies());
     }
 
     public static Player getInstance() {
@@ -87,7 +88,6 @@ public class Player {
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
-
                 inflictDamageToEnemies();
             }
         }

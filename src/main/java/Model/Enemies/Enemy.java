@@ -12,8 +12,7 @@ public class Enemy {
     private EnemyState currentState;
     private EnemyAnimationManager animationManager;
     private boolean damageAnimationComplete = true;
-    private float damageTimer = 0f;
-    private static final float DAMAGE_DURATION = 0.7f;
+
 
     public Enemy(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -31,7 +30,6 @@ public class Enemy {
             // Print information for debugging
             System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
 
-            damageTimer += delta;
             if (animationManager.isDamageAnimationFinished()) {
                 // Transition back to idle state
                 currentState = EnemyState.IDLE;
