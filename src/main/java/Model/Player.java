@@ -203,31 +203,43 @@ public class Player {
     }
 
     public void moveUp() {
+        setDirection('w');
+
+        if(upColliding())
+            return;
+
         currentState = PlayerState.WALK_UP;
         playerY += SPEED;
-
-        setDirection('w');
     }
 
     public void moveDown() {
+        setDirection('s');
+
+        if(downColliding())
+            return;
+
         currentState = PlayerState.WALK_DOWN;
         playerY -= SPEED;
-
-        setDirection('s');
     }
 
     public void moveLeft() {
+        setDirection('a');
+
+        if(leftColliding())
+            return;
+
         currentState = PlayerState.WALK_LEFT;
         playerX -= SPEED;
-
-        setDirection('a');
     }
 
     public void moveRight() {
+        setDirection('d');
+
+        if(rightColliding())
+            return;
+
         currentState = PlayerState.WALK_RIGHT;
         playerX += SPEED;
-
-        setDirection('d');
     }
 
     public void attackUp() {

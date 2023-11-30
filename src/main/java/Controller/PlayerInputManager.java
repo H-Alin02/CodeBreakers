@@ -45,19 +45,19 @@ public class PlayerInputManager {
                 else
                     player.setSPEED(5);
 
-                if (up && !player.upColliding()) {
+                if (up) {
                     player.moveUp();
                 }
 
-                if (down && !player.downColliding()) {
+                if (down) {
                     player.moveDown();
                 }
 
-                if (left && !player.leftColliding()) {
+                if (left) {
                     player.moveLeft();
                 }
 
-                if (right && !player.rightColliding()) {
+                if (right) {
                     player.moveRight();
                 }
             }
