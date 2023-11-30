@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.lwjgl.opengl.GL20;
 
 public class GameScreen extends ScreenAdapter {
@@ -35,11 +36,15 @@ public class GameScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
     private ObjectManager objects;
     private GameObject gameObject;
+    private Hud hud;
+    private FitViewport playerViewport;
 
     public GameScreen(OrthographicCamera camera) {
+        this.batch = new SpriteBatch();
+        this.hud = new Hud(batch);
         this.camera = camera;
         this.camera.position.set(new Vector3(Boot.ISTANCE.getScreenWidth()/2,Boot.ISTANCE.getScreenHeight()/2,0 ));
-        this.batch = new SpriteBatch();
+        this.playerViewport = new FitViewport(Boot.ISTANCE.getScreenWidth()/2, Boot.ISTANCE.getScreenHeight()/2, camera);
         this.world = new World(new Vector2(0,0), false);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.player = Player.getInstance();
@@ -89,7 +94,9 @@ public class GameScreen extends ScreenAdapter {
         //Disegna il giocatore
         batch.draw(player.getCurrentFrame(),player.getPlayerX(), player.getPlayerY(), player.getPLAYER_WIDTH(), player.getPLAYER_HEIGHT());
         batch.end();
-
+        batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
+        hud.getStage().act(delta); //act the Hud
+        hud.getStage().draw(); //draw the Hud
         //DEBUG
         //renderDebug();
         //renderPlayerCollisionDebug();
@@ -129,6 +136,9 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose(){
+
         shapeRenderer.dispose();
+        hud.dispose();
+        batch.dispose();
     }
 }
