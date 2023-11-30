@@ -25,6 +25,10 @@ public class PlayerInputManager {
         Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
         Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
 
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            System.out.println("shoot function called");
+            player.shoot();
+        }
         // Check attack key separately
         if (Gdx.input.isKeyPressed(Input.Keys.K)) {
                 player.checkMeleeAttack();
@@ -32,7 +36,7 @@ public class PlayerInputManager {
             // If no attack key is pressed, check movement keys
             if ((up && down) || (left && right) || (!up && !down && !left && !right)) {
                 // If no movement keys are pressed, set the player to standing
-                if(!player.isAttacking()) player.currentState = PlayerState.STANDING;
+                if(!player.isAttacking() && !player.isShooting()) player.currentState = PlayerState.STANDING;
                 return;
             }
             if(!player.isAttacking()){

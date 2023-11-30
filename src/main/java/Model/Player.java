@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,11 +28,16 @@ public class Player {
     private boolean isSprinting = false;
     private char direction = 's';
     private boolean isAttacking = false;
+    private boolean isShooting = false;
     private float attackTimer = 0f;
     private static final float ATTACK_DURATION = 0.4f;
+    private float shootTimer = 0f;
+    private static final float SHOOT_DURATION = 0.6f;
     private final int PLAYER_DAMAGE = 10;
+    private float bulletSpeed = 5;
 
     private List<Enemy> enemies;
+    private List<Bullet> bullets;
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -40,6 +46,7 @@ public class Player {
         mapModel = new MapModel();
         enemyManager = new EnemyManager();
         setEnemies(enemyManager.getEnemies());
+        bullets = new ArrayList<>();
     }
 
     public static Player getInstance() {
@@ -58,6 +65,16 @@ public class Player {
         animationManager.update(delta);
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
+        updateShootTimer(delta);
+
+        // Aggiorna i proiettili
+        for (Bullet bullet : bullets) {
+            bullet.update(delta);
+            // Aggiungi la logica di collisione qui, se necessario
+        }
+        // Rimuovi i proiettili inattivi
+        bullets.removeIf(bullet -> !bullet.isActive());
+
     }
 
     public void checkMeleeAttack() {
@@ -89,6 +106,18 @@ public class Player {
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
                 inflictDamageToEnemies();
+            }
+        }
+    }
+
+    private void updateShootTimer(float delta) {
+        if (isShooting) {
+            shootTimer += delta;
+            if (shootTimer >= SHOOT_DURATION) {
+                isShooting = false;
+                shootTimer = 0f;
+                currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
+                animationManager.resetShoot();
             }
         }
     }
@@ -143,6 +172,34 @@ public class Player {
     public boolean isCollision(float x, float y) {
         //check for collision with map object
         return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15);
+    }
+
+    public void shoot() {
+        // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting) {
+            switch (getDirection()) {
+                case 'w':
+                    isShooting = true;
+                    currentState = PlayerState.SHOOT_UP;
+                    break;
+                case 's':
+                    isShooting = true;
+                    currentState = PlayerState.SHOOT_DOWN;
+                    break;
+                case 'd':
+                    isShooting = true;
+                    currentState = PlayerState.SHOOT_RIGHT;
+                    break;
+                case 'a':
+                    isShooting = true;
+                    currentState = PlayerState.SHOOT_LEFT;
+                    break;
+            }
+        }
+        System.out.println("Player state : " + currentState);
+        Bullet bullet = new Bullet(getPlayerX(), getPlayerY(), bulletSpeed, getDirection());
+        bullets.add(bullet);
+
     }
 
     public void moveUp() {
@@ -271,6 +328,10 @@ public class Player {
 
     public boolean isAttacking() {
         return isAttacking;
+    }
+
+    public  boolean isShooting(){
+        return isShooting;
     }
 
     public void setSprinting(Boolean isSprinting) {

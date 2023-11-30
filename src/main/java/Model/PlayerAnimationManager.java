@@ -5,15 +5,27 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayerAnimationManager {
+    // Idle Animation
     private final Animation<TextureRegion> idleAnimation;
+
+    // Walk Animations
     private final Animation<TextureRegion> walkUpAnimation;
     private final Animation<TextureRegion> walkDownAnimation;
     private final Animation<TextureRegion> walkLeftAnimation;
     private final Animation<TextureRegion> walkRightAnimation;
+
+    // Melee Animations
     private final Animation<TextureRegion> attackDownAnimation;
     private final Animation<TextureRegion> attackUpAnimation;
     private final Animation<TextureRegion> attackRightAnimation;
     private final Animation<TextureRegion> attackLeftAnimation;
+
+    // Shoot Animations
+    private final Animation<TextureRegion> shootDownAnimation;
+    private final Animation<TextureRegion> shootUpAnimation;
+    private final Animation<TextureRegion> shootRightAnimation;
+    private final Animation<TextureRegion> shootLeftAnimation;
+
 
     private float animSpeed = 0.1f;
     private float stateTime;
@@ -84,6 +96,34 @@ public class PlayerAnimationManager {
             attackLeftFrames.add(new TextureRegion(new Texture("player/AttackLeft/AttackLeft" + i + ".png")));
         }
         attackLeftAnimation = new Animation<>(0.1f, attackLeftFrames, Animation.PlayMode.NORMAL);
+
+        //Animation ShootDown
+        Array<TextureRegion> shootDownFrames = new Array<>();
+        for (int i = 1; i<=3; i++){
+            shootDownFrames.add(new TextureRegion(new Texture("player/ShootDown/ShootDown" + i + ".png")));
+        }
+        shootDownAnimation = new Animation<>(0.2f, shootDownFrames, Animation.PlayMode.NORMAL);
+
+        //Animation ShootUp
+        Array<TextureRegion> shootUpFrames = new Array<>();
+        for (int i = 1; i<=3; i++){
+            shootUpFrames.add(new TextureRegion(new Texture("player/ShootUp/ShootUp" + i + ".png")));
+        }
+        shootUpAnimation = new Animation<>(0.2f, shootUpFrames, Animation.PlayMode.NORMAL);
+
+        //Animation ShootDown
+        Array<TextureRegion> shootRightFrames = new Array<>();
+        for (int i = 1; i<=3; i++){
+            shootRightFrames.add(new TextureRegion(new Texture("player/ShootRight/ShootRight" + i + ".png")));
+        }
+        shootRightAnimation = new Animation<>(0.2f,shootRightFrames, Animation.PlayMode.NORMAL);
+
+        //Animation ShootDown
+        Array<TextureRegion> shootLeftFrames = new Array<>();
+        for (int i = 1; i<=3; i++){
+            shootLeftFrames.add(new TextureRegion(new Texture("player/ShootLeft/ShootLeft" + i + ".png")));
+        }
+        shootLeftAnimation = new Animation<>(0.2f, shootLeftFrames, Animation.PlayMode.NORMAL);
     }
 
     public TextureRegion getKeyFrame(PlayerState state) {
@@ -97,6 +137,10 @@ public class PlayerAnimationManager {
             case ATTACK_UP -> attackUpAnimation.getKeyFrame(stateTime, false);
             case ATTACK_LEFT -> attackLeftAnimation.getKeyFrame(stateTime, false);
             case ATTACK_RIGHT -> attackRightAnimation.getKeyFrame(stateTime, false);
+            case SHOOT_DOWN -> shootDownAnimation.getKeyFrame(stateTime, false);
+            case SHOOT_UP -> shootUpAnimation.getKeyFrame(stateTime, false);
+            case SHOOT_RIGHT -> shootRightAnimation.getKeyFrame(stateTime, false);
+            case SHOOT_LEFT -> shootLeftAnimation.getKeyFrame(stateTime, false);
             // Add more cases for other states
             default -> getDefaultFrame();
         };
@@ -136,5 +180,7 @@ public class PlayerAnimationManager {
     public void resetAttack(){
         this.stateTime = 0;
     }
+
+    public void resetShoot(){ this.stateTime = 0;}
 }
 
