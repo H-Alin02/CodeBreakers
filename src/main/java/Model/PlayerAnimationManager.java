@@ -102,28 +102,28 @@ public class PlayerAnimationManager {
         for (int i = 1; i<=3; i++){
             shootDownFrames.add(new TextureRegion(new Texture("player/ShootDown/ShootDown" + i + ".png")));
         }
-        shootDownAnimation = new Animation<>(0.2f, shootDownFrames, Animation.PlayMode.NORMAL);
+        shootDownAnimation = new Animation<>(0.07f, shootDownFrames, Animation.PlayMode.NORMAL);
 
         //Animation ShootUp
         Array<TextureRegion> shootUpFrames = new Array<>();
         for (int i = 1; i<=3; i++){
             shootUpFrames.add(new TextureRegion(new Texture("player/ShootUp/ShootUp" + i + ".png")));
         }
-        shootUpAnimation = new Animation<>(0.2f, shootUpFrames, Animation.PlayMode.NORMAL);
+        shootUpAnimation = new Animation<>(0.07f, shootUpFrames, Animation.PlayMode.NORMAL);
 
         //Animation ShootDown
         Array<TextureRegion> shootRightFrames = new Array<>();
         for (int i = 1; i<=3; i++){
             shootRightFrames.add(new TextureRegion(new Texture("player/ShootRight/ShootRight" + i + ".png")));
         }
-        shootRightAnimation = new Animation<>(0.2f,shootRightFrames, Animation.PlayMode.NORMAL);
+        shootRightAnimation = new Animation<>(0.07f,shootRightFrames, Animation.PlayMode.NORMAL);
 
         //Animation ShootDown
         Array<TextureRegion> shootLeftFrames = new Array<>();
         for (int i = 1; i<=3; i++){
             shootLeftFrames.add(new TextureRegion(new Texture("player/ShootLeft/ShootLeft" + i + ".png")));
         }
-        shootLeftAnimation = new Animation<>(0.2f, shootLeftFrames, Animation.PlayMode.NORMAL);
+        shootLeftAnimation = new Animation<>(0.07f, shootLeftFrames, Animation.PlayMode.NORMAL);
     }
 
     public TextureRegion getKeyFrame(PlayerState state) {

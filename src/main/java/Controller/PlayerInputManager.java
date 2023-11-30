@@ -39,7 +39,7 @@ public class PlayerInputManager {
                 if(!player.isAttacking() && !player.isShooting()) player.currentState = PlayerState.STANDING;
                 return;
             }
-            if(!player.isAttacking()){
+            if(!player.isAttacking() && !player.isShooting()){
                 if ((up || down) && (left || right))
                     player.setSPEED(4);
                 else

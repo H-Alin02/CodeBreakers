@@ -32,7 +32,7 @@ public class Player {
     private float attackTimer = 0f;
     private static final float ATTACK_DURATION = 0.4f;
     private float shootTimer = 0f;
-    private static final float SHOOT_DURATION = 0.6f;
+    private static final float SHOOT_DURATION = 0.21f;
     private final int PLAYER_DAMAGE = 10;
     private float bulletSpeed = 5;
 
@@ -181,18 +181,22 @@ public class Player {
                 case 'w':
                     isShooting = true;
                     currentState = PlayerState.SHOOT_UP;
+                    animationManager.resetShoot();
                     break;
                 case 's':
                     isShooting = true;
                     currentState = PlayerState.SHOOT_DOWN;
+                    animationManager.resetShoot();
                     break;
                 case 'd':
                     isShooting = true;
                     currentState = PlayerState.SHOOT_RIGHT;
+                    animationManager.resetShoot();
                     break;
                 case 'a':
                     isShooting = true;
                     currentState = PlayerState.SHOOT_LEFT;
+                    animationManager.resetShoot();
                     break;
             }
         }
