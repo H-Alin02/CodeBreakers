@@ -17,6 +17,9 @@ public class EnemyManager {
         enemies.add(new Enemy(100000, 10, 192, 1152));
         enemies.add(new Enemy(100000, 10, 512 , 1152));
         enemies.add(new Enemy(100000, 10, 320, 896));
+        enemies.add(new Enemy(100000, 10, 1472, 384));
+        enemies.add(new Enemy(100000, 10, 1216, 256));
+        enemies.add(new Enemy(100000, 10, 1536, 128));
     }
 
     public void update( float delta){
