@@ -34,6 +34,7 @@ public class Player {
     private float shootTimer = 0f;
     private static final float SHOOT_DURATION = 0.21f;
     private final int PLAYER_DAMAGE = 10;
+    private final int PLAYER_BULLET_DAMAGE = 10;
     private float bulletSpeed = 10;
 
     private List<Enemy> enemies;
@@ -70,6 +71,7 @@ public class Player {
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
             bullet.update(delta);
+            inflictShootDamageToEnemies(bullet);
             // Aggiungi la logica di collisione qui, se necessario
         }
         // Rimuovi i proiettili inattivi
@@ -105,7 +107,6 @@ public class Player {
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
-                inflictDamageToEnemies();
             }
         }
     }
@@ -117,7 +118,7 @@ public class Player {
                 Bullet bullet;
                 switch (getDirection()){
                     case 'w' :
-                        bullet = new Bullet(getPlayerX()+ PLAYER_WIDTH/2 + 20 , getPlayerY() + PLAYER_HEIGHT, bulletSpeed, getDirection());
+                        bullet = new Bullet(getPlayerX()+ PLAYER_WIDTH/2 + 20 , getPlayerY()+ 20 + PLAYER_HEIGHT, bulletSpeed, getDirection());
                         bullet.setBulletState(BulletState.SHOOT_UP);
                         bullets.add(bullet);
                         break;
@@ -137,11 +138,20 @@ public class Player {
                         bullets.add(bullet);
                         break;
                 }
-
                 isShooting = false;
                 shootTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetShoot();
+
+            }
+        }
+    }
+
+    private void inflictShootDamageToEnemies(Bullet bullet){
+        for(Enemy enemy : enemies){
+            if(isCollisionWithAttackArea(bullet.getX(),bullet.getY(), 32, 32, enemy)) {
+                bullet.deactivate();
+                enemy.takeDamage(PLAYER_BULLET_DAMAGE);
             }
         }
     }

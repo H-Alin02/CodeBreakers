@@ -20,6 +20,7 @@ public class Bullet {
     private BulletState bulletState;
     private float stateTime;
 
+
     public Bullet(float startX, float startY, float speed, char direction){
         this.x = startX;
         this.y = startY;
