@@ -1,6 +1,7 @@
 package View;
 
 import Controller.PlayerInputManager;
+import Model.Bullet;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
 import Model.MapModel;
@@ -93,6 +94,11 @@ public class GameScreen extends ScreenAdapter {
         }
         //Disegna il giocatore
         batch.draw(player.getCurrentFrame(),player.getPlayerX(), player.getPlayerY(), player.getPLAYER_WIDTH(), player.getPLAYER_HEIGHT());
+
+        // Disegna proiettili attivi
+        for(Bullet bullet : player.getBullets()){
+            batch.draw(bullet.getCurrentFrame(), bullet.getX(), bullet.getY(), 32, 32);
+        }
         batch.end();
         batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
         hud.getStage().act(delta); //act the Hud

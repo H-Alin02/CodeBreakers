@@ -34,7 +34,7 @@ public class Player {
     private float shootTimer = 0f;
     private static final float SHOOT_DURATION = 0.21f;
     private final int PLAYER_DAMAGE = 10;
-    private float bulletSpeed = 5;
+    private float bulletSpeed = 10;
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
@@ -114,6 +114,30 @@ public class Player {
         if (isShooting) {
             shootTimer += delta;
             if (shootTimer >= SHOOT_DURATION) {
+                Bullet bullet;
+                switch (getDirection()){
+                    case 'w' :
+                        bullet = new Bullet(getPlayerX()+ PLAYER_WIDTH/2 + 20 , getPlayerY() + PLAYER_HEIGHT, bulletSpeed, getDirection());
+                        bullet.setBulletState(BulletState.SHOOT_UP);
+                        bullets.add(bullet);
+                        break;
+                    case 's' :
+                        bullet = new Bullet(getPlayerX() + PLAYER_WIDTH/2 + 20, getPlayerY() , bulletSpeed, getDirection());
+                        bullet.setBulletState(BulletState.SHOOT_DOWN);
+                        bullets.add(bullet);
+                        break;
+                    case 'd' :
+                        bullet = new Bullet(getPlayerX() + PLAYER_WIDTH, getPlayerY() +PLAYER_HEIGHT/2 + 20, bulletSpeed, getDirection());
+                        bullet.setBulletState(BulletState.SHOOT_RIGHT);
+                        bullets.add(bullet);
+                        break;
+                    case 'a' :
+                        bullet = new Bullet(getPlayerX() , getPlayerY() + PLAYER_HEIGHT/2 + 20, bulletSpeed, getDirection());
+                        bullet.setBulletState(BulletState.SHOOT_LEFT);
+                        bullets.add(bullet);
+                        break;
+                }
+
                 isShooting = false;
                 shootTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
@@ -201,9 +225,9 @@ public class Player {
             }
         }
         System.out.println("Player state : " + currentState);
-        Bullet bullet = new Bullet(getPlayerX(), getPlayerY(), bulletSpeed, getDirection());
-        bullets.add(bullet);
-
+        /*Bullet bullet = new Bullet(getPlayerX(), getPlayerY(), bulletSpeed, getDirection());
+        bullet.setBulletState(BulletState.SHOOT);
+        bullets.add(bullet);*/
     }
 
     public void moveUp() {
@@ -359,6 +383,14 @@ public class Player {
     }
     public Rectangle getArea(){
         return new Rectangle(getPlayerX(), getPlayerY(),getPLAYER_WIDTH(),getPLAYER_HEIGHT());
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public void setBullets(List<Bullet> bullets) {
+        this.bullets = bullets;
     }
 }
 
