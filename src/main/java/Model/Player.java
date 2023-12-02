@@ -71,8 +71,14 @@ public class Player {
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
             bullet.update(delta);
-            inflictShootDamageToEnemies(bullet);
             // Aggiungi la logica di collisione qui, se necessario
+        }
+
+        for (Bullet bullet : bullets) {
+            if (mapModel.isCollisionWithScaledObjects(bullet.getX(), bullet.getY(), 32, 32)) {
+                bullet.setBulletState(BulletState.HIT);
+                bullet.deactivate();
+            }
         }
         // Rimuovi i proiettili inattivi
         bullets.removeIf(bullet -> !bullet.isActive());
@@ -107,6 +113,7 @@ public class Player {
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
+                inflictDamageToEnemies();
             }
         }
     }
@@ -147,7 +154,7 @@ public class Player {
         }
     }
 
-    private void inflictShootDamageToEnemies(Bullet bullet){
+    public void inflictShootDamageToEnemies(Bullet bullet){
         for(Enemy enemy : enemies){
             if(isCollisionWithAttackArea(bullet.getX(),bullet.getY(), 32, 32, enemy)) {
                 bullet.deactivate();
@@ -190,7 +197,7 @@ public class Player {
         }
     }
 
-    private boolean isCollisionWithAttackArea(float x, float y, float width, float height, Enemy enemy) {
+    public boolean isCollisionWithAttackArea(float x, float y, float width, float height, Enemy enemy) {
         float enemyX = enemy.getEnemyX();
         float enemyY = enemy.getEnemyY();
         float enemyWidth = enemy.getEnemyWidth();
@@ -203,9 +210,16 @@ public class Player {
     }
 
 
+
     public boolean isCollision(float x, float y) {
+        boolean enemyCollision = false;
+        for (Enemy enemy : enemies){
+            if(isCollisionWithAttackArea(x,y,PLAYER_WIDTH + 15,PLAYER_HEIGHT + 15,enemy))
+                enemyCollision = true;
+        }
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15);
+        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
+
     }
 
     public void shoot() {
@@ -242,7 +256,6 @@ public class Player {
 
     public void moveUp() {
         setDirection('w');
-
         if(upColliding())
             return;
 
@@ -391,6 +404,7 @@ public class Player {
     public PlayerAnimationManager getAnimationManager() {
         return animationManager;
     }
+
     public Rectangle getArea(){
         return new Rectangle(getPlayerX(), getPlayerY(),getPLAYER_WIDTH(),getPLAYER_HEIGHT());
     }

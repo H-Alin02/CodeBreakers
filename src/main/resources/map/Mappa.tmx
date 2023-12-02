@@ -89,11 +89,5 @@
   <object id="82" x="0" y="640" width="32" height="288"/>
   <object id="83" x="32" y="640" width="128" height="64"/>
   <object id="84" x="224" y="640" width="160" height="64"/>
-  <object id="85" x="96" y="352" width="32" height="32"/>
-  <object id="88" x="256" y="352" width="32" height="32"/>
-  <object id="89" x="160" y="480" width="32" height="32"/>
-  <object id="90" x="736" y="736" width="32" height="32"/>
-  <object id="93" x="640" y="800" width="32" height="32"/>
-  <object id="94" x="800" y="864" width="32" height="32"/>
  </objectgroup>
 </map>

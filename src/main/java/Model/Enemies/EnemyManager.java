@@ -14,12 +14,13 @@ public class EnemyManager {
 
     public void initializeEnemies(){
         // Add enemies to the EnemyManager
-        enemies.add(new Enemy(100000, 10, 192, 1152));
-        enemies.add(new Enemy(100000, 10, 512 , 1152));
-        enemies.add(new Enemy(100000, 10, 320, 896));
-        enemies.add(new Enemy(100000, 10, 1472, 384));
-        enemies.add(new Enemy(100000, 10, 1216, 256));
-        enemies.add(new Enemy(100000, 10, 1536, 128));
+        // Offset from tile x = -20 , y = -10
+        enemies.add(new Enemy(100000, 10, 172, 1142));
+        enemies.add(new Enemy(100000, 10, 492 , 1142));
+        enemies.add(new Enemy(100000, 10, 300, 886));
+        enemies.add(new Enemy(100000, 10, 1452, 374));
+        enemies.add(new Enemy(100000, 10, 1260, 246));
+        enemies.add(new Enemy(100000, 10, 1580, 118));
     }
 
     public void update( float delta){

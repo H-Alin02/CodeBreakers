@@ -1,6 +1,7 @@
 package Model.Enemies;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class Enemy {
     private int health;
@@ -12,6 +13,7 @@ public class Enemy {
     private EnemyState currentState;
     private EnemyAnimationManager animationManager;
     private boolean damageAnimationComplete = true;
+    private final Array<EnemyState> enemyStates = Array.with(EnemyState.DAMAGE_1,EnemyState.DAMAGE_2, EnemyState.DAMAGE_3);
 
 
     public Enemy(int initialHealth, int damage , int startX, int startY){
@@ -26,17 +28,16 @@ public class Enemy {
     public void update(float delta){
         animationManager.update(delta);
         // Check for damage state and animation completion
-        if (currentState == EnemyState.DAMAGE && !damageAnimationComplete) {
+        if (enemyStates.contains(currentState,true) && !damageAnimationComplete) {
             // Print information for debugging
             System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
 
-            if (animationManager.isDamageAnimationFinished()) {
+            if (animationManager.isDamageAnimationFinished(currentState)) {
                 // Transition back to idle state
                 currentState = EnemyState.IDLE;
                 damageAnimationComplete = true; // Reset the flag
 
                 // Print a message after the state transition
-                System.out.println("Enemy transitioned to IDLE state.");
             }
         }
 
@@ -53,7 +54,7 @@ public class Enemy {
             animationManager.resetDamage();
         } else {
             // If the enemy is still alive, play the damage animation
-            currentState = EnemyState.DAMAGE;
+            currentState = enemyStates.random();
             animationManager.resetDamage();
             damageAnimationComplete = false;
         }

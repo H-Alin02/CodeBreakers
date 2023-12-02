@@ -15,10 +15,10 @@ public class Bullet {
     private final Animation<TextureRegion> shootUpAnimation;
     private final Animation<TextureRegion> shootRightAnimation;
     private final Animation<TextureRegion> shootLeftAnimation;
-
-    //private final Animation<TextureRegion> HitAnimation;
+    private final Animation<TextureRegion> hitAnimation;
     private BulletState bulletState;
     private float stateTime;
+    Player player = Player.getInstance();
 
 
     public Bullet(float startX, float startY, float speed, char direction){
@@ -58,12 +58,12 @@ public class Bullet {
         }
         shootLeftAnimation = new Animation<>(0.15f, shootLeftFrames, Animation.PlayMode.LOOP);
 
-        /*//Animation Hit
+        //Animation Hit
         Array<TextureRegion> hitFrames = new Array<>();
-        for (int i = 1; i<=8; i++){
-            hitFrames.add(new TextureRegion(new Texture("player/RunDown/RunDown" + i + ".png")));
+        for (int i = 1; i<=4; i++){
+            hitFrames.add(new TextureRegion(new Texture("Bullets/BulletHit/BulletHit" + i + ".png")));
         }
-        HitAnimation = new Animation<>(0.15f, hitFrames, Animation.PlayMode.LOOP);*/
+        hitAnimation = new Animation<>(0.07f, hitFrames, Animation.PlayMode.NORMAL);
     }
 
     public void update(float delta) {
@@ -83,6 +83,11 @@ public class Bullet {
                 x += speed;
                 break;
         }
+
+        for (Bullet bullet : player.getBullets()) {
+            player.inflictShootDamageToEnemies(bullet);
+            // Aggiungi la logica di collisione qui, se necessario
+        }
     }
 
     public TextureRegion getKeyFrame(BulletState state) {
@@ -91,8 +96,7 @@ public class Bullet {
             case SHOOT_UP -> shootUpAnimation.getKeyFrame(stateTime, true);
             case SHOOT_RIGHT -> shootRightAnimation.getKeyFrame(stateTime, true);
             case SHOOT_LEFT -> shootLeftAnimation.getKeyFrame(stateTime, true);
-            //case HIT -> hitAnimation.getKeyFrame(stateTime, true);
-
+            case HIT -> hitAnimation.getKeyFrame(stateTime, false);
             // Add more cases for other states
             default -> getDefaultFrame();
         };
