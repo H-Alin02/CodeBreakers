@@ -176,6 +176,7 @@ public class Player {
                 attackHeight *= 2;
                 break;
             case 's':
+                attackY -= PLAYER_HEIGHT/2;
                 attackHeight *= 2;
                 break;
             case 'a':

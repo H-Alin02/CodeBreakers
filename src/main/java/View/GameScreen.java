@@ -44,8 +44,8 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.hud = new Hud(batch);
         this.camera = camera;
-        this.camera.position.set(new Vector3(Boot.ISTANCE.getScreenWidth()/2,Boot.ISTANCE.getScreenHeight()/2,0 ));
-        this.playerViewport = new FitViewport(Boot.ISTANCE.getScreenWidth()/2, Boot.ISTANCE.getScreenHeight()/2, camera);
+        this.camera.position.set(new Vector3(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2,0 ));
+        this.playerViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2, Boot.INSTANCE.getScreenHeight()/2, camera);
         this.world = new World(new Vector2(0,0), false);
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.player = Player.getInstance();
