@@ -12,7 +12,7 @@ public class Hud {
     private FitViewport stageViewport;
 
     public Hud(SpriteBatch spriteBatch) {
-        stageViewport = new FitViewport(Boot.ISTANCE.getScreenWidth()/2,Boot.ISTANCE.getScreenHeight()/2);
+        stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
 
         Table table = new Table();
