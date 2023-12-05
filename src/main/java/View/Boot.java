@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Boot extends Game {
     //Singleton pattern
-    public static Boot ISTANCE;
+    public static Boot INSTANCE;
     private int screenWidth, screenHeight;
     private OrthographicCamera orthographicCamera;
 
     public Boot(){
-        ISTANCE = this;
+        INSTANCE = this;
     }
 
     @Override
