@@ -71,7 +71,7 @@ public class GameScreen extends ScreenAdapter {
         player.update(delta);
         playerInputManager.update(delta);
         enemyManager.update(delta);
-        objects.update();
+        objects.update(delta);
     }
 
     @Override
@@ -101,8 +101,6 @@ public class GameScreen extends ScreenAdapter {
         }
         batch.end();
         batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
-
-        //Disegna l'HUD
         hud.getStage().act(delta); //act the Hud
         hud.getStage().draw(); //draw the Hud
         //DEBUG
