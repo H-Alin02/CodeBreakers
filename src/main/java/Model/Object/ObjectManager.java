@@ -9,44 +9,52 @@ import com.badlogic.gdx.utils.Array;
 
 
 public class ObjectManager {
-    private Array<GameObject> objects = new Array<>();
+    private Array<ObjectGame> objects = new Array<>();
 
     private Player player;
-    private Coin coin;
+
 
     public ObjectManager(){
         player = Player.getInstance();
-        Texture texture = new Texture(Gdx.files.internal("object/frame0000.png"));
-        GameObject object1 = new GameObject("money",100,100,new TextureRegion(texture));
-        objects.add(object1);
+        Texture texture = new Texture(Gdx.files.internal("object/money/money.png"));
+        Money money1 = new Money(100,300,new TextureRegion(texture));
+        objects.add(money1);
 
-        Texture texture1 = new Texture(Gdx.files.internal("object/key_A_gold.png"));
-        GameObject object2 = new GameObject("key",200,200,new TextureRegion(texture1));
-        GameObject object3 = new GameObject("key",850,200,new TextureRegion(texture1));
-        objects.add(object3);
-        objects.add(object2);
+        Texture texture1 = new Texture(Gdx.files.internal("object/key/key_A_gold.png"));
+        Key key1 = new Key(300,1000,new TextureRegion(texture1));
+        Key key2 = new Key(850,200,new TextureRegion(texture1));
+        objects.add(key1);
+        objects.add(key2);
 
-        Texture texture2 = new Texture(Gdx.files.internal("object/frame0006.png"));
-        GameObject object4 = new GameObject("diamond",850,850,new TextureRegion(texture2));
-        GameObject object5 = new GameObject("diamond",200,850,new TextureRegion(texture2));
-        objects.add(object4);
-        objects.add(object5);
+        Texture texture2 = new Texture(Gdx.files.internal("object/diamond/diamond.png"));
+        Diamond diamond1 = new Diamond(850,850,new TextureRegion(texture2));
+        Diamond diamond2 = new Diamond(200,850,new TextureRegion(texture2));
+        objects.add(diamond1);
+        objects.add(diamond2);
 
-        coin = new Coin(1600,200);
+        Coin coin = new Coin(1600,300);
+        objects.add(coin);
 
+        Texture texture3 = new Texture(Gdx.files.internal("object/meat/meat.png"));
+        Meat meat1 = new Meat(1600,1000,new TextureRegion(texture3));
+        objects.add(meat1);
+
+        Texture texture4 = new Texture(Gdx.files.internal("object/chest/chest.png"));
+        Chest chest1 = new Chest(1650,1300,new TextureRegion(texture4));
+        objects.add(chest1);
 
     }
 
     public void draw(SpriteBatch batch){
-        for(GameObject obj : objects){
+        for(ObjectGame obj : objects){
             obj.draw(batch);
         }
-        coin.draw(batch);
+
     }
 
     public void checkCollision(){
         for (int i = 0; i < objects.size; i++){
-            GameObject obj = objects.get(i);
+            ObjectGame obj = objects.get(i);
 
             if(obj.collide(player)){
                 obj.setRemove(true);
@@ -56,13 +64,13 @@ public class ObjectManager {
 
     public void update(float delta) {
         for (int i = 0; i < objects.size; i++){
-            GameObject obj = objects.get(i);
+            ObjectGame obj = objects.get(i);
+            obj.update(delta);
             if (obj.isRemove()){
                 objects.removeIndex(i);
             }
             checkCollision();
         }
-        coin.update(delta);
 
     }
 }

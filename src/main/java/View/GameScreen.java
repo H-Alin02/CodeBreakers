@@ -5,7 +5,6 @@ import Model.Bullet;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
 import Model.MapModel;
-import Model.Object.GameObject;
 import Model.Object.ObjectManager;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
@@ -36,7 +35,6 @@ public class GameScreen extends ScreenAdapter {
     private EnemyManager enemyManager;
     private ShapeRenderer shapeRenderer;
     private ObjectManager objects;
-    private GameObject gameObject;
     private Hud hud;
     private FitViewport playerViewport;
 
