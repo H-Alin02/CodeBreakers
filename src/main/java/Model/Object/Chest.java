@@ -1,6 +1,8 @@
 package Model.Object;
 
 import Model.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -14,10 +16,10 @@ public class Chest implements ObjectGame{
     private boolean remove;
     private final float SCALE = 2f;
 
-    public Chest(int chestX, int chestY, TextureRegion texture){
+    public Chest(int chestX, int chestY){
         this.chestX = chestX;
         this.chestY = chestY;
-        this.texture = texture;
+        texture = new TextureRegion(new Texture(Gdx.files.internal("object/chest/chest.png"))) ;
 
         remove = false;
     }

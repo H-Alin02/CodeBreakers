@@ -1,6 +1,8 @@
 package Model.Object;
 
 import Model.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -14,10 +16,10 @@ public class Diamond implements ObjectGame{
     private boolean remove;
     private final float SCALE = 1.2f;
 
-    public Diamond(int diamondX, int diamondY, TextureRegion texture){
+    public Diamond(int diamondX, int diamondY){
         this.diamondX = diamondX;
         this.diamondY = diamondY;
-        this.texture = texture;
+        texture = new TextureRegion(new Texture(Gdx.files.internal("object/diamond/diamond.png")));
 
         remove = false;
     }

@@ -1,6 +1,8 @@
 package Model.Object;
 
 import Model.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -13,10 +15,10 @@ public class Key implements ObjectGame{
     private boolean remove;
     private TextureRegion texture ;
     private final float SCALE = 1.2f;
-    public Key(int keyX, int keyY, TextureRegion texture){
+    public Key(int keyX, int keyY){
         this.keyX = keyX;
         this.keyY = keyY;
-        this.texture = texture;
+        texture = new TextureRegion(new Texture(Gdx.files.internal("object/key/key_A_gold.png")));
 
         remove = false;
     }
