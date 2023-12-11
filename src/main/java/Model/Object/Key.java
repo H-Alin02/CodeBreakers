@@ -15,11 +15,13 @@ public class Key implements ObjectGame{
     private boolean remove;
     private TextureRegion texture ;
     private final float SCALE = 1.2f;
+    private String name ;
     public Key(int keyX, int keyY){
         this.keyX = keyX;
         this.keyY = keyY;
         texture = new TextureRegion(new Texture(Gdx.files.internal("object/key/key_A_gold.png")));
 
+        name = "key";
         remove = false;
     }
     @Override
@@ -54,4 +56,7 @@ public class Key implements ObjectGame{
     public void setRemove(boolean b) {
         remove = b;
     }
+
+    @Override
+    public String getName(){return name;}
 }

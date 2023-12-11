@@ -16,7 +16,7 @@ public class Coin implements ObjectGame{
     private float stateTime;
     private boolean remove;
     private final float SCALE = 1.2f;
-
+    private String name ;
     public Coin(int coinX, int coinY) {
         this.coinX = coinX;
         this.coinY = coinY;
@@ -28,6 +28,7 @@ public class Coin implements ObjectGame{
         }
         coin = new Animation<>(0.05f, coinFrames, Animation.PlayMode.LOOP);
 
+        name = "coin";
         remove = false;
 
     }
@@ -66,8 +67,7 @@ public class Coin implements ObjectGame{
     public TextureRegion getKeyFrame() {
         return coin.getKeyFrame(stateTime, true);
     }
-
-
-
+    @Override
+    public String getName(){return name;}
 
 }

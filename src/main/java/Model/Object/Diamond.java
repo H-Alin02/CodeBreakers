@@ -15,13 +15,14 @@ public class Diamond implements ObjectGame{
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
     private final float SCALE = 1.2f;
-
+    private String name ;
     public Diamond(int diamondX, int diamondY){
         this.diamondX = diamondX;
         this.diamondY = diamondY;
-        texture = new TextureRegion(new Texture(Gdx.files.internal("object/diamond/diamond.png")));
+        this.texture = new TextureRegion(new Texture(Gdx.files.internal("object/diamond/diamond.png")));
 
-        remove = false;
+        this.name = "diamond";
+        this.remove = false;
     }
     @Override
     public void draw(SpriteBatch batch) {
@@ -48,11 +49,13 @@ public class Diamond implements ObjectGame{
 
     @Override
     public boolean isRemove() {
-        return remove;
+        return this.remove;
     }
 
     @Override
     public void setRemove(boolean b) {
-        remove = b;
+        this.remove = b;
     }
+    @Override
+    public String getName(){return name;}
 }

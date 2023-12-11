@@ -15,12 +15,14 @@ public class Meat implements ObjectGame{
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
     private final float SCALE = 1.2f;
+    private String name ;
 
     public Meat(int meatX, int meatY){
         this.meatX = meatX;
         this.meatY = meatY;
         texture = new TextureRegion(new Texture(Gdx.files.internal("object/meat/meat.png")));
 
+        name = "meat";
         remove = false;
     }
     @Override
@@ -55,4 +57,6 @@ public class Meat implements ObjectGame{
     public void setRemove(boolean b) {
         remove = b;
     }
+    @Override
+    public String getName(){return name;}
 }
