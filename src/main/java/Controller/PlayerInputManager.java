@@ -13,46 +13,53 @@ public class PlayerInputManager {
         this.player = player;
     }
 
-    public void handleInput() {
+    public void handleInput()
+    {
+        //System.out.println(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT));
         // Update the player state based on input
         // If no movement keys are pressed, set the player to standing
-        player.setIsSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
+        player.setSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
 
+        Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
+        Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
+        Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
+        Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            System.out.println("shoot function called");
+            player.shoot();
+        }
         // Check attack key separately
         if (Gdx.input.isKeyPressed(Input.Keys.K)) {
-            // Handle attack only once when the key is pressed and released
-            if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                    player.attackUp();
-                } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                    player.attackDown();
-                } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                    player.attackLeft();
-                } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                    player.attackRight();
-                }
-            }
+                player.checkMeleeAttack();
         } else {
             // If no attack key is pressed, check movement keys
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4), player.getPlayerY() + player.getSPEED())) {
+            if ((up && down) || (left && right) || (!up && !down && !left && !right)) {
+                // If no movement keys are pressed, set the player to standing
+                if(!player.isAttacking() && !player.isShooting()) player.currentState = PlayerState.STANDING;
+                return;
+            }
+            if(!player.isAttacking() && !player.isShooting()){
+                if ((up || down) && (left || right))
+                    player.setSPEED(4);
+                else
+                    player.setSPEED(5);
+
+                if (up) {
                     player.moveUp();
                 }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4), player.getPlayerY() - player.getSPEED())) {
+
+                if (down) {
                     player.moveDown();
                 }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4) - player.getSPEED(), player.getPlayerY())) {
+
+                if (left) {
                     player.moveLeft();
                 }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                if (!player.isCollision(player.getPlayerX() + (player.getPLAYER_WIDTH() / 4) + player.getSPEED(), player.getPlayerY())) {
+
+                if (right) {
                     player.moveRight();
                 }
-            } else {
-                // If no movement keys are pressed, set the player to standing
-                player.currentState = PlayerState.STANDING;
             }
         }
     }

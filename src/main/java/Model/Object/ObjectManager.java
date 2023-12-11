@@ -1,27 +1,69 @@
 package Model.Object;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import Model.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
 
-public class ObjectManager {
-    private ArrayList<GameObject> objects = new ArrayList<>();
+public class ObjectManager implements ObjectManagerFactory{
+    private Array<ObjectGame> objects = new Array<>();
+
+    private Player player;
+
 
     public ObjectManager(){
-        Texture texture = new Texture(Gdx.files.internal("object/frame0000.png"));
-        GameObject object1 = new GameObject(100,100,texture);
-        objects.add(object1);
+        player = Player.getInstance();
+        Money money1 = new Money(100,300);
+        objects.add(money1);
 
-        Texture texture1 = new Texture(Gdx.files.internal("object/key_A_gold.png"));
-        GameObject object2 = new GameObject(200,200,texture1);
-        objects.add(object2);
+
+        Key key1 = new Key(300,1000);
+        Key key2 = new Key(850,200);
+        objects.add(key1);
+        objects.add(key2);
+
+        Diamond diamond1 = new Diamond(850,850);
+        Diamond diamond2 = new Diamond(200,850);
+        objects.add(diamond1);
+        objects.add(diamond2);
+
+        Coin coin = new Coin(1600,300);
+        objects.add(coin);
+
+        Meat meat1 = new Meat(1600,1000);
+        objects.add(meat1);
+
+        Chest chest1 = new Chest(1650,1300);
+        objects.add(chest1);
+
     }
 
     public void draw(SpriteBatch batch){
-        for(GameObject obj : objects){
+        for(ObjectGame obj : objects){
             obj.draw(batch);
         }
+
+    }
+
+    public void checkCollision(){
+        for (int i = 0; i < objects.size; i++){
+            ObjectGame obj = objects.get(i);
+
+            if(obj.collide(player)){
+                obj.setRemove(true);
+            }
+        }
+    }
+
+    public void update(float delta) {
+        for (int i = 0; i < objects.size; i++){
+            ObjectGame obj = objects.get(i);
+            obj.update(delta);
+            if (obj.isRemove()){
+                objects.removeIndex(i);
+            }
+            checkCollision();
+        }
+
     }
 }

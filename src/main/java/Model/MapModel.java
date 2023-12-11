@@ -90,4 +90,5 @@ public class MapModel {
     public MapObjects getScaledCollisionObjects() {
         return scaledCollisionObjects;
     }
+
 }

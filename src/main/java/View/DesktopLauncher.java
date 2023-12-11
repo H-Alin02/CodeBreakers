@@ -9,7 +9,8 @@ public class DesktopLauncher {
         config.setIdleFPS(60);
         config.useVsync(true);
         config.setTitle("Tutorial");
-        config.setWindowedMode(960 , 640);
+        config.setWindowedMode(1152 , 864);
+        config.setResizable(false);
         //config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 
         new Lwjgl3Application(new Boot(), config);
