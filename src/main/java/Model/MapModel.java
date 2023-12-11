@@ -13,12 +13,20 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class MapModel {
+    private static MapModel INSTANCE;
     private TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final MapObjects scaledCollisionObjects;
     private float mapScale = 2.0f;
 
-    public MapModel(){
+    public static MapModel getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new MapModel();
+        }
+        return INSTANCE;
+    }
+
+    private MapModel(){
         //Load the map
         map = new TmxMapLoader().load("map/Mappa.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map , 2.0f);
@@ -30,12 +38,6 @@ public class MapModel {
         }else {
             throw new GdxRuntimeException("Object layer 'collisioni'not found in the map");
         }
-
-        /* DEBUG
-        for (MapObject object : collisionObjects) {
-            System.out.println("Object Type: " + object.getClass().getSimpleName());
-            System.out.println("Object Properties: " + object.getProperties());
-        }*/
     }
 
     // Scale the collision objects

@@ -26,7 +26,6 @@ public class PlayerInputManager {
         Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            System.out.println("shoot function called");
             player.shoot();
         }
         // Check attack key separately

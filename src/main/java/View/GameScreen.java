@@ -49,7 +49,7 @@ public class GameScreen extends ScreenAdapter {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.player = Player.getInstance();
         this.playerInputManager = new PlayerInputManager(player);
-        this.mapModel = new MapModel();
+        this.mapModel = MapModel.getInstance();
         this.enemyManager = new EnemyManager();
         this.enemyManager.initializeEnemies();
         this.player.setEnemies(enemyManager.getEnemies());

@@ -1,5 +1,6 @@
 package Model.Enemies;
 
+import Model.MapModel;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -11,18 +12,26 @@ public class Enemy {
     private final int enemyWidth = 32;
     private final int enemyHeight = 32;
     private EnemyState currentState;
-    private EnemyAnimationManager animationManager;
+    private final EnemyAnimationManager animationManager;
     private boolean damageAnimationComplete = true;
     private final Array<EnemyState> enemyStates = Array.with(EnemyState.DAMAGE_1,EnemyState.DAMAGE_2, EnemyState.DAMAGE_3);
+    private final MapModel mapModel = MapModel.getInstance();
 
+    //variabili per il movimento del nemico
+    private final boolean isMoving;
+    private int movementSpeed = 1;
+    private float movementTimer = 0f;
+    private float movementDuration = 3f;
+    private char currentDirection = 'w';
 
-    public Enemy(int initialHealth, int damage , int startX, int startY){
+    public Enemy(int initialHealth, int damage , int startX, int startY, boolean isMoving){
         this.health = initialHealth;
         this.damage = damage;
         this.enemyX = startX;
         this.enemyY = startY;
         this.currentState = EnemyState.IDLE;
         this.animationManager = new EnemyAnimationManager();
+        this.isMoving = isMoving;
     }
 
     public void update(float delta){
@@ -36,11 +45,60 @@ public class Enemy {
                 // Transition back to idle state
                 currentState = EnemyState.IDLE;
                 damageAnimationComplete = true; // Reset the flag
-
-                // Print a message after the state transition
             }
         }
 
+
+        if(isMoving) {
+            movementTimer += delta;
+
+            // Change movement direction every 'movementDuration' seconds
+            if (movementTimer >= movementDuration) {
+                movementTimer = 0f;
+                currentDirection = getRandomDirection();
+            }
+            // Move the enemy based on the current direction
+            moveEnemy(delta);
+        }
+    }
+
+    private void moveEnemy(float delta) {
+        if(!enemyStates.contains(currentState,true)) {
+            switch (currentDirection) {
+                case 'w':
+                    if (isCollision(enemyX, enemyY + movementSpeed)) {
+                        enemyY += movementSpeed;
+                    }
+                    break;
+                case 's':
+                    if (isCollision(enemyX, enemyY - movementSpeed)) {
+                        enemyY -= movementSpeed;
+                    }
+                    break;
+                case 'a':
+                    if (isCollision(enemyX - movementSpeed, enemyY)) {
+                        enemyX -= movementSpeed;
+                    }
+                    break;
+                case 'd':
+                    if (isCollision(enemyX + movementSpeed, enemyY)) {
+                        enemyX += movementSpeed;
+                    }
+                    break;
+            }
+        }
+    }
+
+    public boolean isCollision(float x, float y) {
+        //check for collision with map object
+        return !mapModel.isCollisionWithScaledObjects(x, y, 32 + 15, 32 + 15);
+
+    }
+
+    private char getRandomDirection() {
+        char[] directions = {'w', 's', 'a', 'd'};
+        int randomIndex = (int) (Math.random() * directions.length);
+        return directions[randomIndex];
     }
 
     public void takeDamage(int damage) {
@@ -78,5 +136,9 @@ public class Enemy {
 
     public float getEnemyHeight() {
         return enemyHeight * 3;
+    }
+
+    public boolean getIsMoving(){
+        return this.isMoving;
     }
 }

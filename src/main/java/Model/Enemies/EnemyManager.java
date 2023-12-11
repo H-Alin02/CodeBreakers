@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnemyManager {
-    private List<Enemy> enemies;
+    private final List<Enemy> enemies;
     private final EnemyAnimationManager animationManager;
 
     public EnemyManager(){
@@ -15,12 +15,16 @@ public class EnemyManager {
     public void initializeEnemies(){
         // Add enemies to the EnemyManager
         // Offset from tile x = -20 , y = -10
-        enemies.add(new Enemy(100000, 10, 172, 1142));
-        enemies.add(new Enemy(100000, 10, 492 , 1142));
-        enemies.add(new Enemy(100000, 10, 300, 886));
-        enemies.add(new Enemy(100000, 10, 1452, 374));
-        enemies.add(new Enemy(100000, 10, 1260, 246));
-        enemies.add(new Enemy(100000, 10, 1580, 118));
+        enemies.add(new Enemy(100000, 10, 172, 1142, false));
+        enemies.add(new Enemy(100000, 10, 492 , 1142, false));
+        enemies.add(new Enemy(100000, 10, 300, 886, false));
+        enemies.add(new Enemy(100000, 10, 1452, 374, false));
+        enemies.add(new Enemy(100000, 10, 1260, 246, false));
+        enemies.add(new Enemy(100000, 10, 1580, 118, false));
+
+        //Moving enemies
+        enemies.add(new Enemy(100000, 10, 300, 118, true));
+
     }
 
     public void update( float delta){

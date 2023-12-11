@@ -44,7 +44,7 @@ public class Player {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
-        mapModel = new MapModel();
+        mapModel = MapModel.getInstance();
         enemyManager = new EnemyManager();
         setEnemies(enemyManager.getEnemies());
         bullets = new ArrayList<>();
@@ -251,10 +251,6 @@ public class Player {
                     break;
             }
         }
-        System.out.println("Player state : " + currentState);
-        /*Bullet bullet = new Bullet(getPlayerX(), getPlayerY(), bulletSpeed, getDirection());
-        bullet.setBulletState(BulletState.SHOOT);
-        bullets.add(bullet);*/
     }
 
     public void moveUp() {
@@ -298,28 +294,24 @@ public class Player {
 
     public void attackUp() {
         currentState = PlayerState.ATTACK_UP;
-        //System.out.println("ATTACK_UP");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackDown() {
         currentState = PlayerState.ATTACK_DOWN;
-        //System.out.println("ATTACK_DOWN");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackRight() {
         currentState = PlayerState.ATTACK_RIGHT;
-        //System.out.println("ATTACK_RIGHT");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackLeft() {
         currentState = PlayerState.ATTACK_LEFT;
-        //System.out.println("ATTACK_LEFT");
         isAttacking = true;
         animationManager.resetAttack();
     }
