@@ -1,13 +1,20 @@
 package View;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen extends ScreenAdapter {
@@ -19,18 +26,104 @@ public class MainMenuScreen extends ScreenAdapter {
         stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(),Boot.INSTANCE.getScreenHeight() ,camera));
         Gdx.input.setInputProcessor(stage);
 
+        // Carica l'immagine PNG dal tuo progetto
+        Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
+        Texture logoImage = new Texture(Gdx.files.internal("MainMenu/Logo_gioco.png"));
+
+        // Crea un'istanza di Image utilizzando la texture
+        Image background = new Image(backgroundImage);
+        Image logo = new Image(logoImage);
+
+        // Posiziona l'immagine in modo che copra l'intero Stage
+        background.setSize(stage.getWidth(), stage.getHeight());
+        logo.setSize(stage.getWidth()/2, stage.getHeight()/2f);
+        logo.setPosition(300,500);
+
+        // Aggiungi l'Image al tuo Stage in modo che sia disegnato sotto gli altri attori
+        stage.addActor(background);
+        stage.addActor(logo);
+
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
-        Label.LabelStyle textStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
-        textStyle.font.getData().setScale(3); // Imposta la dimensione del testo
 
-        Label gameTitle = new Label("CODEBREAKERS\n     The revenge", textStyle);
-        Label startGame = new Label("Premi Invio per iniziare il gioco", textStyle);
 
-        table.add(gameTitle).padBottom(200).row(); // Aggiunge il titolo con uno spazio alla fine
-        table.add(startGame).padBottom(20).row(); // Aggiunge il testo con uno spazio alla fine
+
+
+        // Aggiungi pulsanti
+        TextButton startButton = createTextButton("Start Game");
+        TextButton loadButton = createTextButton("Load Game");
+        TextButton optionsButton = createTextButton("Options");
+
+        // Aggiungi azione per la transizione alla schermata di gioco quando il pulsante viene premuto
+        startButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
+            }
+        });
+
+        // Aggiungi azioni per i pulsanti "Load Game" e "Options"
+        loadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Aggiungi qui la logica per il pulsante "Load Game"
+                System.out.println("Load Game clicked");
+            }
+        });
+
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Aggiungi qui la logica per il pulsante "Options"
+                System.out.println("Options clicked");
+            }
+        });
+
+        table.add(startButton).padBottom(20).row();
+        table.add(loadButton).padBottom(20).row();
+        table.add(optionsButton).padBottom(20).row();
+
+    }
+
+    private TextButton createTextButton(String text) {
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+
+        // Stile del testo normale
+        buttonStyle.font = new BitmapFont();
+        buttonStyle.font.getData().setScale(2f);
+        // Migliora la risoluzione della scritta dopo lo Scale
+        buttonStyle.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        // Colore del testo normale
+        buttonStyle.fontColor = Color.WHITE;
+
+        // Colore del testo quando il pulsante è focused
+        buttonStyle.overFontColor = Color.YELLOW; // Puoi cambiare il colore del testo focused secondo le tue preferenze
+
+        // Colore del testo quando il pulsante è attivo (premuto)
+        buttonStyle.downFontColor = Color.RED; // Puoi cambiare il colore del testo quando il pulsante è attivo secondo le tue preferenze
+
+        // Crea un TextButton direttamente impostando il colore del testo
+        TextButton button = new TextButton(text, buttonStyle);
+
+        // Aggiungi un ChangeListener per gestire il cambio di focus
+        button.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Cambia il colore del testo in base allo stato del pulsante
+                if (button.isPressed()) {
+                    button.getLabel().setColor(buttonStyle.downFontColor);
+                    button.getLabel().setColor(buttonStyle.fontColor);
+                } else if (button.isOver()) {
+                    button.getLabel().setColor(buttonStyle.overFontColor);
+                } else {
+                    button.getLabel().setColor(buttonStyle.fontColor);
+                }
+            }
+        });
+        return button;
     }
 
     @Override
@@ -44,11 +137,6 @@ public class MainMenuScreen extends ScreenAdapter {
 
         stage.act();
         stage.draw();
-
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            //((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(this.camera));
-            Boot.INSTANCE.setScreen(new GameScreen(this.camera));
-        }
     }
 
     @Override
