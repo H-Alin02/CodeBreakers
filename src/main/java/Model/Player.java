@@ -48,8 +48,6 @@ public class Player {
         enemyManager = new EnemyManager();
         setEnemies(enemyManager.getEnemies());
         bullets = new ArrayList<>();
-
-
     }
 
     public static Player getInstance() {
