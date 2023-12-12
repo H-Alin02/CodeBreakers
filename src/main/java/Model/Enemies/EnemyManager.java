@@ -31,11 +31,18 @@ public class EnemyManager {
         enemies.add(dummyEnemyCreator.createEnemy(1580, 118));
 
         //Moving enemies
-        enemies.add(metalRobotCreator.createEnemy(300,118));
+        enemies.add(metalRobotCreator.createEnemy(150,118));
+        enemies.add(metalRobotCreator.createEnemy(350,118));
+        enemies.add(metalRobotCreator.createEnemy(500,118));
+
+        enemies.add(metalRobotCreator.createEnemy(1452,1142));
+        enemies.add(metalRobotCreator.createEnemy(1260,1142));
+        enemies.add(metalRobotCreator.createEnemy(1580,886));
 
     }
 
     public void update( float delta){
+        enemies.removeIf(Enemy::isDead);
         for(Enemy enemy : enemies){
             enemy.update(delta);
         }

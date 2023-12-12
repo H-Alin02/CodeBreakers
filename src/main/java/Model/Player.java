@@ -37,6 +37,8 @@ public class Player {
     private final int PLAYER_BULLET_DAMAGE = 10;
     private float bulletSpeed = 10;
 
+
+
     private List<Enemy> enemies;
     private List<Bullet> bullets;
 
@@ -64,6 +66,7 @@ public class Player {
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
+        enemyManager.update(delta);
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
         updateShootTimer(delta);
@@ -363,6 +366,9 @@ public class Player {
             animationManager.updateAnimSpeed(0.1f);
 
         this.SPEED = SPEED;
+    }
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 
     public char getDirection() {

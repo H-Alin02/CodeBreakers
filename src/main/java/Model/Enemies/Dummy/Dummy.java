@@ -1,8 +1,8 @@
 package Model.Enemies.Dummy;
 
 import Model.Enemies.Enemy;
-import Model.MapModel;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class Dummy implements Enemy {
@@ -11,19 +11,29 @@ public class Dummy implements Enemy {
     private int enemyY;
     private final int enemyWidth = 32;
     private final int enemyHeight = 32;
+
+    //Hit box
+    private int HitBoxX;
+    private int HitBoxY;
+    private final int  HitBoxWidht = 42;
+    private final int  HitBoxHeight = 51;
+    private final Rectangle hitBox;
+
     private DummyState currentState;
     private final DummyAnimationManager animationManager;
     private boolean damageAnimationComplete = true;
     private final Array<DummyState> enemyStates = Array.with(DummyState.DAMAGE_1, DummyState.DAMAGE_2, DummyState.DAMAGE_3);
-    private final MapModel mapModel = MapModel.getInstance();
 
 
     public Dummy(int initialHealth , int startX, int startY){
         this.health = initialHealth;
         this.enemyX = startX;
         this.enemyY = startY;
+        this.HitBoxX = enemyX + 8;
+        this.HitBoxY = enemyY + 6;
         this.currentState = DummyState.IDLE;
         this.animationManager = new DummyAnimationManager();
+        this.hitBox = new Rectangle(HitBoxX, HitBoxY, HitBoxWidht, HitBoxHeight);
     }
 
     @Override
@@ -79,5 +89,15 @@ public class Dummy implements Enemy {
 
     public float getEnemyHeight() {
         return enemyHeight * 3;
+    }
+
+    @Override
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
+
+    @Override
+    public boolean isDead() {
+        return currentState == DummyState.DEAD ;
     }
 }

@@ -1,6 +1,7 @@
 package Model.Enemies;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public interface Enemy {
     void update(float delta);
@@ -10,4 +11,7 @@ public interface Enemy {
     float getEnemyY();
     float getEnemyWidth();
     float getEnemyHeight();
+    Rectangle getHitBox();
+
+    boolean isDead();
 }
