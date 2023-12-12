@@ -14,4 +14,6 @@ public interface Enemy {
     Rectangle getHitBox();
 
     boolean isDead();
+
+    boolean isDamageAnimationComplete();
 }

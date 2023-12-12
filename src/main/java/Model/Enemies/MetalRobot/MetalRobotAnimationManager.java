@@ -12,6 +12,8 @@ public class MetalRobotAnimationManager {
     private final Animation<TextureRegion> walkAnimation2;
     private final Animation<TextureRegion> hitAnimation1;
     private final Animation<TextureRegion> hitAnimation2;
+    private final Animation<TextureRegion> deadAnimation1;
+    private final Animation<TextureRegion> deadAnimation2;
     private float stateTime;
 
     public MetalRobotAnimationManager(){
@@ -60,6 +62,20 @@ public class MetalRobotAnimationManager {
             hitFrames2.add(new TextureRegion(new Texture("enemies/MetalRobot/Hit2/Hit" + i + ".png")));
         }
         hitAnimation2 = new Animation<>(0.07f, hitFrames2, Animation.PlayMode.NORMAL);
+
+        //Dead animation1
+        Array<TextureRegion> deadFrames1 = new Array<>();
+        for (int i = 1; i<=12; i++){
+            deadFrames1.add(new TextureRegion(new Texture("enemies/MetalRobot/Dead1/Dead" + i + ".png")));
+        }
+        deadAnimation1 = new Animation<>(0.07f, deadFrames1, Animation.PlayMode.NORMAL);
+
+        //Dead animation1
+        Array<TextureRegion> deadFrames2 = new Array<>();
+        for (int i = 1; i<=12; i++){
+            deadFrames2.add(new TextureRegion(new Texture("enemies/MetalRobot/Dead2/Dead" + i + ".png")));
+        }
+        deadAnimation2 = new Animation<>(0.07f, deadFrames2, Animation.PlayMode.NORMAL);
     }
 
     public void update(float delta){
@@ -75,15 +91,18 @@ public class MetalRobotAnimationManager {
             case WALK2 -> walkAnimation2.getKeyFrame(stateTime, true);
             case HIT1 -> hitAnimation1.getKeyFrame(stateTime, false);
             case HIT2 -> hitAnimation2.getKeyFrame(stateTime, false);
-            case DEAD -> null;
+            case DEAD1 -> deadAnimation1.getKeyFrame(stateTime, false);
+            case DEAD2 -> deadAnimation2.getKeyFrame(stateTime, false);
         };
     }
 
     public boolean isDamageAnimationFinished(MetalRobotState state){
         return switch (state) {
-            case IDLE1, IDLE2, WALK1, WALK2, DEAD -> false;
+            case IDLE1, IDLE2, WALK1, WALK2 -> false;
             case HIT1 -> hitAnimation1.isAnimationFinished(stateTime);
             case HIT2 -> hitAnimation2.isAnimationFinished(stateTime);
+            case DEAD1 -> deadAnimation1.isAnimationFinished(stateTime);
+            case DEAD2 -> deadAnimation2.isAnimationFinished(stateTime);
         };
     }
 

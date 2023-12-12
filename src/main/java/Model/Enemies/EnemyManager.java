@@ -42,7 +42,7 @@ public class EnemyManager {
     }
 
     public void update( float delta){
-        enemies.removeIf(Enemy::isDead);
+        enemies.removeIf(enemy -> enemy.isDead() && enemy.isDamageAnimationComplete());
         for(Enemy enemy : enemies){
             enemy.update(delta);
         }

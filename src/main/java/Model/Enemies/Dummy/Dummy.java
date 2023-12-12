@@ -100,4 +100,9 @@ public class Dummy implements Enemy {
     public boolean isDead() {
         return currentState == DummyState.DEAD ;
     }
+
+    @Override
+    public boolean isDamageAnimationComplete() {
+        return damageAnimationComplete;
+    }
 }

@@ -26,7 +26,9 @@ public class MetalRobot implements Enemy {
 
     private final MetalRobotAnimationManager animationManager;
     private boolean damageAnimationComplete = true;
-    private final Array<MetalRobotState> enemyStates = Array.with(MetalRobotState.HIT1, MetalRobotState.HIT2);
+    private boolean deadAnimationComplete = true;
+    private final Array<MetalRobotState> enemyHitStates = Array.with(MetalRobotState.HIT1, MetalRobotState.HIT2);
+    private final Array<MetalRobotState> enemyDeadStates = Array.with(MetalRobotState.DEAD1, MetalRobotState.DEAD2);
     private final MapModel mapModel = MapModel.getInstance();
 
     //variabili per il movimento del nemico
@@ -48,7 +50,7 @@ public class MetalRobot implements Enemy {
     public void update(float delta) {
         animationManager.update(delta);
         // Check for damage state and animation completion
-        if (enemyStates.contains(currentState,true) && !damageAnimationComplete) {
+        if (enemyHitStates.contains(currentState,true) && !damageAnimationComplete) {
             // Print information for debugging
             System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
 
@@ -56,6 +58,16 @@ public class MetalRobot implements Enemy {
                 // Transition back to idle state
                 currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
                 damageAnimationComplete = true; // Reset the flag
+            }
+        }
+
+        if (enemyDeadStates.contains(currentState,true) && !deadAnimationComplete) {
+            // Print information for debugging
+            System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
+
+            if (animationManager.isDamageAnimationFinished(currentState)) {
+                // Transition back to idle state
+                deadAnimationComplete = true; // Reset the flag
             }
         }
 
@@ -69,7 +81,7 @@ public class MetalRobot implements Enemy {
         }
 
         // Move the enemy based on the current direction
-        if(currentState != MetalRobotState.HIT1 && currentState != MetalRobotState.HIT2){
+        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
             moveEnemy();
         }
 
@@ -176,19 +188,22 @@ public class MetalRobot implements Enemy {
 
     @Override
     public void takeDamage(int damage) {
-        health -= damage;
+        if(!enemyDeadStates.contains(currentState, true)) {
+            health -= damage;
+            // Check if the enemy is still alive
+            if (health <= 0) {
+                // Implement logic for enemy death or removal from the game
+                // For example, set the enemy state to a death state and stop animations
+                deadAnimationComplete = false;
+                currentState = (flip == 'a') ? MetalRobotState.DEAD1 : MetalRobotState.DEAD2;
+                animationManager.resetDamage();
 
-        // Check if the enemy is still alive
-        if (health <= 0) {
-            // Implement logic for enemy death or removal from the game
-            // For example, set the enemy state to a death state and stop animations
-            currentState = MetalRobotState.DEAD;
-            animationManager.resetDamage();
-        } else {
-            // If the enemy is still alive, play the damage animation
-            currentState = (flip == 'a') ? MetalRobotState.HIT1 : MetalRobotState.HIT2;
-            animationManager.resetDamage();
-            damageAnimationComplete = false;
+            } else {
+                // If the enemy is still alive, play the damage animation
+                currentState = (flip == 'a') ? MetalRobotState.HIT1 : MetalRobotState.HIT2;
+                animationManager.resetDamage();
+                damageAnimationComplete = false;
+            }
         }
     }
 
@@ -198,7 +213,12 @@ public class MetalRobot implements Enemy {
 
     @Override
     public boolean isDead() {
-        return currentState == MetalRobotState.DEAD;
+        return currentState == MetalRobotState.DEAD1 || currentState == MetalRobotState.DEAD2;
+    }
+
+    @Override
+    public boolean isDamageAnimationComplete() {
+        return deadAnimationComplete;
     }
 
     public TextureRegion getCurrentFrame(){
@@ -221,4 +241,6 @@ public class MetalRobot implements Enemy {
     public float getEnemyHeight() {
         return enemyHeight * 3;
     }
+
+
 }
