@@ -230,13 +230,6 @@ public class Player {
                 enemyCollision = true;
             }
         }
-
-
-        /*for (Enemy enemy : enemies){
-            if(isCollisionWithAttackArea(x,y,PLAYER_WIDTH + 15,PLAYER_HEIGHT + 15,enemy))
-                enemyCollision = true;
-        }*/
-
         //check for collision with map object
         return mapModel.isCollisionWithScaledObjects(x+8, y+6, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
 
@@ -267,6 +260,18 @@ public class Player {
                     animationManager.resetShoot();
                     break;
             }
+        }
+    }
+
+    public void takeDamage(int damage){
+        this.playerLife -= damage;
+        if (playerLife <= 0) {
+            // Implement logic for enemy death or removal from the game
+            // For example, set the enemy state to a death state and stop animations
+            System.out.println("PLAYER IS DEAD - GAME OVER");
+
+        } else {
+            System.out.println("PLAYER HIT , OUCH!! , LIFE = " + playerLife);
         }
     }
 
@@ -389,6 +394,10 @@ public class Player {
 
     public char getDirection() {
         return direction;
+    }
+
+    public int getPlayerLife(){
+        return playerLife;
     }
 
     public void setDirection(char direction) {

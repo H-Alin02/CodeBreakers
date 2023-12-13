@@ -35,9 +35,9 @@ public class EnemyManager {
         enemies.add(metalRobotCreator.createEnemy(350,118));
         enemies.add(metalRobotCreator.createEnemy(500,118));
 
-        enemies.add(metalRobotCreator.createEnemy(1452,1142));
+        /*enemies.add(metalRobotCreator.createEnemy(1452,1142));
         enemies.add(metalRobotCreator.createEnemy(1260,1142));
-        enemies.add(metalRobotCreator.createEnemy(1580,886));
+        enemies.add(metalRobotCreator.createEnemy(1580,886));*/
 
     }
 

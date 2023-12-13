@@ -4,6 +4,9 @@ import Model.Enemies.Enemy;
 import Model.MapModel;
 import Model.Player;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -26,21 +29,27 @@ public class MetalRobot implements Enemy {
     private final MetalRobotAnimationManager animationManager;
     private boolean damageAnimationComplete = true;
     private boolean deadAnimationComplete = true;
+    private boolean attackAnimationComplete = true;
     private final Array<MetalRobotState> enemyHitStates = Array.with(MetalRobotState.HIT1, MetalRobotState.HIT2);
     private final Array<MetalRobotState> enemyDeadStates = Array.with(MetalRobotState.DEAD1, MetalRobotState.DEAD2);
+    private final Array<MetalRobotState> enemyAttackStates = Array.with(MetalRobotState.ATTACK1, MetalRobotState.ATTACK2);
     private final MapModel mapModel = MapModel.getInstance();
 
     //variabili per il movimento del nemico
-    private int movementSpeed = 2;
+    private int movementSpeed = 3;
     private float movementTimer = 0f;
     private float movementDuration = 2f;
     private char currentDirection = 'w';
     private char flip = 'a';
 
     // Range di movimento del nemico (puoi regolare questo valore)
-    private float movementRange = 300f;
+    private float chasingArea = 350f;
     private float distanceToPlayer;
     private boolean isChasing = false;
+    private boolean isAttacking = false;
+    private float attackRange = 90f;
+    private float attackTimer = 0f;
+    private float timeBetweenAttacks = 2f;
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -54,11 +63,8 @@ public class MetalRobot implements Enemy {
     public void update(float delta) {
         animationManager.update(delta);
         // Check for damage state and animation completion
-        if (enemyHitStates.contains(currentState,true) && !damageAnimationComplete) {
-            // Print information for debugging
-            System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
-
-            if (animationManager.isDamageAnimationFinished(currentState)) {
+        if (enemyHitStates.contains(currentState,true) && !damageAnimationComplete ) {
+            if (animationManager.isAnimationFinished(currentState)) {
                 // Transition back to idle state
                 currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
                 damageAnimationComplete = true; // Reset the flag
@@ -66,12 +72,20 @@ public class MetalRobot implements Enemy {
         }
 
         if (enemyDeadStates.contains(currentState,true) && !deadAnimationComplete) {
-            // Print information for debugging
-            System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
-
-            if (animationManager.isDamageAnimationFinished(currentState)) {
+            if (animationManager.isAnimationFinished(currentState)) {
                 // Transition back to idle state
                 deadAnimationComplete = true; // Reset the flag
+            }
+        }
+
+        // Check for attack state and animation completion
+        if (enemyAttackStates.contains(currentState,true) && !attackAnimationComplete ) {
+            if (animationManager.isAnimationFinished(currentState)) {
+                // Transition back to idle state
+                currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
+                if(distanceToPlayer < attackRange) player.takeDamage(damage);
+                damageAnimationComplete = true; // Reset the flag
+                isAttacking = false;
             }
         }
 
@@ -82,19 +96,61 @@ public class MetalRobot implements Enemy {
             movementTimer = 0f;
             currentDirection = getRandomDirection();
         }
+
         // Move the enemy based on the current direction
-        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true) && !isChasing){
-            moveEnemy();
+        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
+            if(!isAttacking) {
+                if (isChasing) {
+                    moveTowardsPlayer();
+                    attackTimer += delta;
+                    if (distanceToPlayer < attackRange && attackTimer >= timeBetweenAttacks) {
+                        System.out.println("Enemy ready to attack ");
+                        currentState = (flip == 'a') ? MetalRobotState.ATTACK1 : MetalRobotState.ATTACK2;
+                        animationManager.resetDamage();
+                        attackAnimationComplete = false;
+                        isAttacking = true;
+                        attackTimer = 0f;
+                    }
+                } else {
+                    moveEnemy();
+                }
+            }
         }
 
-        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)) {
-            distanceToPlayer = calculateDistanceToPlayer();
-            // Se il giocatore è nel range di movimento, muovi il nemico verso di lui
-            if (distanceToPlayer < movementRange) {
-                isChasing = true;
-                moveTowardsPlayer();
-            }else isChasing = false;
+        distanceToPlayer = calculateDistance(player.getPlayerX(), player.getPlayerY());
+        isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
+    }
+
+    private boolean hasLineOfSight() {
+        float playerX = player.getPlayerX();
+        float playerY = player.getPlayerY();
+
+        float startX = enemyX;
+        float startY = enemyY;
+
+        // Itera su tutti gli oggetti (muri, ecc.) e altri nemici
+        for (Enemy otherEnemy : player.getEnemies()) {
+            if (otherEnemy != this) {
+                if (Intersector.intersectSegmentRectangle(startX, startY, playerX, playerY, otherEnemy.getHitBox())) {
+                    // Collisione con un altro nemico, no Line of Sight
+                    return false;
+                }
+            }
         }
+
+        // Verifica anche eventuali collisioni con gli oggetti della mappa
+        for (MapObject object : mapModel.getScaledCollisionObjects()) {
+            if (object instanceof RectangleMapObject) {
+                Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+                if (Intersector.intersectSegmentRectangle(startX, startY, playerX, playerY, rectangle)) {
+                    // Collisione con un oggetto, no Line of Sight
+                    return false;
+                }
+            }
+        }
+
+        // Se il loop è completato senza restituire, c'è Line of Sight
+        return true;
     }
 
     private void moveTowardsPlayer() {
@@ -170,11 +226,12 @@ public class MetalRobot implements Enemy {
                 break;
             // Idle
             case 'f' :
+                //currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
                 break;
         }
     }
 
-    private float calculateDistanceToPlayer() {
+    private float calculateDistance(float x , float y) {
         float playerX = player.getPlayerX();
         float playerY = player.getPlayerY();
         float dx = enemyX - playerX;
@@ -183,8 +240,8 @@ public class MetalRobot implements Enemy {
     }
 
     private void moveDownLeft() {
-        currentState = MetalRobotState.WALK1;
         if (!isCollision(enemyX - movementSpeed, enemyY - movementSpeed)) {
+            currentState = MetalRobotState.WALK1;
             enemyX -= movementSpeed-1;
             enemyY -= movementSpeed-1;
             flip = 'a';
@@ -192,8 +249,8 @@ public class MetalRobot implements Enemy {
     }
 
     private void moveDownRight() {
-        currentState = MetalRobotState.WALK2;
         if (!isCollision(enemyX + movementSpeed, enemyY - movementSpeed)) {
+            currentState = MetalRobotState.WALK2;
             enemyX += movementSpeed-1;
             enemyY -= movementSpeed-1;
             flip = 'd';
@@ -201,8 +258,8 @@ public class MetalRobot implements Enemy {
     }
 
     private void moveUpRight() {
-        currentState = MetalRobotState.WALK2;
         if (!isCollision(enemyX + movementSpeed, enemyY + movementSpeed)) {
+            currentState = MetalRobotState.WALK2;
             enemyX += movementSpeed-1;
             enemyY += movementSpeed-1;
             flip = 'd';
@@ -210,8 +267,8 @@ public class MetalRobot implements Enemy {
     }
 
     private void moveUpLeft() {
-        currentState = MetalRobotState.WALK1;
         if (!isCollision(enemyX - movementSpeed, enemyY + movementSpeed)) {
+            currentState = MetalRobotState.WALK1;
             enemyX -= movementSpeed-1;
             enemyY += movementSpeed-1;
             flip = 'a';
@@ -219,16 +276,16 @@ public class MetalRobot implements Enemy {
     }
 
     private void moveRight() {
-        currentState = MetalRobotState.WALK2;
         if (!isCollision(enemyX + movementSpeed, enemyY)) {
+            currentState = MetalRobotState.WALK2;
             enemyX += movementSpeed;
             flip = 'd';
         }
     }
 
     private void moveLeft() {
-        currentState = MetalRobotState.WALK1;
         if (!isCollision(enemyX - movementSpeed, enemyY)) {
+            currentState = MetalRobotState.WALK1;
             enemyX -= movementSpeed;
             flip = 'a';
         }
@@ -236,12 +293,14 @@ public class MetalRobot implements Enemy {
 
     private void moveDown() {
         if (!isCollision(enemyX, enemyY - movementSpeed)) {
+            currentState = (flip == 'a') ? MetalRobotState.WALK1 : MetalRobotState.WALK2;
             enemyY -= movementSpeed;
         }
     }
 
     private void moveUp() {
         if (!isCollision(enemyX, enemyY + movementSpeed)) {
+            currentState = (flip == 'a') ? MetalRobotState.WALK1 : MetalRobotState.WALK2;
             enemyY += movementSpeed;
         }
     }
@@ -301,6 +360,10 @@ public class MetalRobot implements Enemy {
         return currentState == MetalRobotState.DEAD1 || currentState == MetalRobotState.DEAD2;
     }
 
+    public boolean isChasing(){
+        return isChasing;
+    }
+
     @Override
     public boolean isDamageAnimationComplete() {
         return deadAnimationComplete;
@@ -325,6 +388,10 @@ public class MetalRobot implements Enemy {
 
     public float getEnemyHeight() {
         return enemyHeight * 3;
+    }
+
+    public float getChasingArea(){
+        return chasingArea;
     }
 
 }

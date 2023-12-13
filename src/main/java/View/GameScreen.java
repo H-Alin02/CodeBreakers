@@ -4,6 +4,7 @@ import Controller.PlayerInputManager;
 import Model.Bullet;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
+import Model.Enemies.MetalRobot.MetalRobot;
 import Model.MapModel;
 import Model.Object.ObjectManager;
 import Model.Object.ObjectManagerFactory;
@@ -143,9 +144,23 @@ public class GameScreen extends ScreenAdapter {
     private void renderEnemyDebug() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
         for(Enemy enemy : player.getEnemies()){
             Rectangle rect = enemy.getHitBox();
             shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            if(enemy instanceof MetalRobot){
+                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, ((MetalRobot)enemy).getChasingArea());
+                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, 90);
+                // Draw the line of sight
+                if (((MetalRobot)enemy).isChasing()) {
+                    shapeRenderer.line(
+                            enemy.getEnemyX() + enemy.getEnemyWidth() / 2,
+                            enemy.getEnemyY() + enemy.getEnemyHeight() / 2,
+                            player.getPlayerX() + player.getPLAYER_WIDTH() / 2,
+                            player.getPlayerY() + player.getPLAYER_HEIGHT() / 2
+                    );
+                }
+            }
         }
         shapeRenderer.end();
     }
@@ -155,5 +170,9 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.dispose();
         hud.dispose();
         batch.dispose();
+    }
+
+    public Hud getHud() {
+        return hud;
     }
 }

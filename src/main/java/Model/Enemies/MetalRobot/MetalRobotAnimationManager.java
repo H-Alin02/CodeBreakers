@@ -14,6 +14,8 @@ public class MetalRobotAnimationManager {
     private final Animation<TextureRegion> hitAnimation2;
     private final Animation<TextureRegion> deadAnimation1;
     private final Animation<TextureRegion> deadAnimation2;
+    private final Animation<TextureRegion> attackAnimation1;
+    private final Animation<TextureRegion> attackAnimation2;
     private float stateTime;
 
     public MetalRobotAnimationManager(){
@@ -70,12 +72,26 @@ public class MetalRobotAnimationManager {
         }
         deadAnimation1 = new Animation<>(0.07f, deadFrames1, Animation.PlayMode.NORMAL);
 
-        //Dead animation1
+        //Dead animation2
         Array<TextureRegion> deadFrames2 = new Array<>();
         for (int i = 1; i<=12; i++){
             deadFrames2.add(new TextureRegion(new Texture("enemies/MetalRobot/Dead2/Dead" + i + ".png")));
         }
         deadAnimation2 = new Animation<>(0.07f, deadFrames2, Animation.PlayMode.NORMAL);
+
+        //Attack animation1
+        Array<TextureRegion> attackFrames1 = new Array<>();
+        for (int i = 1; i<=10; i++){
+            attackFrames1.add(new TextureRegion(new Texture("enemies/MetalRobot/Attack1/Attack" + i + ".png")));
+        }
+        attackAnimation1 = new Animation<>(0.07f, attackFrames1, Animation.PlayMode.NORMAL);
+
+        //Attack animation2
+        Array<TextureRegion> attackFrames2 = new Array<>();
+        for (int i = 1; i<=10; i++){
+            attackFrames2.add(new TextureRegion(new Texture("enemies/MetalRobot/Attack2/Attack" + i + ".png")));
+        }
+        attackAnimation2 = new Animation<>(0.07f, attackFrames2, Animation.PlayMode.NORMAL);
     }
 
     public void update(float delta){
@@ -93,16 +109,20 @@ public class MetalRobotAnimationManager {
             case HIT2 -> hitAnimation2.getKeyFrame(stateTime, false);
             case DEAD1 -> deadAnimation1.getKeyFrame(stateTime, false);
             case DEAD2 -> deadAnimation2.getKeyFrame(stateTime, false);
+            case ATTACK1 -> attackAnimation1.getKeyFrame(stateTime, false);
+            case ATTACK2 -> attackAnimation2.getKeyFrame(stateTime, false);
         };
     }
 
-    public boolean isDamageAnimationFinished(MetalRobotState state){
+    public boolean isAnimationFinished(MetalRobotState state){
         return switch (state) {
             case IDLE1, IDLE2, WALK1, WALK2 -> false;
             case HIT1 -> hitAnimation1.isAnimationFinished(stateTime);
             case HIT2 -> hitAnimation2.isAnimationFinished(stateTime);
             case DEAD1 -> deadAnimation1.isAnimationFinished(stateTime);
             case DEAD2 -> deadAnimation2.isAnimationFinished(stateTime);
+            case ATTACK1 -> attackAnimation1.isAnimationFinished(stateTime);
+            case ATTACK2 -> attackAnimation2.isAnimationFinished(stateTime);
         };
     }
 
