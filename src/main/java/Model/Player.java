@@ -36,6 +36,14 @@ public class Player {
     private final int PLAYER_DAMAGE = 10;
     private final int PLAYER_BULLET_DAMAGE = 10;
     private float bulletSpeed = 10;
+    private int playerLife = 100;
+
+    // HitBox
+    private int HitBoxX;
+    private int HitBoxY;
+    private final int  HitBoxWidht = 42;
+    private final int  HitBoxHeight = 51;
+    private Rectangle hitBox;
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
@@ -44,12 +52,10 @@ public class Player {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
-        mapModel = new MapModel();
+        mapModel = MapModel.getInstance();
         enemyManager = new EnemyManager();
         setEnemies(enemyManager.getEnemies());
         bullets = new ArrayList<>();
-
-
     }
 
     public static Player getInstance() {
@@ -66,6 +72,7 @@ public class Player {
     public void update(float delta) {
         inputManager.handleInput();
         animationManager.update(delta);
+        enemyManager.update(delta);
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
         updateShootTimer(delta);
@@ -216,12 +223,15 @@ public class Player {
 
     public boolean isCollision(float x, float y) {
         boolean enemyCollision = false;
-        for (Enemy enemy : enemies){
-            if(isCollisionWithAttackArea(x,y,PLAYER_WIDTH + 15,PLAYER_HEIGHT + 15,enemy))
+        hitBox = new Rectangle(x + 8, y + 6, HitBoxWidht, HitBoxHeight);
+        for(Enemy enemy : enemies){
+            Rectangle enemyHitBox = enemy.getHitBox();
+            if(enemyHitBox != null && hitBox.overlaps(enemyHitBox)){
                 enemyCollision = true;
+            }
         }
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
+        return mapModel.isCollisionWithScaledObjects(x+8, y+6, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
 
     }
 
@@ -251,10 +261,18 @@ public class Player {
                     break;
             }
         }
-        System.out.println("Player state : " + currentState);
-        /*Bullet bullet = new Bullet(getPlayerX(), getPlayerY(), bulletSpeed, getDirection());
-        bullet.setBulletState(BulletState.SHOOT);
-        bullets.add(bullet);*/
+    }
+
+    public void takeDamage(int damage){
+        this.playerLife -= damage;
+        if (playerLife <= 0) {
+            // Implement logic for enemy death or removal from the game
+            // For example, set the enemy state to a death state and stop animations
+            System.out.println("PLAYER IS DEAD - GAME OVER");
+
+        } else {
+            System.out.println("PLAYER HIT , OUCH!! , LIFE = " + playerLife);
+        }
     }
 
     public void moveUp() {
@@ -298,28 +316,24 @@ public class Player {
 
     public void attackUp() {
         currentState = PlayerState.ATTACK_UP;
-        //System.out.println("ATTACK_UP");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackDown() {
         currentState = PlayerState.ATTACK_DOWN;
-        //System.out.println("ATTACK_DOWN");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackRight() {
         currentState = PlayerState.ATTACK_RIGHT;
-        //System.out.println("ATTACK_RIGHT");
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackLeft() {
         currentState = PlayerState.ATTACK_LEFT;
-        //System.out.println("ATTACK_LEFT");
         isAttacking = true;
         animationManager.resetAttack();
     }
@@ -374,9 +388,16 @@ public class Player {
 
         this.SPEED = SPEED;
     }
+    public List<Enemy> getEnemies() {
+        return enemies;
+    }
 
     public char getDirection() {
         return direction;
+    }
+
+    public int getPlayerLife(){
+        return playerLife;
     }
 
     public void setDirection(char direction) {

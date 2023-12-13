@@ -4,6 +4,7 @@ import Controller.PlayerInputManager;
 import Model.Bullet;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
+import Model.Enemies.MetalRobot.MetalRobot;
 import Model.MapModel;
 import Model.Object.ObjectManager;
 import Model.Object.ObjectManagerFactory;
@@ -49,7 +50,7 @@ public class GameScreen extends ScreenAdapter {
         this.box2DDebugRenderer = new Box2DDebugRenderer();
         this.player = Player.getInstance();
         this.playerInputManager = new PlayerInputManager(player);
-        this.mapModel = new MapModel();
+        this.mapModel = MapModel.getInstance();
         this.enemyManager = new EnemyManager();
         this.enemyManager.initializeEnemies();
         this.player.setEnemies(enemyManager.getEnemies());
@@ -103,8 +104,9 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().act(delta); //act the Hud
         hud.getStage().draw(); //draw the Hud
         //DEBUG
-        //renderDebug();
-        //renderPlayerCollisionDebug();
+        renderDebug();
+        renderPlayerCollisionDebug();
+        renderEnemyDebug();
     }
 
     private void renderPlayerCollisionDebug() {
@@ -139,10 +141,38 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
     }
 
+    private void renderEnemyDebug() {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        for(Enemy enemy : player.getEnemies()){
+            Rectangle rect = enemy.getHitBox();
+            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            if(enemy instanceof MetalRobot){
+                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, ((MetalRobot)enemy).getChasingArea());
+                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, 90);
+                // Draw the line of sight
+                if (((MetalRobot)enemy).isChasing()) {
+                    shapeRenderer.line(
+                            enemy.getEnemyX() + enemy.getEnemyWidth() / 2,
+                            enemy.getEnemyY() + enemy.getEnemyHeight() / 2,
+                            player.getPlayerX() + player.getPLAYER_WIDTH() / 2,
+                            player.getPlayerY() + player.getPLAYER_HEIGHT() / 2
+                    );
+                }
+            }
+        }
+        shapeRenderer.end();
+    }
+
     @Override
     public void dispose(){
         shapeRenderer.dispose();
         hud.dispose();
         batch.dispose();
+    }
+
+    public Hud getHud() {
+        return hud;
     }
 }

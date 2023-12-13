@@ -12,4 +12,5 @@ public interface ObjectGame {
     Rectangle getArea();
     boolean isRemove();
     void setRemove(boolean b);
+    String getName();
 }

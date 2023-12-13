@@ -15,12 +15,14 @@ public class Chest implements ObjectGame{
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
     private final float SCALE = 2f;
+    private  String name ;
 
     public Chest(int chestX, int chestY){
         this.chestX = chestX;
         this.chestY = chestY;
         texture = new TextureRegion(new Texture(Gdx.files.internal("object/chest/chest.png"))) ;
 
+        name = "chest";
         remove = false;
     }
     @Override
@@ -55,4 +57,6 @@ public class Chest implements ObjectGame{
     public void setRemove(boolean b) {
         remove = b;
     }
+    @Override
+    public String getName(){return name;}
 }

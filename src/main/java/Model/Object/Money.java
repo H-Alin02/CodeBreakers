@@ -15,12 +15,14 @@ public class Money implements ObjectGame{
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
     private final float SCALE = 1.2f;
+    private String name ;
 
     public Money(int moneyX, int moneyY){
         this.moneyX = moneyX;
         this.moneyY = moneyY;
         texture = new TextureRegion(new Texture(Gdx.files.internal("object/money/money.png")));
 
+        name = "money";
         remove = false;
     }
     @Override
@@ -55,4 +57,6 @@ public class Money implements ObjectGame{
     public void setRemove(boolean b) {
         remove = b;
     }
+    @Override
+    public String getName(){return name;}
 }
