@@ -103,8 +103,9 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().act(delta); //act the Hud
         hud.getStage().draw(); //draw the Hud
         //DEBUG
-        //renderDebug();
-        //renderPlayerCollisionDebug();
+        renderDebug();
+        renderPlayerCollisionDebug();
+        renderEnemyDebug();
     }
 
     private void renderPlayerCollisionDebug() {
@@ -135,6 +136,16 @@ public class GameScreen extends ScreenAdapter {
                 shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             }
             // Add additional checks for other object types if needed
+        }
+        shapeRenderer.end();
+    }
+
+    private void renderEnemyDebug() {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for(Enemy enemy : player.getEnemies()){
+            Rectangle rect = enemy.getHitBox();
+            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
         }
         shapeRenderer.end();
     }

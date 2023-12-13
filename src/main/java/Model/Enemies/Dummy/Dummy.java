@@ -29,8 +29,8 @@ public class Dummy implements Enemy {
         this.health = initialHealth;
         this.enemyX = startX;
         this.enemyY = startY;
-        this.HitBoxX = enemyX + 8;
-        this.HitBoxY = enemyY + 6;
+        this.HitBoxX = enemyX + (9 * 3);
+        this.HitBoxY = enemyY + (6 * 3);
         this.currentState = DummyState.IDLE;
         this.animationManager = new DummyAnimationManager();
         this.hitBox = new Rectangle(HitBoxX, HitBoxY, HitBoxWidht, HitBoxHeight);

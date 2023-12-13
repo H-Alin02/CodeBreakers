@@ -4,8 +4,9 @@ import Model.Enemies.Enemy;
 import Model.MapModel;
 import Model.Player;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class MetalRobot implements Enemy {
     private int health;
@@ -18,8 +19,6 @@ public class MetalRobot implements Enemy {
     private Player player = Player.getInstance();
 
     //Hit box
-    private int HitBoxX;
-    private int HitBoxY;
     private final int  HitBoxWidht = 42;
     private final int  HitBoxHeight = 51;
     private Rectangle hitBox;
@@ -32,11 +31,16 @@ public class MetalRobot implements Enemy {
     private final MapModel mapModel = MapModel.getInstance();
 
     //variabili per il movimento del nemico
-    private int movementSpeed = 1;
+    private int movementSpeed = 2;
     private float movementTimer = 0f;
     private float movementDuration = 2f;
     private char currentDirection = 'w';
     private char flip = 'a';
+
+    // Range di movimento del nemico (puoi regolare questo valore)
+    private float movementRange = 300f;
+    private float distanceToPlayer;
+    private boolean isChasing = false;
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -73,96 +77,177 @@ public class MetalRobot implements Enemy {
 
 
         movementTimer += delta;
-
         // Change movement direction every 'movementDuration' seconds
         if (movementTimer >= movementDuration) {
             movementTimer = 0f;
             currentDirection = getRandomDirection();
         }
-
         // Move the enemy based on the current direction
-        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
+        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true) && !isChasing){
             moveEnemy();
         }
 
-
+        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)) {
+            distanceToPlayer = calculateDistanceToPlayer();
+            // Se il giocatore è nel range di movimento, muovi il nemico verso di lui
+            if (distanceToPlayer < movementRange) {
+                isChasing = true;
+                moveTowardsPlayer();
+            }else isChasing = false;
+        }
     }
+
+    private void moveTowardsPlayer() {
+        float playerX = player.getPlayerX();
+        float playerY = player.getPlayerY();
+
+        // Calcola la direzione verso cui muoversi
+        float angle = MathUtils.atan2(playerY - enemyY, playerX - enemyX);
+
+        // Imposta la direzione del nemico in base all'angolo di movimento
+        setMovementDirection(angle);
+    }
+
+    private void setMovementDirection(float angle) {
+        // Calcola la direzione in base all'angolo
+        float degrees = MathUtils.radiansToDegrees * angle;
+
+        // Scegli la direzione in base all'angolo
+        if (degrees >= -22.5f && degrees < 22.5f) {
+            moveRight(); // Muovi a destra
+        } else if (degrees >= 22.5f && degrees < 67.5f) {
+            moveUpRight(); // Muovi in alto a destra
+        } else if (degrees >= 67.5f && degrees < 112.5f) {
+           moveUp(); // Muovi in alto
+        } else if (degrees >= 112.5f && degrees < 157.5f) {
+            moveUpLeft(); // Muovi in alto a sinistra
+        } else if (degrees >= 157.5f || degrees < -157.5f) {
+            moveLeft(); // Muovi a sinistra
+        } else if (degrees >= -157.5f && degrees < -112.5f) {
+            moveDownLeft(); // Muovi in basso a sinistra
+        } else if (degrees >= -112.5f && degrees < -67.5f) {
+            moveDown(); // Muovi in basso
+        } else if (degrees >= -67.5f && degrees < -22.5f) {
+            moveDownRight(); // Muovi in basso a destra
+        }
+    }
+
 
 
     private void moveEnemy() {
         switch (currentDirection) {
             // Move Up
             case 'w':
-                if (!isCollision(enemyX, enemyY + movementSpeed)) {
-                    enemyY += movementSpeed;
-                }
+                moveUp();
                 break;
             // Move Down
             case 's':
-                if (!isCollision(enemyX, enemyY - movementSpeed)) {
-                    enemyY -= movementSpeed;
-                }
+                moveDown();
                 break;
             // Move Left
             case 'a':
-                currentState = MetalRobotState.WALK1;
-                if (!isCollision(enemyX - movementSpeed, enemyY)) {
-                    enemyX -= movementSpeed;
-                    flip = 'a';
-                }
+                moveLeft();
                 break;
             // Move Right
             case 'd':
-                currentState = MetalRobotState.WALK2;
-                if (!isCollision(enemyX + movementSpeed, enemyY)) {
-                    enemyX += movementSpeed;
-                    flip = 'd';
-                }
+                moveRight();
                 break;
             // Move Up-Left
             case 'q' :
-                currentState = MetalRobotState.WALK1;
-                if (!isCollision(enemyX - movementSpeed, enemyY + movementSpeed)) {
-                    enemyX -= movementSpeed;
-                    enemyY += movementSpeed;
-                    flip = 'a';
-                }
+                moveUpLeft();
                 break;
             // Move Up-Right
             case 'e' :
-               currentState = MetalRobotState.WALK2;
-               if (!isCollision(enemyX + movementSpeed, enemyY + movementSpeed)) {
-                   enemyX += movementSpeed;
-                   enemyY += movementSpeed;
-                   flip = 'd';
-               }
-               break;
+                moveUpRight();
+                break;
             // Move Down-Right
             case 'x' :
-               currentState = MetalRobotState.WALK2;
-               if (!isCollision(enemyX + movementSpeed, enemyY - movementSpeed)) {
-                   enemyX += movementSpeed;
-                   enemyY -= movementSpeed;
-                   flip = 'd';
-               }
-               break;
+                moveDownRight();
+                break;
             // Move Down-Left
             case 'z' :
-               currentState = MetalRobotState.WALK1;
-               if (!isCollision(enemyX - movementSpeed, enemyY - movementSpeed)) {
-                   enemyX -= movementSpeed;
-                   enemyY -= movementSpeed;
-                   flip = 'a';
-               }
-               break;
+                moveDownLeft();
+                break;
             // Idle
             case 'f' :
                 break;
         }
     }
 
+    private float calculateDistanceToPlayer() {
+        float playerX = player.getPlayerX();
+        float playerY = player.getPlayerY();
+        float dx = enemyX - playerX;
+        float dy = enemyY - playerY;
+        return (float) Math.sqrt(dx * dx + dy * dy);
+    }
+
+    private void moveDownLeft() {
+        currentState = MetalRobotState.WALK1;
+        if (!isCollision(enemyX - movementSpeed, enemyY - movementSpeed)) {
+            enemyX -= movementSpeed-1;
+            enemyY -= movementSpeed-1;
+            flip = 'a';
+        }
+    }
+
+    private void moveDownRight() {
+        currentState = MetalRobotState.WALK2;
+        if (!isCollision(enemyX + movementSpeed, enemyY - movementSpeed)) {
+            enemyX += movementSpeed-1;
+            enemyY -= movementSpeed-1;
+            flip = 'd';
+        }
+    }
+
+    private void moveUpRight() {
+        currentState = MetalRobotState.WALK2;
+        if (!isCollision(enemyX + movementSpeed, enemyY + movementSpeed)) {
+            enemyX += movementSpeed-1;
+            enemyY += movementSpeed-1;
+            flip = 'd';
+        }
+    }
+
+    private void moveUpLeft() {
+        currentState = MetalRobotState.WALK1;
+        if (!isCollision(enemyX - movementSpeed, enemyY + movementSpeed)) {
+            enemyX -= movementSpeed-1;
+            enemyY += movementSpeed-1;
+            flip = 'a';
+        }
+    }
+
+    private void moveRight() {
+        currentState = MetalRobotState.WALK2;
+        if (!isCollision(enemyX + movementSpeed, enemyY)) {
+            enemyX += movementSpeed;
+            flip = 'd';
+        }
+    }
+
+    private void moveLeft() {
+        currentState = MetalRobotState.WALK1;
+        if (!isCollision(enemyX - movementSpeed, enemyY)) {
+            enemyX -= movementSpeed;
+            flip = 'a';
+        }
+    }
+
+    private void moveDown() {
+        if (!isCollision(enemyX, enemyY - movementSpeed)) {
+            enemyY -= movementSpeed;
+        }
+    }
+
+    private void moveUp() {
+        if (!isCollision(enemyX, enemyY + movementSpeed)) {
+            enemyY += movementSpeed;
+        }
+    }
+
     public boolean isCollision(float x, float y) {
-        hitBox = new Rectangle(x+8, y+6, HitBoxWidht, HitBoxHeight);
+        hitBox = new Rectangle(x+(8*3), y+(6*3), HitBoxWidht, HitBoxHeight);
         //check for collision with map object, other enemies or player
 
         for(Enemy enemy : player.getEnemies()){
@@ -241,6 +326,5 @@ public class MetalRobot implements Enemy {
     public float getEnemyHeight() {
         return enemyHeight * 3;
     }
-
 
 }

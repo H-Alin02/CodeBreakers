@@ -36,8 +36,14 @@ public class Player {
     private final int PLAYER_DAMAGE = 10;
     private final int PLAYER_BULLET_DAMAGE = 10;
     private float bulletSpeed = 10;
+    private int playerLife = 100;
 
-
+    // HitBox
+    private int HitBoxX;
+    private int HitBoxY;
+    private final int  HitBoxWidht = 42;
+    private final int  HitBoxHeight = 51;
+    private Rectangle hitBox;
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
@@ -217,12 +223,22 @@ public class Player {
 
     public boolean isCollision(float x, float y) {
         boolean enemyCollision = false;
-        for (Enemy enemy : enemies){
+        hitBox = new Rectangle(x + 8, y + 6, HitBoxWidht, HitBoxHeight);
+        for(Enemy enemy : enemies){
+            Rectangle enemyHitBox = enemy.getHitBox();
+            if(enemyHitBox != null && hitBox.overlaps(enemyHitBox)){
+                enemyCollision = true;
+            }
+        }
+
+
+        /*for (Enemy enemy : enemies){
             if(isCollisionWithAttackArea(x,y,PLAYER_WIDTH + 15,PLAYER_HEIGHT + 15,enemy))
                 enemyCollision = true;
-        }
+        }*/
+
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x, y, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
+        return mapModel.isCollisionWithScaledObjects(x+8, y+6, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
 
     }
 
