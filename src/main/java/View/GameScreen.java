@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -39,6 +40,8 @@ public class GameScreen extends ScreenAdapter {
     private ObjectManagerFactory objects;
     private Hud hud;
     private FitViewport playerViewport;
+    private float shakeDuration = 0f;
+    private float shakeIntensity = 5f;
 
     public GameScreen(OrthographicCamera camera) {
         this.batch = new SpriteBatch();
@@ -77,7 +80,17 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta){
         update(delta);
+
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
+        if (shakeDuration > 0) {
+            float shakeX = (MathUtils.random() - 0.5f) * 2* shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
+            float shakeY = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerY() + player.getPLAYER_HEIGHT() / 2;
+
+            camera.position.set(shakeX, shakeY, 0);
+            shakeDuration -= delta;
+        }
+
+        // Applica lo shake della camera se necessario
         camera.update();
         //clear the screen
         Gdx.gl.glClearColor(0,0,0,1);
@@ -99,6 +112,8 @@ public class GameScreen extends ScreenAdapter {
         for(Bullet bullet : player.getBullets()){
             batch.draw(bullet.getCurrentFrame(), bullet.getX(), bullet.getY(), 32, 32);
         }
+
+
         batch.end();
         batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
         hud.getStage().act(delta); //act the Hud
@@ -107,6 +122,11 @@ public class GameScreen extends ScreenAdapter {
         renderDebug();
         renderPlayerCollisionDebug();
         renderEnemyDebug();
+    }
+
+    public void shakeCamera(float duration , float intensity){
+        shakeDuration = duration;
+        shakeIntensity = intensity;
     }
 
     private void renderPlayerCollisionDebug() {
@@ -120,7 +140,8 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.setColor(Color.MAGENTA);
 
         // Draw a rectangle around the player's collision box
-        shapeRenderer.rect(player.getPlayerX() + (player.getPLAYER_WIDTH()/4) , player.getPlayerY() , player.getPLAYER_WIDTH()/2+15, player.getPLAYER_HEIGHT()/2+15);
+        Rectangle rectangle = player.getHitBox();
+        shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 
         // End drawing shapes
         shapeRenderer.end();
@@ -150,14 +171,14 @@ public class GameScreen extends ScreenAdapter {
             shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             if(enemy instanceof MetalRobot){
                 shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, ((MetalRobot)enemy).getChasingArea());
-                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, 90);
+                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, 100);
                 // Draw the line of sight
                 if (((MetalRobot)enemy).isChasing()) {
                     shapeRenderer.line(
-                            enemy.getEnemyX() + enemy.getEnemyWidth() / 2,
-                            enemy.getEnemyY() + enemy.getEnemyHeight() / 2,
-                            player.getPlayerX() + player.getPLAYER_WIDTH() / 2,
-                            player.getPlayerY() + player.getPLAYER_HEIGHT() / 2
+                            rect.x + rect.width/2,
+                            rect.y + rect.height/2,
+                            player.getHitBox().x + player.getHitBox().width/2,
+                            player.getHitBox().y + player.getHitBox().height/2
                     );
                 }
             }

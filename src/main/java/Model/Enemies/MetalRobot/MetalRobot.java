@@ -3,6 +3,8 @@ package Model.Enemies.MetalRobot;
 import Model.Enemies.Enemy;
 import Model.MapModel;
 import Model.Player;
+import View.Boot;
+import View.GameScreen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -22,6 +24,8 @@ public class MetalRobot implements Enemy {
     private Player player = Player.getInstance();
 
     //Hit box
+    private int hitBoxX;
+    private int hitBoxY;
     private final int  HitBoxWidht = 42;
     private final int  HitBoxHeight = 51;
     private Rectangle hitBox;
@@ -47,9 +51,11 @@ public class MetalRobot implements Enemy {
     private float distanceToPlayer;
     private boolean isChasing = false;
     private boolean isAttacking = false;
-    private float attackRange = 90f;
+    private float attackRange = 100f;
     private float attackTimer = 0f;
-    private float timeBetweenAttacks = 2f;
+    private float timeBetweenAttacks = 1f;
+
+    private GameScreen gameScreen;
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -61,7 +67,15 @@ public class MetalRobot implements Enemy {
     }
     @Override
     public void update(float delta) {
+        if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
         animationManager.update(delta);
+
+        hitBoxX = enemyX + (8*3);
+        hitBoxY = enemyY + (6*3);
+
+        distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
+        isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
+
         // Check for damage state and animation completion
         if (enemyHitStates.contains(currentState,true) && !damageAnimationComplete ) {
             if (animationManager.isAnimationFinished(currentState)) {
@@ -79,16 +93,42 @@ public class MetalRobot implements Enemy {
         }
 
         // Check for attack state and animation completion
-        if (enemyAttackStates.contains(currentState,true) && !attackAnimationComplete ) {
+        if (enemyAttackStates.contains(currentState,true) && !attackAnimationComplete ) { // Se il nemico è in uno stato Attack e l'animazione è iniziata
+            if(attackTimer >= 0.5 && attackTimer <= 0.51){ // se sono passati almeno 0,5 sec per l'animazione
+                attackPlayer();
+            }
             if (animationManager.isAnimationFinished(currentState)) {
-                // Transition back to idle state
-                currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
-                if(distanceToPlayer < attackRange) player.takeDamage(damage);
-                damageAnimationComplete = true; // Reset the flag
                 isAttacking = false;
+                attackAnimationComplete = true; // Reset the flag
+                currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
             }
         }
 
+        // Move the enemy based on the current direction
+        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
+            System.out.println("Current state = " + this.currentState + " is chasing = " + this.isChasing + " isAttacing = " + this.isAttacking);
+            if (isChasing) {
+                // Move towards the player only if not attacking
+                if (!isAttacking) {
+                    moveTowardsPlayer();
+                }
+                attackTimer += delta;
+                if (distanceToPlayer < attackRange && attackTimer >= timeBetweenAttacks && !enemyHitStates.contains(currentState, true)) {
+                    if (flip == 'a') currentState = MetalRobotState.ATTACK1;
+                    else {
+                        currentState = MetalRobotState.ATTACK2;
+                        flip = 'd';
+                    }
+                    isAttacking = true;
+                    animationManager.resetDamage();
+                    attackAnimationComplete = false;
+                    attackTimer = 0f;
+                }
+            } else {
+                moveEnemy();
+            }
+
+        }
 
         movementTimer += delta;
         // Change movement direction every 'movementDuration' seconds
@@ -96,37 +136,14 @@ public class MetalRobot implements Enemy {
             movementTimer = 0f;
             currentDirection = getRandomDirection();
         }
-
-        // Move the enemy based on the current direction
-        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
-            if(!isAttacking) {
-                if (isChasing) {
-                    moveTowardsPlayer();
-                    attackTimer += delta;
-                    if (distanceToPlayer < attackRange && attackTimer >= timeBetweenAttacks) {
-                        System.out.println("Enemy ready to attack ");
-                        currentState = (flip == 'a') ? MetalRobotState.ATTACK1 : MetalRobotState.ATTACK2;
-                        animationManager.resetDamage();
-                        attackAnimationComplete = false;
-                        isAttacking = true;
-                        attackTimer = 0f;
-                    }
-                } else {
-                    moveEnemy();
-                }
-            }
-        }
-
-        distanceToPlayer = calculateDistance(player.getPlayerX(), player.getPlayerY());
-        isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
     }
 
     private boolean hasLineOfSight() {
-        float playerX = player.getPlayerX();
-        float playerY = player.getPlayerY();
+        float playerX = player.getHitBox().x + player.getHitBox().width/2;
+        float playerY = player.getHitBox().y + player.getHitBox().height/2;
 
-        float startX = enemyX;
-        float startY = enemyY;
+        float startX = hitBox.x + hitBox.width / 2;
+        float startY = hitBox.y + hitBox.height / 2;
 
         // Itera su tutti gli oggetti (muri, ecc.) e altri nemici
         for (Enemy otherEnemy : player.getEnemies()) {
@@ -154,11 +171,11 @@ public class MetalRobot implements Enemy {
     }
 
     private void moveTowardsPlayer() {
-        float playerX = player.getPlayerX();
-        float playerY = player.getPlayerY();
+        float playerX = player.getHitBox().x + player.getHitBox().width/2;;
+        float playerY = player.getHitBox().y + player.getHitBox().height/2;
 
         // Calcola la direzione verso cui muoversi
-        float angle = MathUtils.atan2(playerY - enemyY, playerX - enemyX);
+        float angle = MathUtils.atan2(playerY - hitBox.y + hitBox.height / 2, playerX - hitBox.x + hitBox.width / 2);
 
         // Imposta la direzione del nemico in base all'angolo di movimento
         setMovementDirection(angle);
@@ -188,6 +205,20 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    public void attackPlayer(){
+        float playerX = player.getHitBox().x + player.getHitBox().width/2;;
+        float playerY = player.getHitBox().y + player.getHitBox().height/2;
+        float angle = MathUtils.atan2(playerY - hitBox.y + hitBox.height / 2, playerX - hitBox.x + hitBox.width / 2) * MathUtils.radiansToDegrees;
+        System.out.println("Attacking player on angle ( " + angle + " )");
+
+        if(angle >= -60 && angle < 60){
+            //Attack Right
+            player.takeDamage(damage);
+        } else if (angle >= -120 && angle < 120){
+            //Attack Left
+            player.takeDamage(damage);
+        }
+    }
 
 
     private void moveEnemy() {
@@ -226,16 +257,14 @@ public class MetalRobot implements Enemy {
                 break;
             // Idle
             case 'f' :
-                //currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
+                currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
                 break;
         }
     }
 
     private float calculateDistance(float x , float y) {
-        float playerX = player.getPlayerX();
-        float playerY = player.getPlayerY();
-        float dx = enemyX - playerX;
-        float dy = enemyY - playerY;
+        float dx = hitBoxX - x;
+        float dy = hitBoxY - y;
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -341,12 +370,15 @@ public class MetalRobot implements Enemy {
                 deadAnimationComplete = false;
                 currentState = (flip == 'a') ? MetalRobotState.DEAD1 : MetalRobotState.DEAD2;
                 animationManager.resetDamage();
+                gameScreen.shakeCamera(0.3f, 4);
 
             } else {
                 // If the enemy is still alive, play the damage animation
                 currentState = (flip == 'a') ? MetalRobotState.HIT1 : MetalRobotState.HIT2;
                 animationManager.resetDamage();
                 damageAnimationComplete = false;
+                gameScreen.shakeCamera(0.3f, 4);
+                isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
             }
         }
     }
