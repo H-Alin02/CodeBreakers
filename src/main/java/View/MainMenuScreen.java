@@ -47,10 +47,6 @@ public class MainMenuScreen extends ScreenAdapter {
         table.setFillParent(true);
         stage.addActor(table);
 
-
-
-
-
         // Aggiungi pulsanti
         TextButton startButton = createTextButton("Start Game");
         TextButton loadButton = createTextButton("Load Game");
