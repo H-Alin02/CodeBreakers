@@ -75,6 +75,8 @@ public class GameScreen extends ScreenAdapter {
         playerInputManager.update(delta);
         enemyManager.update(delta);
         objects.update(delta);
+        hud.update();
+
     }
 
     @Override
@@ -115,9 +117,11 @@ public class GameScreen extends ScreenAdapter {
 
 
         batch.end();
+        hud.setPlayerLife(player.getPlayerLife());//sets playerLife on hud equal to player's playerLife
         batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
         hud.getStage().act(delta); //act the Hud
         hud.getStage().draw(); //draw the Hud
+
         //DEBUG
         renderDebug();
         renderPlayerCollisionDebug();

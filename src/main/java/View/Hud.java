@@ -13,8 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class Hud {
+
     private Stage stage;
     private FitViewport stageViewport;
+
+    private ProgressBar lifeBar;
+
+
+    private int playerLife= 1;
 
     public Hud(SpriteBatch spriteBatch) {
         stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
@@ -34,8 +40,8 @@ public class Hud {
         //life bar
         TextureRegionDrawable textureLifeBar = new TextureRegionDrawable(new TextureRegion(new Texture("hudAssets/barGreen_horizontalMid.png")));
         ProgressBar.ProgressBarStyle lifeBarStyle = new ProgressBar.ProgressBarStyle(skin.newDrawable("white", Color.DARK_GRAY), textureLifeBar);
-        ProgressBar lifeBar = new ProgressBar(0, 10, 0.5f, false, lifeBarStyle);
-        lifeBar.setValue(10);//<-- cambiare 10 con la vita del player
+        lifeBar = new ProgressBar(0, 100, 0.5f, false, lifeBarStyle);
+        lifeBar.setValue(playerLife);//<-- cambiare 10 con la vita del player
         lifeBarStyle.knobBefore = lifeBarStyle.knob;
         lifeBar.setSize(50, 10);
 
@@ -74,6 +80,19 @@ public class Hud {
 
     public Stage getStage() {
         return stage;
+    }
+
+    public int getPlayerLife() {
+        return playerLife;
+    }
+
+    public void setPlayerLife(int playerLife) {
+        this.playerLife = playerLife;
+    }
+
+    public void update() {
+        lifeBar.setValue(playerLife);
+
     }
 
     public void dispose(){
