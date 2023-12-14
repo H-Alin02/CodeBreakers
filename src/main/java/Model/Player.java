@@ -125,11 +125,11 @@ public class Player {
         if (isAttacking) {
             attackTimer += delta;
             if (attackTimer >= ATTACK_DURATION) {
+                inflictDamageToEnemies();
                 isAttacking = false;
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
-                inflictDamageToEnemies();
             }
         }
     }

@@ -51,9 +51,10 @@ public class MetalRobot implements Enemy {
     private float distanceToPlayer;
     private boolean isChasing = false;
     private boolean isAttacking = false;
+    private boolean hasAttacked = true;
     private float attackRange = 100f;
     private float attackTimer = 0f;
-    private float timeBetweenAttacks = 1f;
+    private float timeBetweenAttacks = 1.5f;
 
     private GameScreen gameScreen;
 
@@ -94,19 +95,21 @@ public class MetalRobot implements Enemy {
 
         // Check for attack state and animation completion
         if (enemyAttackStates.contains(currentState,true) && !attackAnimationComplete ) { // Se il nemico è in uno stato Attack e l'animazione è iniziata
-            if(attackTimer >= 0.5 && attackTimer <= 0.51){ // se sono passati almeno 0,5 sec per l'animazione
+            if(!hasAttacked &&attackTimer >= 0.50 && attackTimer <= 0.53){ // se sono passati almeno 0,5 sec per l'animazione
                 attackPlayer();
+                hasAttacked = true;
             }
             if (animationManager.isAnimationFinished(currentState)) {
                 isAttacking = false;
                 attackAnimationComplete = true; // Reset the flag
                 currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
+                hasAttacked = false;
             }
         }
 
+        System.out.println("Timer del attacco : " + attackTimer + "Stato del nemico : " + currentState);
         // Move the enemy based on the current direction
         if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
-            System.out.println("Current state = " + this.currentState + " is chasing = " + this.isChasing + " isAttacing = " + this.isAttacking);
             if (isChasing) {
                 // Move towards the player only if not attacking
                 if (!isAttacking) {
