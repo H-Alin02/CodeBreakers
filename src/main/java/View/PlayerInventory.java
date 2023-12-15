@@ -26,7 +26,7 @@ public class PlayerInventory {
         stage = new Stage(stageViewport,batch);
 
         Table table = new Table();
-        table.left().top();
+        table.right().top();
         table.setFillParent(true);
 
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));

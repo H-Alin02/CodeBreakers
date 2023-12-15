@@ -1,5 +1,6 @@
 package View;
 
+import Model.Player;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -16,10 +17,7 @@ public class Hud {
 
     private Stage stage;
     private FitViewport stageViewport;
-
     private ProgressBar lifeBar;
-
-
     private int playerLife= 1;
 
     public Hud(SpriteBatch spriteBatch) {
@@ -90,9 +88,8 @@ public class Hud {
         this.playerLife = playerLife;
     }
 
-    public void update() {
-        lifeBar.setValue(playerLife);
-
+    public void update(Player player) {
+        lifeBar.setValue(player.getPlayerLife());
     }
 
     public void dispose(){
