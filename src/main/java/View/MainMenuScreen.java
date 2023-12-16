@@ -80,7 +80,6 @@ public class MainMenuScreen extends ScreenAdapter {
         table.add(startButton).padBottom(20).row();
         table.add(loadButton).padBottom(20).row();
         table.add(optionsButton).padBottom(20).row();
-
     }
 
     private TextButton createTextButton(String text) {

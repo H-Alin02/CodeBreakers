@@ -14,47 +14,43 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class MetalRobot implements Enemy {
-    private int health;
-    private int damage;
-    private int enemyX;
-    private int enemyY;
-    private final int enemyWidth = 32;
-    private final int enemyHeight = 32;
-    private MetalRobotState currentState;
-    private Player player = Player.getInstance();
+    private int health; // Vita del nemico
+    private int damage; // Danno inflitto dal nemico
+    private int enemyX; // Posizione x del nemico sulla mappa
+    private int enemyY; // Posizione Y del nemico sulla mappa
+    private final int enemyWidth = 32; // Larghezza dell'immagine del nemico
+    private final int enemyHeight = 32; // Altezza dell'immagine del nemico
+    MetalRobotState currentState;  // Stato del nemico con enum ( per animazioni )
+    private RobotState currentRobotState; // Stato del nemico con Pattern STATE
+    private Player player = Player.getInstance(); // Istanza di Player
 
     //Hit box
-    private int hitBoxX;
-    private int hitBoxY;
-    private final int  HitBoxWidht = 42;
-    private final int  HitBoxHeight = 51;
-    private Rectangle hitBox;
+    private int hitBoxX; // Posizione x della HitBox del nemico
+    private int hitBoxY; // Posizione y della HitBox del nemico
+    private final int  HitBoxWidht = 42; // Larghezza della HitBox
+    private final int  HitBoxHeight = 51; // Altezza della HitBox
+    private Rectangle hitBox; // Oggetto rettangolare rappresentante la hitBox
 
-    private final MetalRobotAnimationManager animationManager;
+    private final MetalRobotAnimationManager animationManager; // Menager delle animazioni del nemico
+    // Flag per determinare la fine della animazioni di attacco , danno ricevuto e morte del nemico
     private boolean damageAnimationComplete = true;
     private boolean deadAnimationComplete = true;
-    private boolean attackAnimationComplete = true;
-    private final Array<MetalRobotState> enemyHitStates = Array.with(MetalRobotState.HIT1, MetalRobotState.HIT2);
-    private final Array<MetalRobotState> enemyDeadStates = Array.with(MetalRobotState.DEAD1, MetalRobotState.DEAD2);
+
+    //TODO eliminare le doppie animazioni per direzione sinistra e destra e inserire la funzione flip()
+    final Array<MetalRobotState> enemyHitStates = Array.with(MetalRobotState.HIT1, MetalRobotState.HIT2);
+    final Array<MetalRobotState> enemyDeadStates = Array.with(MetalRobotState.DEAD1, MetalRobotState.DEAD2);
     private final Array<MetalRobotState> enemyAttackStates = Array.with(MetalRobotState.ATTACK1, MetalRobotState.ATTACK2);
     private final MapModel mapModel = MapModel.getInstance();
 
     //variabili per il movimento del nemico
-    private int movementSpeed = 3;
-    private float movementTimer = 0f;
-    private float movementDuration = 2f;
-    private char currentDirection = 'w';
-    private char flip = 'a';
+    private final int movementSpeed = 3;
+    char flip = 'a';
 
     // Range di movimento del nemico (puoi regolare questo valore)
-    private float chasingArea = 350f;
-    private float distanceToPlayer;
+    private final float chasingArea = 350f;
+    float distanceToPlayer;
     private boolean isChasing = false;
-    private boolean isAttacking = false;
-    private boolean hasAttacked = true;
-    private float attackRange = 100f;
-    private float attackTimer = 0f;
-    private float timeBetweenAttacks = 1.5f;
+    private boolean hasAttacked = false;
 
     private GameScreen gameScreen;
 
@@ -63,7 +59,7 @@ public class MetalRobot implements Enemy {
         this.damage = damage;
         this.enemyX = startX;
         this.enemyY = startY;
-        this.currentState = MetalRobotState.IDLE1;
+        this.currentRobotState = new IdleState();
         this.animationManager = new MetalRobotAnimationManager();
     }
     @Override
@@ -73,6 +69,9 @@ public class MetalRobot implements Enemy {
 
         hitBoxX = enemyX + (8*3);
         hitBoxY = enemyY + (6*3);
+
+        currentRobotState.update(this,delta);
+        currentRobotState.enter(this);
 
         distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
         isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
@@ -92,53 +91,12 @@ public class MetalRobot implements Enemy {
                 deadAnimationComplete = true; // Reset the flag
             }
         }
+    }
 
-        // Check for attack state and animation completion
-        if (enemyAttackStates.contains(currentState,true) && !attackAnimationComplete ) { // Se il nemico è in uno stato Attack e l'animazione è iniziata
-            if(!hasAttacked &&attackTimer >= 0.50 && attackTimer <= 0.53){ // se sono passati almeno 0,5 sec per l'animazione
-                attackPlayer();
-                hasAttacked = true;
-            }
-            if (animationManager.isAnimationFinished(currentState)) {
-                isAttacking = false;
-                attackAnimationComplete = true; // Reset the flag
-                currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
-                hasAttacked = false;
-            }
-        }
-
-        System.out.println("Timer del attacco : " + attackTimer + "Stato del nemico : " + currentState);
-        // Move the enemy based on the current direction
-        if(!enemyDeadStates.contains(currentState,true) && !enemyHitStates.contains(currentState,true)){
-            if (isChasing) {
-                // Move towards the player only if not attacking
-                if (!isAttacking) {
-                    moveTowardsPlayer();
-                }
-                attackTimer += delta;
-                if (distanceToPlayer < attackRange && attackTimer >= timeBetweenAttacks && !enemyHitStates.contains(currentState, true)) {
-                    if (flip == 'a') currentState = MetalRobotState.ATTACK1;
-                    else {
-                        currentState = MetalRobotState.ATTACK2;
-                        flip = 'd';
-                    }
-                    isAttacking = true;
-                    animationManager.resetDamage();
-                    attackAnimationComplete = false;
-                    attackTimer = 0f;
-                }
-            } else {
-                moveEnemy();
-            }
-
-        }
-
-        movementTimer += delta;
-        // Change movement direction every 'movementDuration' seconds
-        if (movementTimer >= movementDuration) {
-            movementTimer = 0f;
-            currentDirection = getRandomDirection();
-        }
+    public void changeState(RobotState newState) {
+        currentRobotState.exit(this);
+        currentRobotState = newState;
+        currentRobotState.enter(this);
     }
 
     private boolean hasLineOfSight() {
@@ -173,7 +131,7 @@ public class MetalRobot implements Enemy {
         return true;
     }
 
-    private void moveTowardsPlayer() {
+    public void moveTowardsPlayer() {
         float playerX = player.getHitBox().x + player.getHitBox().width/2;;
         float playerY = player.getHitBox().y + player.getHitBox().height/2;
 
@@ -209,22 +167,32 @@ public class MetalRobot implements Enemy {
     }
 
     public void attackPlayer(){
-        float playerX = player.getHitBox().x + player.getHitBox().width/2;;
-        float playerY = player.getHitBox().y + player.getHitBox().height/2;
-        float angle = MathUtils.atan2(playerY - hitBox.y + hitBox.height / 2, playerX - hitBox.x + hitBox.width / 2) * MathUtils.radiansToDegrees;
-        System.out.println("Attacking player on angle ( " + angle + " )");
+        if (!enemyAttackStates.contains(currentState, true))
+            if(flip == 'a') {
+                currentState = MetalRobotState.ATTACK1;
+                animationManager.resetDamage();
+            }else{
+                currentState = MetalRobotState.ATTACK2;
+                animationManager.resetDamage();
+                flip = 'd';
+            }
 
-        if(angle >= -60 && angle < 60){
-            //Attack Right
-            player.takeDamage(damage);
-        } else if (angle >= -120 && angle < 120){
-            //Attack Left
-            player.takeDamage(damage);
+        // Check for attack state and animation completion
+        if (enemyAttackStates.contains(currentState,true)) { // Se il nemico è in uno stato Attack e l'animazione è iniziata
+            System.out.println(hasAttacked);
+            if(!hasAttacked){
+                System.out.println("Time to attack");
+                player.takeDamage(damage);
+                hasAttacked = true;
+            }
+            if (animationManager.isAnimationFinished(currentState)) {
+                System.out.println("Animation FInisced");
+                hasAttacked = false;
+            }
         }
     }
 
-
-    private void moveEnemy() {
+    public void moveEnemy(char currentDirection) {
         switch (currentDirection) {
             // Move Up
             case 'w':
@@ -356,12 +324,6 @@ public class MetalRobot implements Enemy {
 
     }
 
-    private char getRandomDirection() {
-        char[] directions = {'w', 's', 'a', 'd', 'q', 'e', 'x', 'z', 'f'};
-        int randomIndex = (int) (Math.random() * directions.length);
-        return directions[randomIndex];
-    }
-
     @Override
     public void takeDamage(int damage) {
         if(!enemyDeadStates.contains(currentState, true)) {
@@ -381,7 +343,7 @@ public class MetalRobot implements Enemy {
                 animationManager.resetDamage();
                 damageAnimationComplete = false;
                 gameScreen.shakeCamera(0.3f, 4);
-                isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
+                //isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
             }
         }
     }
@@ -429,4 +391,11 @@ public class MetalRobot implements Enemy {
         return chasingArea;
     }
 
+    public MetalRobotAnimationManager getAnimationManager() {
+        return this.animationManager;
+    }
+
+    public MetalRobotState getCurrentState() {
+        return this.currentState;
+    }
 }

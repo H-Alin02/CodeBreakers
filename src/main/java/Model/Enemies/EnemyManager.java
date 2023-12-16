@@ -15,7 +15,7 @@ public class EnemyManager {
 
     public EnemyManager(){
         this.enemies = new ArrayList<>();
-        this.animationManager = new DummyAnimationManager();
+        this.animationManager = new DummyAnimationManager(); // TODO Da eliminare , rimasto dalla vecchia implementazione
         this.dummyEnemyCreator = new DummyEnemyCreator();
         this.metalRobotCreator = new MetalRobotCreator();
     }
@@ -32,8 +32,8 @@ public class EnemyManager {
 
         //Moving enemies
         enemies.add(metalRobotCreator.createEnemy(150,118));
-        enemies.add(metalRobotCreator.createEnemy(350,118));
-        enemies.add(metalRobotCreator.createEnemy(500,118));
+        //enemies.add(metalRobotCreator.createEnemy(350,118));
+        //enemies.add(metalRobotCreator.createEnemy(500,118));
 
         /*enemies.add(metalRobotCreator.createEnemy(1452,1142));
         enemies.add(metalRobotCreator.createEnemy(1260,1142));
@@ -46,7 +46,7 @@ public class EnemyManager {
         for(Enemy enemy : enemies){
             enemy.update(delta);
         }
-        animationManager.update(delta);
+        animationManager.update(delta); // TODO Da eliminare , rimasto dalla vecchia implementazione
     }
 
     public List<Enemy> getEnemies() {
