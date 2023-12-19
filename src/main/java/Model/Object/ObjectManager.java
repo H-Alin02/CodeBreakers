@@ -7,39 +7,41 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Objects;
 
 
-public class ObjectManager implements ObjectManagerFactory{
-    private Array<ObjectGame> objects = new Array<>();
+public class ObjectManager {
+    private Array<ObjectGame> objects ;
+    private ChestCreator chest;
+    private CoinCreator coin;
+    private DiamondCreator diamond;
+    private KeyCreator key;
+    private MeatCreator meat;
+    private MoneyCreator money;
 
     private Player player;
     private Item item;
 
 
     public ObjectManager(){
+        this.objects = new Array<>();
         item = new Item();
         player = Player.getInstance();
-        Money money1 = new Money(100,300);
-        objects.add(money1);
+        this.chest = new ChestCreator();
+        this.coin = new CoinCreator();
+        this.diamond = new DiamondCreator();
+        this.key = new KeyCreator();
+        this.meat = new MeatCreator();
+        this.money = new MoneyCreator();
 
+    }
 
-        Key key1 = new Key(300,1000);
-        Key key2 = new Key(850,200);
-        objects.add(key1);
-        objects.add(key2);
-
-        Diamond diamond1 = new Diamond(850,850);
-        Diamond diamond2 = new Diamond(200,850);
-        objects.add(diamond1);
-        objects.add(diamond2);
-
-        Coin coin = new Coin(1600,300);
-        objects.add(coin);
-
-        Meat meat1 = new Meat(1600,1000);
-        objects.add(meat1);
-
-        Chest chest1 = new Chest(1650,1300);
-        objects.add(chest1);
-
+    public void initializeObject(){
+        objects.add(chest.createObject(1650,1300));
+        objects.add(coin.createObject(1600,300));
+        objects.add(diamond.createObject(850,850));
+        objects.add(diamond.createObject(200,850));
+        objects.add(key.createObject(300,1000));
+        objects.add(key.createObject(850,200));
+        objects.add(meat.createObject(1600,1000));
+        objects.add(money.createObject(100,300));
     }
 
     public void draw(SpriteBatch batch){

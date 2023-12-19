@@ -7,7 +7,6 @@ import Model.Enemies.EnemyManager;
 import Model.Enemies.MetalRobot.MetalRobot;
 import Model.MapModel;
 import Model.Object.ObjectManager;
-import Model.Object.ObjectManagerFactory;
 import Model.Player;
 import View.Hud.Hud;
 import com.badlogic.gdx.Gdx;
@@ -38,7 +37,7 @@ public class GameScreen extends ScreenAdapter {
     private MapModel mapModel;
     private EnemyManager enemyManager;
     private ShapeRenderer shapeRenderer;
-    private ObjectManagerFactory objects;
+    private ObjectManager objects;
     private Hud hud;
     private FitViewport playerViewport;
     private float shakeDuration = 0f;
@@ -60,6 +59,7 @@ public class GameScreen extends ScreenAdapter {
         this.player.setEnemies(enemyManager.getEnemies());
         this.shapeRenderer = new ShapeRenderer();
         this.objects = new ObjectManager();
+        this.objects.initializeObject();
     }
 
     @Override
