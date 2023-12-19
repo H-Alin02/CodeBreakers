@@ -1,9 +1,25 @@
 package Model.Enemies.MetalRobot;
 
 public class ChasingState implements RobotState{
-    private float attackRange = 100f;
-
+    private float attackRange = 90f;
     @Override
+    public RobotState runCurrentState(MetalRobot metalRobot, float delta) {
+        if(metalRobot.distanceToPlayer <= attackRange &&
+                !metalRobot.enemyHitStates.contains(metalRobot.currentState, true)){
+            return new AttackState();
+        } else if (metalRobot.distanceToPlayer > metalRobot.getChasingArea()) {
+            return  new IdleState();
+        }else {
+            // Logica specifica per lo stato di chasing
+            if(!metalRobot.enemyHitStates.contains(metalRobot.currentState,true) &&
+                    !metalRobot.enemyDeadStates.contains(metalRobot.currentState,true))
+                metalRobot.moveTowardsPlayer();
+        }
+
+        return this;
+    }
+
+    /*@Override
     public void update(MetalRobot metalRobot, float delta) {
         // Logica specifica per lo stato di chasing
         if(!metalRobot.enemyHitStates.contains(metalRobot.currentState,true) &&
@@ -29,4 +45,6 @@ public class ChasingState implements RobotState{
     public void exit(MetalRobot metalRobot) {
         // Logica specifica quando esce dallo stato di chasing
     }
+*/
+
 }

@@ -70,9 +70,9 @@ public class MetalRobot implements Enemy {
         hitBoxX = enemyX + (8*3);
         hitBoxY = enemyY + (6*3);
 
-        currentRobotState.update(this,delta);
-        currentRobotState.enter(this);
+        runStateMachine(delta);
 
+        System.out.println(currentRobotState + " | " + distanceToPlayer + " | " + currentState + " | " + hasAttacked);
         distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
         isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
 
@@ -93,10 +93,15 @@ public class MetalRobot implements Enemy {
         }
     }
 
-    public void changeState(RobotState newState) {
-        currentRobotState.exit(this);
-        currentRobotState = newState;
-        currentRobotState.enter(this);
+    public void runStateMachine(float delta){
+        RobotState nextState = currentRobotState.runCurrentState(this, delta);
+        if(nextState != null){
+            switchToNextState(nextState);
+        }
+    }
+
+    private void switchToNextState( RobotState nextState){
+        currentRobotState = nextState;
     }
 
     private boolean hasLineOfSight() {
@@ -168,26 +173,24 @@ public class MetalRobot implements Enemy {
 
     public void attackPlayer(){
         if (!enemyAttackStates.contains(currentState, true))
-            if(flip == 'a') {
-                currentState = MetalRobotState.ATTACK1;
-                animationManager.resetDamage();
-            }else{
-                currentState = MetalRobotState.ATTACK2;
-                animationManager.resetDamage();
-                flip = 'd';
-            }
-
-        // Check for attack state and animation completion
-        if (enemyAttackStates.contains(currentState,true)) { // Se il nemico è in uno stato Attack e l'animazione è iniziata
-            System.out.println(hasAttacked);
             if(!hasAttacked){
-                System.out.println("Time to attack");
-                player.takeDamage(damage);
+                if(flip == 'a') {
+                    currentState = MetalRobotState.ATTACK1;
+                    animationManager.resetDamage();
+                }else{
+                    currentState = MetalRobotState.ATTACK2;
+                    animationManager.resetDamage();
+                    flip = 'd';
+                }
                 hasAttacked = true;
             }
-            if (animationManager.isAnimationFinished(currentState)) {
-                System.out.println("Animation FInisced");
-                hasAttacked = false;
+
+        // Controlla lo stato di attacco e il completamento dell'animazione
+        if (enemyAttackStates.contains(currentState, true)) {
+            if (hasAttacked && animationManager.isAnimationFinished(currentState)) {
+                player.takeDamage(damage);
+                hasAttacked = false;  // Reimposta la flag dopo che l'animazione è terminata
+                currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
             }
         }
     }
@@ -234,8 +237,8 @@ public class MetalRobot implements Enemy {
     }
 
     private float calculateDistance(float x , float y) {
-        float dx = hitBoxX - x;
-        float dy = hitBoxY - y;
+        float dx = (hitBoxX + HitBoxWidht/2) - x;
+        float dy = (hitBoxY + HitBoxHeight/2) - y;
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
@@ -391,8 +394,8 @@ public class MetalRobot implements Enemy {
         return chasingArea;
     }
 
-    public MetalRobotAnimationManager getAnimationManager() {
-        return this.animationManager;
+    public void setHasAttacked(boolean hasAttacked) {
+        this.hasAttacked = hasAttacked;
     }
 
     public MetalRobotState getCurrentState() {

@@ -173,7 +173,7 @@ public class GameScreen extends ScreenAdapter {
             shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             if(enemy instanceof MetalRobot){
                 shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, ((MetalRobot)enemy).getChasingArea());
-                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, 100);
+                shapeRenderer.circle(enemy.getEnemyX() + enemy.getEnemyWidth() / 2, enemy.getEnemyY() + enemy.getEnemyHeight() / 2, 90);
                 // Draw the line of sight
                 if (((MetalRobot)enemy).isChasing()) {
                     shapeRenderer.line(
