@@ -9,6 +9,7 @@ import Model.MapModel;
 import Model.Object.ObjectManager;
 import Model.Object.ObjectManagerFactory;
 import Model.Player;
+import View.Hud.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
