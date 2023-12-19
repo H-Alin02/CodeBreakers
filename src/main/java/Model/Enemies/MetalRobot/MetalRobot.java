@@ -72,7 +72,6 @@ public class MetalRobot implements Enemy {
 
         runStateMachine(delta);
 
-        System.out.println(currentRobotState + " | " + distanceToPlayer + " | " + currentState + " | " + hasAttacked);
         distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
         isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
 

@@ -40,6 +40,7 @@ public class Player {
     private final int PLAYER_BULLET_DAMAGE = 10;
     private float bulletSpeed = 10;
     private int playerLife = 100;
+    private float sprintStat = 100;
 
     // HitBox
     private int HitBoxX; // Player x + 8
@@ -50,6 +51,7 @@ public class Player {
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
+    private boolean canRegenerateSprint = true;
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -98,6 +100,12 @@ public class Player {
 
         HitBoxX = playerX + (8 * 3);
         HitBoxY = playerY + (6 * 3);
+
+        if(canRegenerateSprint && sprintStat < 100){
+            sprintStat+=0.5;
+        }
+
+        //this.isSprinting = isSprinting && sprintStat > 10;
 
     }
 
@@ -387,14 +395,17 @@ public class Player {
     }
 
     public void setSPEED(int SPEED) {
-
         if (isSprinting) {
-            SPEED *= 1.5;
+            SPEED *= 2;
             animationManager.updateAnimSpeed(0.07f);
-        } else
+            sprintStat -= 1;
+            if(sprintStat <= 0){
+                this.isSprinting = false;
+            }
+        } else {
             animationManager.updateAnimSpeed(0.1f);
-
-        this.SPEED = SPEED;
+        }
+            this.SPEED = SPEED;
     }
     public List<Enemy> getEnemies() {
         return enemies;
@@ -408,6 +419,9 @@ public class Player {
         return playerLife;
     }
 
+    public float getPlayerStamina(){
+        return this.sprintStat;
+    }
     public void setDirection(char direction) {
         this.direction = direction;
     }
@@ -430,7 +444,9 @@ public class Player {
     }
 
     public void setSprinting(Boolean isSprinting) {
-        this.isSprinting = isSprinting;
+        this.isSprinting = isSprinting && sprintStat > 0;
+        if(!isSprinting) this.canRegenerateSprint = true;
+        else this.canRegenerateSprint = false;
     }
 
     public PlayerAnimationManager getAnimationManager() {
