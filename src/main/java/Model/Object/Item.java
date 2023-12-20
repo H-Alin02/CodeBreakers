@@ -47,20 +47,20 @@ public class Item {
         return this.coin.size;
     }
 
-    public Array<Diamond> getDiamond() {
-        return diamond;
+    public int getDiamond() {
+        return this.diamond.size;
     }
 
-    public Array<Money> getMoney() {
-        return money;
+    public int getMoney() {
+        return this.money.size;
     }
 
-    public Array<Meat> getMeat() {
-        return meat;
+    public int getMeat() {
+        return this.meat.size;
     }
 
-    public Array<Key> getKey() {
-        return key;
+    public int getKey() {
+        return this.key.size;
     }
 
     public void update(float delta){

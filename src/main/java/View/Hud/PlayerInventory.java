@@ -5,11 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class PlayerInventory {
     /*
@@ -22,57 +20,70 @@ public class PlayerInventory {
 
      */
 
-    private Stage stage;
-    private Model.Object.Item item;
-    private FitViewport stageViewport;
+
     private ObjectManager objectManager ;
     private final float SCALE = 0.2f;
 
     private Table table;
     private Label labelCoin;
+    private Label labelKey;
+    private Label labelMeat;
+    private Label labelMoney;
+    private Label labelDiamond;
 
-    //objects counters
-    private int coinValue;
-    //private int keyValue;
-    //private int moneyValue;
-    //private int meatValue;
     public PlayerInventory(ObjectManager objectManager){
-        //item = new Item();
-        //stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
-        //stage = new Stage(stageViewport,batch);
+
 
         this.objectManager = objectManager;
         table = new Table();
         table.right().top();
         table.setFillParent(true);
 
-        coinValue = objectManager.getItem().getCoin();
-
+        //key icon
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));
         Image icon1 = new Image(image1);
         icon1.setSize(image1.getWidth()*SCALE, image1.getHeight()*SCALE);
-
+        //coin icon
         Texture image2 = new Texture(Gdx.files.internal("inventory/coin/coin.png"));
         Image icon2 = new Image(image2);
         icon2.setSize(image2.getWidth()*SCALE, image2.getHeight()*SCALE);
-
+        //money icon
         Texture image3 = new Texture(Gdx.files.internal("inventory/money/money.png"));
         Image icon3 = new Image(image3);
         icon1.setSize(image3.getWidth()*SCALE, image3.getHeight()*SCALE);
-
+        //meat icon
         Texture image4 = new Texture(Gdx.files.internal("inventory/meat/meat.png"));
         Image icon4 = new Image(image4);
         icon2.setSize(image4.getWidth()*SCALE, image4.getHeight()*SCALE);
+        //diamond icon
+        Texture image5 = new Texture(Gdx.files.internal("inventory/diamond/diamond.png"));
+        Image icon5 = new Image(image5);
+        icon2.setSize(image5.getWidth()*SCALE, image5.getHeight()*SCALE);
 
-        labelCoin = new Label(String.format("%01d",coinValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelCoin = new Label(String.format("%01d",objectManager.getItem().getCoin()),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelKey = new Label(String.format("%01d",objectManager.getItem().getKey()),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelMeat = new Label(String.format("%01d",objectManager.getItem().getMeat()),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelMoney = new Label(String.format("%01d",objectManager.getItem().getMoney()),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelDiamond = new Label(String.format("%01d",objectManager.getItem().getDiamond()),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table.center();
         table.setFillParent(true);
-        table.add(icon1).padBottom(5).row();
+
+        //keys
+        table.add(icon1).padRight(5);
+        table.add(labelKey).padBottom(5).row();
+        //diamonds
+        table.add(icon5).padRight(5);
+        table.add(labelDiamond).padBottom(5).row();
+        //coins
         table.add(icon2).padRight(5);
         table.add(labelCoin).padBottom(5).row();
-        table.add(icon3).padBottom(5).row();
-        table.add(icon4).padBottom(5).row();
+        //moneys
+        table.add(icon3).padRight(5);
+        table.add(labelMoney).padBottom(5).row();
+        //meat
+        table.add(icon4).padRight(5);
+        table.add(labelMeat).row();
 
         table.setVisible(false);
 
@@ -94,9 +105,25 @@ public class PlayerInventory {
 
 
     public void update(){
-        //coinValue = item.getCoin();
-        coinValue = objectManager.getItem().getCoin();
-        labelCoin.setText(String.format("%01d", coinValue));
+        //update labelCoin
+
+        labelCoin.setText(String.format("%01d",objectManager.getItem().getCoin()));
+
+        //update labelDiamond
+
+        labelDiamond.setText(String.format("%01d",objectManager.getItem().getDiamond()));
+
+        //update labelKey
+
+        labelKey.setText(String.format("%01d", objectManager.getItem().getKey()));
+
+        //update labelMoney
+
+        labelMoney.setText(String.format("%01d", objectManager.getItem().getMoney()));
+
+        //update labelMeat
+
+        labelMeat.setText(String.format("%01d", objectManager.getItem().getMeat()));
     }
 
 }

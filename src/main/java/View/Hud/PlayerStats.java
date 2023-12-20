@@ -63,62 +63,11 @@ public class PlayerStats implements HudComponent{
 
     }
 
-    public Label getStaminaLabel() {
-        return staminaLabel;
-    }
-
-    public void setStaminaLabel(Label staminaLabel) {
-        this.staminaLabel = staminaLabel;
-    }
-
-    public Label getLifeLabel() {
-        return lifeLabel;
-    }
-
-    public void setLifeLabel(Label lifeLabel) {
-        this.lifeLabel = lifeLabel;
-    }
-
-
-    public ProgressBar getLifeBar() {
-        return lifeBar;
-    }
-
-    public void setLifeBar(ProgressBar lifeBar) {
-        this.lifeBar = lifeBar;
-    }
-
-    public ProgressBar getStaminaBar() {
-        return staminaBar;
-    }
-
-    public void setStaminaBar(ProgressBar staminaBar) {
-        this.staminaBar = staminaBar;
-    }
-
     public Table getTableStats() {
         return tableStats;
     }
 
-    public void setTableStats(Table tableStats) {
-        this.tableStats = tableStats;
-    }
 
-    public float getPlayerLife() {
-        return playerLife;
-    }
-
-    public void setPlayerLife(float playerLife) {
-        this.playerLife = playerLife;
-    }
-
-    public float getPlayerStamina() {
-        return playerStamina;
-    }
-
-    public void setPlayerStamina(float playerStamina) {
-        this.playerStamina = playerStamina;
-    }
 
     @Override
     public void update(Player player) {
