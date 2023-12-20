@@ -43,8 +43,8 @@ public class Item {
     }
 
 
-    public String getCoin() {
-        return String.valueOf(coin.size);
+    public int getCoin() {
+        return this.coin.size;
     }
 
     public Array<Diamond> getDiamond() {

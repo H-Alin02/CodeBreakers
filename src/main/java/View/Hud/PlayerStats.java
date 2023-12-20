@@ -24,6 +24,7 @@ public class PlayerStats implements HudComponent{
     private float playerLife = 1f;
     private float playerStamina = 1f;
     public PlayerStats(){
+        //skin e pixmap sono relativi a ProgressBar
         Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -49,7 +50,8 @@ public class PlayerStats implements HudComponent{
 
         //tables
 
-        tableStats.left().top();
+        tableStats.left();
+        tableStats.top();
         tableStats.setFillParent(true);
 
         tableStats.add(lifeLabel);

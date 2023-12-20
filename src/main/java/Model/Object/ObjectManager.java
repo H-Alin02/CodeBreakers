@@ -75,4 +75,8 @@ public class ObjectManager {
         }
 
     }
+
+    public Item getItem(){
+        return this.item;
+    }
 }
