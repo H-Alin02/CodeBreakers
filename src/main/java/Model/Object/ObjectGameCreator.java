@@ -1,5 +1,5 @@
 package Model.Object;
 
 public interface ObjectGameCreator {
-    ObjectGame createObject(int posX, int posY);
+    ObjectGame createObject(String nameObject,int posX, int posY);
 }

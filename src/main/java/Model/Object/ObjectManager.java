@@ -9,12 +9,7 @@ import java.util.Objects;
 
 public class ObjectManager {
     private Array<ObjectGame> objects ;
-    private ChestCreator chest;
-    private CoinCreator coin;
-    private DiamondCreator diamond;
-    private KeyCreator key;
-    private MeatCreator meat;
-    private MoneyCreator money;
+    private ObjectGameCreator objectCreator;
 
     private Player player;
     private Item item;
@@ -24,24 +19,19 @@ public class ObjectManager {
         this.objects = new Array<>();
         item = new Item();
         player = Player.getInstance();
-        this.chest = new ChestCreator();
-        this.coin = new CoinCreator();
-        this.diamond = new DiamondCreator();
-        this.key = new KeyCreator();
-        this.meat = new MeatCreator();
-        this.money = new MoneyCreator();
+        this.objectCreator = new ObjectCreator();
 
     }
 
     public void initializeObject(){
-        objects.add(chest.createObject(1650,1300));
-        objects.add(coin.createObject(1600,300));
-        objects.add(diamond.createObject(850,850));
-        objects.add(diamond.createObject(200,850));
-        objects.add(key.createObject(300,1000));
-        objects.add(key.createObject(850,200));
-        objects.add(meat.createObject(1600,1000));
-        objects.add(money.createObject(100,300));
+        objects.add(objectCreator.createObject("chest",1650,1300));
+        objects.add(objectCreator.createObject("coin",1600,300));
+        objects.add(objectCreator.createObject("diamond",850,850));
+        objects.add(objectCreator.createObject("diamond",200,850));
+        objects.add(objectCreator.createObject("key",300,1000));
+        objects.add(objectCreator.createObject("key",850,200));
+        objects.add(objectCreator.createObject("meat",1600,1000));
+        objects.add(objectCreator.createObject("money",100,300));
     }
 
     public void draw(SpriteBatch batch){
