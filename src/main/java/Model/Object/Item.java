@@ -43,27 +43,31 @@ public class Item {
     }
 
 
-    public int getCoin() {
-        return this.coin.size;
+    public String getCoin() {
+        return String.valueOf(coin.size);
     }
 
-    public Array<Diamond> getDiamond() {
-        return diamond;
+    public String getDiamond() {
+        return String.valueOf(diamond.size);
     }
 
-    public Array<Money> getMoney() {
-        return money;
+    public String getMoney() {
+        return String.valueOf(money.size);
     }
 
-    public Array<Meat> getMeat() {
-        return meat;
+    public String getMeat() {
+        return String.valueOf(meat.size);
     }
 
-    public Array<Key> getKey() {
-        return key;
+    public String getKey() {
+        return String.valueOf(key.size);
     }
 
     public void update(float delta){
         getCoin();
+        getKey();
+        getMeat();
+        getMoney();
+        getDiamond();
     }
 }

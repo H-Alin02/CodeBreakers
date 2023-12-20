@@ -30,12 +30,17 @@ public class PlayerInventory {
 
     private Table table;
     private Label labelCoin;
+    private Label labelKey;
+    private Label labelMoney;
+    private Label labelMeat;
+    private Label labelDiamond;
 
     //objects counters
     private int coinValue;
-    //private int keyValue;
-    //private int moneyValue;
-    //private int meatValue;
+    private int keyValue;
+    private int moneyValue;
+    private int meatValue;
+    private int diamondValue;
     public PlayerInventory(ObjectManager objectManager){
         //item = new Item();
         //stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
@@ -46,7 +51,11 @@ public class PlayerInventory {
         table.right().top();
         table.setFillParent(true);
 
-        coinValue = objectManager.getItem().getCoin();
+        coinValue = Integer.parseInt(objectManager.getItem().getCoin());
+        keyValue = Integer.parseInt(objectManager.getItem().getKey());
+        moneyValue = Integer.parseInt(objectManager.getItem().getMoney());
+        meatValue = Integer.parseInt(objectManager.getItem().getMeat());
+        diamondValue = Integer.parseInt(objectManager.getItem().getDiamond());
 
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));
         Image icon1 = new Image(image1);
@@ -58,21 +67,34 @@ public class PlayerInventory {
 
         Texture image3 = new Texture(Gdx.files.internal("inventory/money/money.png"));
         Image icon3 = new Image(image3);
-        icon1.setSize(image3.getWidth()*SCALE, image3.getHeight()*SCALE);
+        icon3.setSize(image3.getWidth()*SCALE, image3.getHeight()*SCALE);
 
         Texture image4 = new Texture(Gdx.files.internal("inventory/meat/meat.png"));
         Image icon4 = new Image(image4);
-        icon2.setSize(image4.getWidth()*SCALE, image4.getHeight()*SCALE);
+        icon4.setSize(image4.getWidth()*SCALE, image4.getHeight()*SCALE);
+
+        Texture image5 = new Texture(Gdx.files.internal("inventory/diamond/diamond.png"));
+        Image icon5 = new Image(image5);
+        icon5.setSize(image5.getWidth()*0.1f, image5.getHeight()*SCALE);
 
         labelCoin = new Label(String.format("%01d",coinValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelKey = new Label(String.format("%01d",keyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelMoney = new Label(String.format("%01d",moneyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelMeat = new Label(String.format("%01d",meatValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelDiamond = new Label(String.format("%01d",diamondValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        table.center();
+
         table.setFillParent(true);
-        table.add(icon1).padBottom(5).row();
+        table.add(icon1).padRight(5);
+        table.add(labelKey).padRight(5);
         table.add(icon2).padRight(5);
-        table.add(labelCoin).padBottom(5).row();
-        table.add(icon3).padBottom(5).row();
-        table.add(icon4).padBottom(5).row();
+        table.add(labelCoin).padRight(5);
+        table.add(icon3).padRight(5);
+        table.add(labelMoney).padRight(5);
+        table.add(icon4).padRight(5);
+        table.add(labelMeat).padRight(5);
+        table.add(icon5).padRight(5);
+        table.add(labelDiamond);
 
         table.setVisible(false);
 
@@ -95,8 +117,20 @@ public class PlayerInventory {
 
     public void update(){
         //coinValue = item.getCoin();
-        coinValue = objectManager.getItem().getCoin();
+        coinValue = Integer.parseInt(objectManager.getItem().getCoin());
         labelCoin.setText(String.format("%01d", coinValue));
+
+        keyValue = Integer.parseInt(objectManager.getItem().getKey());
+        labelKey.setText(String.format("%01d", keyValue));
+
+        moneyValue = Integer.parseInt(objectManager.getItem().getMoney());
+        labelMoney.setText(String.format("%01d", moneyValue));
+
+        meatValue = Integer.parseInt(objectManager.getItem().getMeat());
+        labelMeat.setText(String.format("%01d", meatValue));
+
+        diamondValue = Integer.parseInt(objectManager.getItem().getDiamond());
+        labelDiamond.setText(String.format("%01d", diamondValue));
     }
 
 }
