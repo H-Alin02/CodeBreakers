@@ -1,5 +1,6 @@
 package View.Hud;
 
+import Model.Object.ObjectManager;
 import Model.Player;
 import View.Boot;
 import com.badlogic.gdx.Gdx;
@@ -20,13 +21,13 @@ public class Hud extends WidgetGroup {
 
     private PlayerInventory inventory;
 
-    public Hud(SpriteBatch spriteBatch) {
+    public Hud(SpriteBatch spriteBatch, ObjectManager objectManager) {
         stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
 
         playerStats = new PlayerStats();
         mapName = new MapName();
-        inventory = new PlayerInventory();
+        inventory = new PlayerInventory(objectManager);
 
 
         /*/-------------------test inventario--------------------------

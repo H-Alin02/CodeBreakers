@@ -1,6 +1,6 @@
 package View.Hud;
 
-import Model.Object.Item;
+import Model.Object.ObjectManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,26 +25,28 @@ public class PlayerInventory {
     private Stage stage;
     private Model.Object.Item item;
     private FitViewport stageViewport;
+    private ObjectManager objectManager ;
     private final float SCALE = 0.2f;
 
     private Table table;
     private Label labelCoin;
 
     //objects counters
-    private int coinValue = 0;
+    private int coinValue;
     //private int keyValue;
     //private int moneyValue;
     //private int meatValue;
-    public PlayerInventory(){
-        item = new Item();
+    public PlayerInventory(ObjectManager objectManager){
+        //item = new Item();
         //stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
         //stage = new Stage(stageViewport,batch);
 
+        this.objectManager = objectManager;
         table = new Table();
         table.right().top();
         table.setFillParent(true);
 
-        coinValue = item.getCoin();
+        coinValue = objectManager.getItem().getCoin();
 
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));
         Image icon1 = new Image(image1);
@@ -92,10 +94,9 @@ public class PlayerInventory {
 
 
     public void update(){
-        coinValue = item.getCoin();
+        //coinValue = item.getCoin();
+        coinValue = objectManager.getItem().getCoin();
         labelCoin.setText(String.format("%01d", coinValue));
-
-
     }
 
 }

@@ -45,7 +45,7 @@ public class GameScreen extends ScreenAdapter {
 
     public GameScreen(OrthographicCamera camera) {
         this.batch = new SpriteBatch();
-        this.hud = new Hud(batch);
+
         this.camera = camera;
         this.camera.position.set(new Vector3(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2,0 ));
         this.playerViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2, Boot.INSTANCE.getScreenHeight()/2, camera);
@@ -60,6 +60,7 @@ public class GameScreen extends ScreenAdapter {
         this.shapeRenderer = new ShapeRenderer();
         this.objects = new ObjectManager();
         this.objects.initializeObject();
+        this.hud = new Hud(batch, objects);
     }
 
     @Override
