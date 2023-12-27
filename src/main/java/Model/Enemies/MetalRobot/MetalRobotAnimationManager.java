@@ -25,14 +25,14 @@ public class MetalRobotAnimationManager {
         //Idle animation1
         Array<TextureRegion> idleFrames1 = new Array<>();
         for (int i = 1; i<=7; i++){
-            idleFrames1.add(new TextureRegion(new Texture("enemies/MetalRobot/Idle1/Idle" + i + ".png")));
+            idleFrames1.add(new TextureRegion(new Texture("enemies/MetalRobot/Idle-1/Idle" + i + ".png")));
         }
         idleAnimation1 = new Animation<>(0.1f, idleFrames1, Animation.PlayMode.LOOP);
 
-        //Idle animation1
+        //Idle animation2
         Array<TextureRegion> idleFrames2 = new Array<>();
         for (int i = 1; i<=7; i++){
-            idleFrames2.add(new TextureRegion(new Texture("enemies/MetalRobot/Idle1/Idle" + i + ".png")));
+            idleFrames2.add(new TextureRegion(new Texture("enemies/MetalRobot/Idle-2/Idle" + i + ".png")));
         }
         idleAnimation2 = new Animation<>(0.1f, idleFrames2, Animation.PlayMode.LOOP);
 

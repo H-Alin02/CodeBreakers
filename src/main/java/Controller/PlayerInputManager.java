@@ -40,9 +40,9 @@ public class PlayerInputManager {
             }
             if(!player.isAttacking() && !player.isShooting()){
                 if ((up || down) && (left || right))
-                    player.setSPEED(4);
+                    player.setSPEED(3);
                 else
-                    player.setSPEED(5);
+                    player.setSPEED(4);
 
                 if (up) {
                     player.moveUp();

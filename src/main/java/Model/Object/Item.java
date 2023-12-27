@@ -42,4 +42,32 @@ public class Item {
         System.out.println("key " + key.size);
     }
 
+
+    public String getCoin() {
+        return String.valueOf(coin.size);
+    }
+
+    public String getDiamond() {
+        return String.valueOf(diamond.size);
+    }
+
+    public String getMoney() {
+        return String.valueOf(money.size);
+    }
+
+    public String getMeat() {
+        return String.valueOf(meat.size);
+    }
+
+    public String getKey() {
+        return String.valueOf(key.size);
+    }
+
+    public void update(float delta){
+        getCoin();
+        getKey();
+        getMeat();
+        getMoney();
+        getDiamond();
+    }
 }

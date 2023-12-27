@@ -3,6 +3,8 @@ package Model;
 import Controller.PlayerInputManager;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
+import View.Boot;
+import View.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,6 +25,7 @@ public class Player {
     private final PlayerAnimationManager animationManager;
     private final MapModel mapModel;
     private final EnemyManager enemyManager;
+    private GameScreen gameScreen;
     private int playerX = 832;
     private int playerY = 1408;
     private boolean isSprinting = false;
@@ -37,16 +40,18 @@ public class Player {
     private final int PLAYER_BULLET_DAMAGE = 10;
     private float bulletSpeed = 10;
     private int playerLife = 100;
+    private float sprintStat = 100;
 
     // HitBox
-    private int HitBoxX;
-    private int HitBoxY;
-    private final int  HitBoxWidht = 42;
+    private int HitBoxX; // Player x + 8
+    private int HitBoxY; // Player y + 6
+    private final int  HitBoxWidht = 54;
     private final int  HitBoxHeight = 51;
     private Rectangle hitBox;
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
+    private boolean canRegenerateSprint = true;
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -70,6 +75,7 @@ public class Player {
     }
 
     public void update(float delta) {
+        if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
         inputManager.handleInput();
         animationManager.update(delta);
         enemyManager.update(delta);
@@ -91,6 +97,15 @@ public class Player {
         }
         // Rimuovi i proiettili inattivi
         bullets.removeIf(bullet -> !bullet.isActive());
+
+        HitBoxX = playerX + (8 * 3);
+        HitBoxY = playerY + (6 * 3);
+
+        if(canRegenerateSprint && sprintStat < 100){
+            sprintStat+=0.5;
+        }
+
+        //this.isSprinting = isSprinting && sprintStat > 10;
 
     }
 
@@ -118,11 +133,11 @@ public class Player {
         if (isAttacking) {
             attackTimer += delta;
             if (attackTimer >= ATTACK_DURATION) {
+                inflictDamageToEnemies();
                 isAttacking = false;
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetAttack();
-                inflictDamageToEnemies();
             }
         }
     }
@@ -223,7 +238,7 @@ public class Player {
 
     public boolean isCollision(float x, float y) {
         boolean enemyCollision = false;
-        hitBox = new Rectangle(x + 8, y + 6, HitBoxWidht, HitBoxHeight);
+        hitBox = new Rectangle(x , y , HitBoxWidht, HitBoxHeight);
         for(Enemy enemy : enemies){
             Rectangle enemyHitBox = enemy.getHitBox();
             if(enemyHitBox != null && hitBox.overlaps(enemyHitBox)){
@@ -231,7 +246,7 @@ public class Player {
             }
         }
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x+8, y+6, PLAYER_WIDTH + 15, PLAYER_HEIGHT + 15) || enemyCollision;
+        return mapModel.isCollisionWithScaledObjects(x, y, HitBoxWidht, HitBoxHeight) || enemyCollision;
 
     }
 
@@ -271,6 +286,7 @@ public class Player {
             System.out.println("PLAYER IS DEAD - GAME OVER");
 
         } else {
+            gameScreen.shakeCamera(0.3f, 4);
             System.out.println("PLAYER HIT , OUCH!! , LIFE = " + playerLife);
         }
     }
@@ -339,19 +355,19 @@ public class Player {
     }
 
     public Boolean upColliding() {
-        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() + getSPEED());
+        return isCollision(HitBoxX, HitBoxY + getSPEED());
     }
 
     public Boolean downColliding() {
-        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4), getPlayerY() - getSPEED());
+        return isCollision(HitBoxX, HitBoxY - getSPEED());
     }
 
     public Boolean leftColliding() {
-        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4) - getSPEED(), getPlayerY());
+        return isCollision(HitBoxX - getSPEED(), HitBoxY);
     }
 
     public Boolean rightColliding() {
-        return isCollision(getPlayerX() + (getPLAYER_WIDTH() / 4) + getSPEED(), getPlayerY());
+        return isCollision(HitBoxX + getSPEED(), HitBoxY);
     }
 
     public TextureRegion getCurrentFrame() {
@@ -379,14 +395,17 @@ public class Player {
     }
 
     public void setSPEED(int SPEED) {
-
         if (isSprinting) {
-            SPEED *= 1.5;
+            SPEED *= 2;
             animationManager.updateAnimSpeed(0.07f);
-        } else
+            sprintStat -= 1;
+            if(sprintStat <= 0){
+                this.isSprinting = false;
+            }
+        } else {
             animationManager.updateAnimSpeed(0.1f);
-
-        this.SPEED = SPEED;
+        }
+            this.SPEED = SPEED;
     }
     public List<Enemy> getEnemies() {
         return enemies;
@@ -400,6 +419,9 @@ public class Player {
         return playerLife;
     }
 
+    public float getPlayerStamina(){
+        return this.sprintStat;
+    }
     public void setDirection(char direction) {
         this.direction = direction;
     }
@@ -422,7 +444,9 @@ public class Player {
     }
 
     public void setSprinting(Boolean isSprinting) {
-        this.isSprinting = isSprinting;
+        this.isSprinting = isSprinting && sprintStat > 0;
+        if(!isSprinting) this.canRegenerateSprint = true;
+        else this.canRegenerateSprint = false;
     }
 
     public PlayerAnimationManager getAnimationManager() {
@@ -433,12 +457,12 @@ public class Player {
         return new Rectangle(getPlayerX(), getPlayerY(),getPLAYER_WIDTH(),getPLAYER_HEIGHT());
     }
 
-    public List<Bullet> getBullets() {
-        return bullets;
+    public Rectangle getHitBox(){
+        return new Rectangle(HitBoxX, HitBoxY, HitBoxWidht , HitBoxHeight);
     }
 
-    public void setBullets(List<Bullet> bullets) {
-        this.bullets = bullets;
+    public List<Bullet> getBullets() {
+        return bullets;
     }
 }
 
