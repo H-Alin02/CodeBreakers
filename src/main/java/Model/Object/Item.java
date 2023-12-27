@@ -8,6 +8,8 @@ public class Item {
     private Array<Money> money;
     private Array<Meat> meat;
     private Array<Key> key;
+    private Array<Ammunition> ammunition;
+    private Array<Medikit> medikit;
 
     public Item(){
         this.coin = new Array<>();
@@ -15,6 +17,8 @@ public class Item {
         this.money = new Array<>();
         this.meat = new Array<>();
         this.key = new Array<>();
+        this.ammunition = new Array<>();
+        this.medikit = new Array<>();
     }
 
     public void addCoin(ObjectGame obj){
@@ -42,25 +46,38 @@ public class Item {
         System.out.println("key " + key.size);
     }
 
-
-    public String getCoin() {
-        return String.valueOf(coin.size);
+    public void addAmmunition(ObjectGame obj){
+        ammunition.add((Ammunition) obj);
+    }
+    public void addMedikit(ObjectGame obj){
+        medikit.add((Medikit) obj);
     }
 
-    public String getDiamond() {
-        return String.valueOf(diamond.size);
+    public int getCoin() {
+        return coin.size;
     }
 
-    public String getMoney() {
-        return String.valueOf(money.size);
+    public int getDiamond() {
+        return diamond.size;
     }
 
-    public String getMeat() {
-        return String.valueOf(meat.size);
+    public int getMoney() {
+        return money.size;
     }
 
-    public String getKey() {
-        return String.valueOf(key.size);
+    public int getMeat() {
+        return meat.size;
+    }
+
+    public int getKey() {
+        return key.size;
+    }
+
+    public int getAmmunition(){
+        return  ammunition.size;
+    }
+    public int getMedikit(){
+        return medikit.size;
     }
 
     public void update(float delta){
@@ -69,5 +86,7 @@ public class Item {
         getMeat();
         getMoney();
         getDiamond();
+        getAmmunition();
+        getMedikit();
     }
 }

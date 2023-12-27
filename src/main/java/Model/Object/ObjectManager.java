@@ -29,9 +29,10 @@ public class ObjectManager {
         objects.add(objectCreator.createObject("diamond",850,850));
         objects.add(objectCreator.createObject("diamond",200,850));
         objects.add(objectCreator.createObject("key",300,1000));
-        objects.add(objectCreator.createObject("key",850,200));
         objects.add(objectCreator.createObject("meat",1600,1000));
         objects.add(objectCreator.createObject("money",100,300));
+        objects.add(objectCreator.createObject("ammunition",850,200));
+        objects.add(objectCreator.createObject("medikit",850,1300));
     }
 
     public void draw(SpriteBatch batch){
@@ -60,6 +61,12 @@ public class ObjectManager {
                     objects.removeIndex(objects.indexOf(obj,false));
                 } else if (Objects.equals(obj.getName(), "money") && obj.isRemove()) {
                     item.addMoney(obj);
+                    objects.removeIndex(objects.indexOf(obj,false));
+                }else if (Objects.equals(obj.getName(), "ammunition") && obj.isRemove()) {
+                    item.addAmmunition(obj);
+                    objects.removeIndex(objects.indexOf(obj,false));
+                }else if (Objects.equals(obj.getName(), "medikit") && obj.isRemove()) {
+                    item.addMedikit(obj);
                     objects.removeIndex(objects.indexOf(obj,false));
                 }
 

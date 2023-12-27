@@ -17,6 +17,7 @@ public class Coin implements ObjectGame{
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
+    private int coinValue;
     public Coin(int coinX, int coinY) {
         this.coinX = coinX;
         this.coinY = coinY;
@@ -30,6 +31,7 @@ public class Coin implements ObjectGame{
 
         name = "coin";
         remove = false;
+        coinValue = 500;
 
     }
 
@@ -70,4 +72,7 @@ public class Coin implements ObjectGame{
     @Override
     public String getName(){return name;}
 
+    public int getCoinValue(){
+        return coinValue;
+    }
 }
