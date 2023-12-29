@@ -28,7 +28,7 @@ public class MapModel {
 
     private MapModel(){
         //Load the map
-        map = new TmxMapLoader().load("map/Mappa.tmx");
+        map = new TmxMapLoader().load("map/MappaNUOVA.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map , 2.0f);
 
         //Get the collision objects from the "collisioni" object layer

@@ -26,8 +26,8 @@ public class Player {
     private final MapModel mapModel;
     private final EnemyManager enemyManager;
     private GameScreen gameScreen;
-    private int playerX = 832;
-    private int playerY = 1408;
+    private int playerX = 1984;
+    private int playerY = 3436;
     private boolean isSprinting = false;
     private char direction = 's';
     private boolean isAttacking = false;

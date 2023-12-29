@@ -23,15 +23,19 @@ public class EnemyManager {
     public void initializeEnemies(){
         // Add enemies to the EnemyManager
         // Offset from tile x = -20 , y = -10
-        enemies.add(dummyEnemyCreator.createEnemy(172,1142));
-        enemies.add(dummyEnemyCreator.createEnemy(492,1142));
-        enemies.add(dummyEnemyCreator.createEnemy(300, 886));
-        enemies.add(dummyEnemyCreator.createEnemy(1452, 374));
-        enemies.add(dummyEnemyCreator.createEnemy(1260, 246));
-        enemies.add(dummyEnemyCreator.createEnemy(1580, 118));
+        //Poligono
+        enemies.add(dummyEnemyCreator.createEnemy(3436,3126));
+        enemies.add(dummyEnemyCreator.createEnemy(3628,3062));
+        enemies.add(dummyEnemyCreator.createEnemy(3820, 3136));
+
+        //Gym
+        enemies.add(dummyEnemyCreator.createEnemy(492, 2166));
+        enemies.add(dummyEnemyCreator.createEnemy(876, 2166));
+        enemies.add(dummyEnemyCreator.createEnemy(492, 1846));
+        enemies.add(dummyEnemyCreator.createEnemy(876, 1846));
 
         //Moving enemies
-        enemies.add(metalRobotCreator.createEnemy(150,118));
+        enemies.add(metalRobotCreator.createEnemy(1664,1014));
         //enemies.add(metalRobotCreator.createEnemy(350,118));
         //enemies.add(metalRobotCreator.createEnemy(500,118));
 

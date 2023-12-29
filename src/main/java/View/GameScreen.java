@@ -123,9 +123,9 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().draw(); //draw the Hud
 
         //DEBUG
-        renderDebug();
-        renderPlayerCollisionDebug();
-        renderEnemyDebug();
+        //renderDebug();
+        //renderPlayerCollisionDebug();
+        //renderEnemyDebug();
     }
 
     public void shakeCamera(float duration , float intensity){
