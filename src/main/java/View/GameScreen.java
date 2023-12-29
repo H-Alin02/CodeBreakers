@@ -2,6 +2,7 @@ package View;
 
 import Controller.PlayerInputManager;
 import Model.Bullet;
+import Model.Door;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
 import Model.Enemies.MetalRobot.MetalRobot;
@@ -73,10 +74,12 @@ public class GameScreen extends ScreenAdapter {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
         }
+        mapModel.update(delta);
         player.update(delta);
         playerInputManager.update(delta);
         enemyManager.update(delta);
         objects.update(delta);
+
     }
 
     @Override
@@ -123,7 +126,7 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().draw(); //draw the Hud
 
         //DEBUG
-        //renderDebug();
+        renderDebug();
         //renderPlayerCollisionDebug();
         //renderEnemyDebug();
     }
@@ -151,6 +154,8 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
 
     }
+
+
     private void renderDebug() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -162,6 +167,11 @@ public class GameScreen extends ScreenAdapter {
                 shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             }
             // Add additional checks for other object types if needed
+        }
+
+        for(Door door : mapModel.getDoors()){
+            Rectangle rect = door.getBoundingBox();
+            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
         }
         shapeRenderer.end();
     }

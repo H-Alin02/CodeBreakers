@@ -69,7 +69,6 @@ public class ObjectManager {
                     item.addMedikit(obj);
                     objects.removeIndex(objects.indexOf(obj,false));
                 }
-
             }
         }
     }

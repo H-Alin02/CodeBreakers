@@ -1,5 +1,7 @@
 package Model;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class MapModel {
@@ -18,6 +21,10 @@ public class MapModel {
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final MapObjects scaledCollisionObjects;
     private float mapScale = 2.0f;
+    private Array<Door> doors;
+    private float raggioPorta = 90f;
+    private Player player;
+
 
     public static MapModel getInstance() {
         if (INSTANCE == null) {
@@ -37,6 +44,23 @@ public class MapModel {
             scaledCollisionObjects = scaleCollisionObjects(collisioniLayer.getObjects());
         }else {
             throw new GdxRuntimeException("Object layer 'collisioni'not found in the map");
+        }
+
+        // Carica le porte dalla mappa
+        loadDoors();
+    }
+
+    public void update(float delta){
+        this.player = Player.getInstance();
+        for (Door door : doors) {
+            // Verifica se il giocatore è nel raggio della porta e se sta premendo il pulsante
+            if (player != null &&
+                    door.isPlayerInRange(player.getHitBox().x + player.getHitBox().width/2, player.getHitBox().y + player.getHitBox().height/2, raggioPorta) &&
+                    Gdx.input.isKeyJustPressed(Input.Keys.E) &&
+                    !player.getHitBox().overlaps(new Rectangle(door.getX(), door.getY(), door.getDoorWidth(), door.getDoorHeight()))) {
+                door.setOpen(!door.isOpen()); // Inverti lo stato della porta
+                System.out.println("Porta invertita");
+            }
         }
     }
 
@@ -77,20 +101,51 @@ public class MapModel {
                 }
             }
         }
+
+        // Itera attraverso le porte
+        for (Door door : doors) {
+            if (!door.isOpen() && door.getBoundingBox().overlaps(new Rectangle(x, y, width, height))) {
+                return true; // Collisione con la porta chiusa
+            }
+        }
         return false;
     }
 
-    public void update(float delta){
-
+    private void loadDoors() {
+        doors = new Array<>();
+        MapLayer doorsLayer = map.getLayers().get("porte");
+        if (doorsLayer != null) {
+            for (MapObject object : doorsLayer.getObjects()) {
+                if (object instanceof RectangleMapObject rectObject) {
+                    doors.add(new Door(rectObject.getRectangle().x * mapScale,
+                            rectObject.getRectangle().y * mapScale,
+                            rectObject.getRectangle().width * mapScale,
+                            rectObject.getRectangle().height * mapScale));
+                }
+            }
+        }
+        else {
+            throw new GdxRuntimeException("Object layer 'porte' not found in the map");
+        }
     }
+
+
 
     public void render(SpriteBatch spriteBatch, OrthographicCamera camera){
         mapRenderer.setView(camera);
         mapRenderer.render();
+
+        for (Door door : doors){
+            door.draw(spriteBatch);
+        }
     }
 
     public MapObjects getScaledCollisionObjects() {
         return scaledCollisionObjects;
+    }
+
+    public Array<Door> getDoors(){
+        return this.doors;
     }
 
 }
