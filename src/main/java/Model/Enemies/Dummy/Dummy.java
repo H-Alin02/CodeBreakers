@@ -1,6 +1,8 @@
 package Model.Enemies.Dummy;
 
 import Model.Enemies.Enemy;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -24,6 +26,8 @@ public class Dummy implements Enemy {
     private boolean damageAnimationComplete = true;
     private final Array<DummyState> enemyStates = Array.with(DummyState.DAMAGE_1, DummyState.DAMAGE_2, DummyState.DAMAGE_3);
 
+
+    private static final Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/player_punch.mp3"));
 
     public Dummy(int initialHealth , int startX, int startY){
         this.health = initialHealth;
@@ -55,6 +59,7 @@ public class Dummy implements Enemy {
     @Override
     public void takeDamage(int damage) {
         health -= damage;
+        damageSound.play(0.1f);
 
         // Check if the enemy is still alive
         if (health <= 0) {

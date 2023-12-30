@@ -5,6 +5,8 @@ import Model.MapModel;
 import Model.Player;
 import View.Boot;
 import View.GameScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -53,6 +55,9 @@ public class MetalRobot implements Enemy {
     private boolean hasAttacked = false;
 
     private GameScreen gameScreen;
+
+    private static final Sound punchSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/robot_punch.wav"));
+    public static final Sound alertSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/robot_alert.wav"));
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -173,6 +178,8 @@ public class MetalRobot implements Enemy {
     public void attackPlayer(){
         if (!enemyAttackStates.contains(currentState, true))
             if(!hasAttacked){
+                punchSound.play(0.1f);
+
                 if(flip == 'a') {
                     currentState = MetalRobotState.ATTACK1;
                     animationManager.resetDamage();

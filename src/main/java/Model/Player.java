@@ -7,6 +7,7 @@ import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -54,6 +55,10 @@ public class Player {
     private List<Enemy> enemies;
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
+
+    private static final Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/player_damaged.mp3"));
+    private static final Sound shotSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/shot.mp3"));
+    private static final Sound punchSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/missed_punch.wav"));
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -107,6 +112,8 @@ public class Player {
         if(canRegenerateSprint && sprintStat < 100){
             sprintStat+=0.5;
         }
+
+        //shotSound.dispose();
     }
 
     public void interactWithNearestObject(Array<Interactable> interactables) {
@@ -277,26 +284,23 @@ public class Player {
     public void shoot() {
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting) {
+            shotSound.play(0.1f);
+
+            isShooting = true;
+            animationManager.resetShoot();
+
             switch (getDirection()) {
                 case 'w':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_UP;
-                    animationManager.resetShoot();
                     break;
                 case 's':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_DOWN;
-                    animationManager.resetShoot();
                     break;
                 case 'd':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_RIGHT;
-                    animationManager.resetShoot();
                     break;
                 case 'a':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_LEFT;
-                    animationManager.resetShoot();
                     break;
             }
         }
@@ -304,6 +308,8 @@ public class Player {
 
     public void takeDamage(int damage){
         this.playerLife -= damage;
+        damageSound.play(0.1f);
+
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
             // For example, set the enemy state to a death state and stop animations
@@ -355,24 +361,28 @@ public class Player {
     }
 
     public void attackUp() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_UP;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackDown() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_DOWN;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackRight() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_RIGHT;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackLeft() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_LEFT;
         isAttacking = true;
         animationManager.resetAttack();

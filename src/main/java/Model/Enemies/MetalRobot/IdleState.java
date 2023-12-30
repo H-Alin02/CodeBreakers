@@ -11,6 +11,7 @@ public class IdleState implements RobotState {
         // Implementare logica per passare allo stato chasing altrimenti rimanere in questo stato
         // se il nemico vede il player ed è nel suo range di chasing allora passa allo stato di Chasing
         if (metalRobot.isChasing()) {
+            MetalRobot.alertSound.play(0.1f);
             return new ChasingState();
         } else {
             movementTimer += delta;

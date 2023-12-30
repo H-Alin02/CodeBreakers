@@ -70,7 +70,7 @@ public class MainMenuScreen extends ScreenAdapter {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                buttonClickSound.play();
+                buttonClickSound.play(0.1f);
                 backgroundMusic.dispose();
                 Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
             }
@@ -80,7 +80,7 @@ public class MainMenuScreen extends ScreenAdapter {
         loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                buttonClickSound.play();
+                buttonClickSound.play(0.1f);
                 // Aggiungi qui la logica per il pulsante "Load Game"
                 System.out.println("Load Game clicked");
             }
@@ -90,7 +90,7 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Aggiungi qui la logica per il pulsante "Options"
-                buttonClickSound.play();
+                buttonClickSound.play(0.1f);
                 System.out.println("Options clicked");
             }
         });
