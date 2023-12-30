@@ -14,7 +14,6 @@ public class MapName implements HudComponent{
     public MapName(){
         sceneName = new Container(worldLabel);//forse è meglio cambiare sceneName con levelName
         sceneName.top();
-        sceneName.setFillParent(true);
     }
 
     public Container getSceneName() {

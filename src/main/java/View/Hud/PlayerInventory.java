@@ -53,7 +53,9 @@ public class PlayerInventory {
         this.objectManager = objectManager;
         table = new Table();
         table.right().top();
-        table.setFillParent(true);
+        //table.setFillParent(true);
+
+        table.setDebug(true);
 
         coinValue = objectManager.getItem().getCoin();
         keyValue = objectManager.getItem().getKey();
@@ -99,7 +101,7 @@ public class PlayerInventory {
         labelAmmunition = new Label(String.format("%01d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         labelMedikit = new Label(String.format("%01d",medikitValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
-        table.setFillParent(true);
+
         table.add(icon1).padRight(5);
         table.add(labelKey).padRight(5);
         table.add(icon2).padRight(5);

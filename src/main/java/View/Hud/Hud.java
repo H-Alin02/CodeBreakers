@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -29,7 +30,9 @@ public class Hud extends WidgetGroup {
         mapName = new MapName();
         inventory = new PlayerInventory(objectManager);
 
-
+        Table rootTable = new Table();
+        rootTable.setFillParent(true);
+        stage.addActor(rootTable);
         /*/-------------------test inventario--------------------------
         Label inventoryLabel = new Label("INVENTORY", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
@@ -42,9 +45,12 @@ public class Hud extends WidgetGroup {
 
         stage.addActor(inventory);
         //--------------------------------------------------------------/*/
-        stage.addActor(playerStats.getTableStats());
-        stage.addActor(mapName.getSceneName());
-        stage.addActor(inventory.getTable());
+        rootTable.top().left();
+        rootTable.add(playerStats.getTableStats()).expandX();
+
+        rootTable.add(mapName.getSceneName()).expandX();
+
+        rootTable.add(inventory.getTable()).expandX();
 
     }
 
