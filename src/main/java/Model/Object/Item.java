@@ -43,7 +43,11 @@ public class Item {
     }
 
     public int getCoin() {
-        return coin.size;
+        int value = 0;
+        for (Coin c : coin){
+            value += c.getValue();
+        }
+        return value;
     }
 
     public int getDiamond() {
@@ -51,7 +55,11 @@ public class Item {
     }
 
     public int getMoney() {
-        return money.size;
+        int value = 0;
+        for (Money m : money){
+            value += m.getValue();
+        }
+        return value;
     }
 
     public int getKey() {
@@ -59,7 +67,11 @@ public class Item {
     }
 
     public int getAmmunition(){
-        return  ammunition.size;
+        int value = 0;
+        for (Ammunition a : ammunition){
+            value = a.getValue();
+        }
+        return  value;
     }
     public void update(float delta){
         getCoin();

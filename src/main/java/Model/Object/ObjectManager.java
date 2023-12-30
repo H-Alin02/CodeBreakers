@@ -26,14 +26,18 @@ public class ObjectManager {
     }
 
     public void initializeObject(){
-        objects.add(objectCreator.createObject("chest",1650,1300));
-        objects.add(objectCreator.createObject("coin",1600,300));
-        objects.add(objectCreator.createObject("diamond",850,850));
-        objects.add(objectCreator.createObject("diamond",200,850));
-        objects.add(objectCreator.createObject("key",300,1000));
+        objects.add(objectCreator.createObject("chest",1650,1200));
+        objects.add(objectCreator.createObject("coin",3600,1800));
+        objects.add(objectCreator.createObject("coin",3500,1800));
+        objects.add(objectCreator.createObject("coin",3400,1800));
+        objects.add(objectCreator.createObject("diamond",1850,1850));
+        objects.add(objectCreator.createObject("diamond",1200,1850));
+        objects.add(objectCreator.createObject("key",3100,2800));
         objects.add(objectCreator.createObject("meat",1600,1000));
-        objects.add(objectCreator.createObject("money",100,300));
-        objects.add(objectCreator.createObject("ammunition",850,200));
+        objects.add(objectCreator.createObject("money",1100,1300));
+        objects.add(objectCreator.createObject("money",3100,1300));
+        objects.add(objectCreator.createObject("money",2100,1400));
+        objects.add(objectCreator.createObject("ammunition",850,1000));
         objects.add(objectCreator.createObject("medikit",850,1300));
     }
 

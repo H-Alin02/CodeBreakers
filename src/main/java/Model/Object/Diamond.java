@@ -58,4 +58,14 @@ public class Diamond implements ObjectGame{
     }
     @Override
     public String getName(){return name;}
+
+    @Override
+    public int getValue() {
+        return 0;
+    }
+
+    @Override
+    public void setValue(int value) {
+
+    }
 }

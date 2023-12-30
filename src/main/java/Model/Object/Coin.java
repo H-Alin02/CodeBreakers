@@ -31,7 +31,7 @@ public class Coin implements ObjectGame{
 
         name = "coin";
         remove = false;
-        coinValue = 500;
+        coinValue = 50;
 
     }
 
@@ -72,7 +72,13 @@ public class Coin implements ObjectGame{
     @Override
     public String getName(){return name;}
 
-    public int getCoinValue(){
+    @Override
+    public int getValue(){
         return coinValue;
+    }
+
+    @Override
+    public void setValue(int value) {
+        coinValue += value;
     }
 }

@@ -16,6 +16,7 @@ public class Meat implements ObjectGame{
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
+    private int meatValue;
 
     public Meat(int meatX, int meatY){
         this.meatX = meatX;
@@ -59,4 +60,14 @@ public class Meat implements ObjectGame{
     }
     @Override
     public String getName(){return name;}
+
+    @Override
+    public int getValue() {
+        return meatValue;
+    }
+
+    @Override
+    public void setValue(int value) {
+        meatValue = value;
+    }
 }

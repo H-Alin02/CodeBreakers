@@ -16,7 +16,7 @@ public class Medikit implements ObjectGame{
     private boolean isAvailable;
     private final float SCALE = 1.2f;
     private String name ;
-    private int amountLife ;
+    private int medicalLife;
     public Medikit(int medikitX, int medikitY){
         this.medikitX = medikitX;
         this.medikitY = medikitY;
@@ -24,7 +24,6 @@ public class Medikit implements ObjectGame{
 
         this.name = "medikit";
         this.remove = false;
-        this.amountLife = 20;
         this.isAvailable = true;
     }
     @Override
@@ -63,6 +62,16 @@ public class Medikit implements ObjectGame{
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public int getValue() {
+        return medicalLife;
+    }
+
+    @Override
+    public void setValue(int value) {
+        medicalLife = value;
     }
 
 }
