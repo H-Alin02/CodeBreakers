@@ -2,6 +2,7 @@ package View;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,11 +21,19 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class MainMenuScreen extends ScreenAdapter {
     private Stage stage;
     private OrthographicCamera camera;
+    private Music backgroundMusic;
 
     public MainMenuScreen(OrthographicCamera camera) {
         this.camera = camera;
         stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(),Boot.INSTANCE.getScreenHeight() ,camera));
         Gdx.input.setInputProcessor(stage);
+
+        // Carica la musica dal tuo progetto (assumi che il file sia nella cartella "assets")
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));
+        // Imposta la ripetizione della musica in modo che continui a suonare
+        backgroundMusic.setLooping(true);
+        // Avvia la musica
+        backgroundMusic.play();
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -56,6 +65,7 @@ public class MainMenuScreen extends ScreenAdapter {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                backgroundMusic.dispose();
                 Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
             }
         });
@@ -153,6 +163,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        // Libera le risorse quando la schermata viene chiusa
         stage.dispose();
     }
 }
