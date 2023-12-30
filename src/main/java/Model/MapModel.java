@@ -1,7 +1,5 @@
 package Model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
@@ -21,9 +19,8 @@ public class MapModel {
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final MapObjects scaledCollisionObjects;
     private float mapScale = 2.0f;
-    private Array<Door> doors;
-    private float raggioPorta = 90f;
     private Player player;
+    private Array<Interactable> interactables;
 
 
     public static MapModel getInstance() {
@@ -52,16 +49,6 @@ public class MapModel {
 
     public void update(float delta){
         this.player = Player.getInstance();
-        for (Door door : doors) {
-            // Verifica se il giocatore è nel raggio della porta e se sta premendo il pulsante
-            if (player != null &&
-                    door.isPlayerInRange(player.getHitBox().x + player.getHitBox().width/2, player.getHitBox().y + player.getHitBox().height/2, raggioPorta) &&
-                    Gdx.input.isKeyJustPressed(Input.Keys.E) &&
-                    !player.getHitBox().overlaps(new Rectangle(door.getX(), door.getY(), door.getDoorWidth(), door.getDoorHeight()))) {
-                door.setOpen(!door.isOpen()); // Inverti lo stato della porta
-                System.out.println("Porta invertita");
-            }
-        }
     }
 
     // Scale the collision objects
@@ -103,21 +90,21 @@ public class MapModel {
         }
 
         // Itera attraverso le porte
-        for (Door door : doors) {
-            if (!door.isOpen() && door.getBoundingBox().overlaps(new Rectangle(x, y, width, height))) {
-                return true; // Collisione con la porta chiusa
+        for (Interactable interactable : interactables) {
+            if (interactable.isCollision(x, y, width, height)) {
+                return true;
             }
         }
         return false;
     }
 
     private void loadDoors() {
-        doors = new Array<>();
+        interactables = new Array<>();
         MapLayer doorsLayer = map.getLayers().get("porte");
         if (doorsLayer != null) {
             for (MapObject object : doorsLayer.getObjects()) {
                 if (object instanceof RectangleMapObject rectObject) {
-                    doors.add(new Door(rectObject.getRectangle().x * mapScale,
+                    interactables.add(new Door(rectObject.getRectangle().x * mapScale,
                             rectObject.getRectangle().y * mapScale,
                             rectObject.getRectangle().width * mapScale,
                             rectObject.getRectangle().height * mapScale));
@@ -135,8 +122,8 @@ public class MapModel {
         mapRenderer.setView(camera);
         mapRenderer.render();
 
-        for (Door door : doors){
-            door.draw(spriteBatch);
+        for (Interactable door : interactables){
+            door.draw(spriteBatch, this.player);
         }
     }
 
@@ -144,8 +131,8 @@ public class MapModel {
         return scaledCollisionObjects;
     }
 
-    public Array<Door> getDoors(){
-        return this.doors;
+    public Array<Interactable> getInteractables(){
+        return this.interactables;
     }
 
 }

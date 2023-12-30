@@ -1,10 +1,12 @@
 
 package Controller;
 
+import Model.Interactable;
 import Model.Player;
 import Model.PlayerState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.utils.Array;
 
 public class PlayerInputManager {
     private final Player player;
@@ -60,6 +62,12 @@ public class PlayerInputManager {
                     player.moveRight();
                 }
             }
+        }
+    }
+
+    public void handleInteractInput(Array<Interactable> interactables){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            player.interactWithNearestObject(interactables);
         }
     }
     public void update(float delta){

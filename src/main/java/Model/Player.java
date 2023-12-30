@@ -9,6 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,7 @@ public class Player {
     public void update(float delta) {
         if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
         inputManager.handleInput();
+        inputManager.handleInteractInput(mapModel.getInteractables());
         animationManager.update(delta);
         enemyManager.update(delta);
         // Check for melee attack and collisions with enemies
@@ -107,6 +110,31 @@ public class Player {
 
         //this.isSprinting = isSprinting && sprintStat > 10;
 
+    }
+
+    public void interactWithNearestObject(Array<Interactable> interactables) {
+        Interactable nearestInteractable = findNearestInteractable(interactables);
+
+        if (nearestInteractable != null) {
+            nearestInteractable.interact(this);
+        }
+    }
+
+    private Interactable findNearestInteractable(Array<Interactable> interactables) {
+        float minDistance = 100f;
+        Interactable nearestInteractable = null;
+
+        for (Interactable interactable : interactables) {
+            float distance = new Vector2(getHitBox().x + getHitBox().width/2, getHitBox().y + getHitBox().height/2).dst(
+                    interactable.getPosition());
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestInteractable = interactable;
+            }
+        }
+
+        return nearestInteractable;
     }
 
     public void checkMeleeAttack() {

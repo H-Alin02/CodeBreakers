@@ -1,14 +1,11 @@
 package View;
 
 import Controller.PlayerInputManager;
-import Model.Bullet;
-import Model.Door;
+import Model.*;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
 import Model.Enemies.MetalRobot.MetalRobot;
-import Model.MapModel;
 import Model.Object.ObjectManager;
-import Model.Player;
 import View.Hud.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -126,7 +123,7 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().draw(); //draw the Hud
 
         //DEBUG
-        renderDebug();
+        //renderDebug();
         //renderPlayerCollisionDebug();
         //renderEnemyDebug();
     }
@@ -169,9 +166,11 @@ public class GameScreen extends ScreenAdapter {
             // Add additional checks for other object types if needed
         }
 
-        for(Door door : mapModel.getDoors()){
-            Rectangle rect = door.getBoundingBox();
-            shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+        for(Interactable door : mapModel.getInteractables()){
+            if(door instanceof Door){
+                Rectangle rect = ((Door) door).getBoundingBox();
+                shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            }
         }
         shapeRenderer.end();
     }

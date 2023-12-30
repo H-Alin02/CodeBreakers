@@ -1,5 +1,6 @@
 package Model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-public class Door {
+public class Door implements Interactable{
     private float x,y;
     private float doorWidth;
     private float doorHeight;
@@ -18,7 +19,7 @@ public class Door {
     private final Animation<TextureRegion> doorOpen;
     private final Animation<TextureRegion> doorClose;
     private float stateTime;
-
+    private Texture interactTexture;
     public Door( float x, float y, float width, float height){
         this.x = x;
         this.y = y;
@@ -27,6 +28,7 @@ public class Door {
         this.isOpen = false;
         this.isClosing = false;
         this.boundingBox = new Rectangle(x,y, width, height);
+        interactTexture = new Texture(Gdx.files.internal("map/Interaction/Interaction.png"));
 
         String path = (width == 64) ? "Door2" : "Door1";
 
@@ -57,27 +59,21 @@ public class Door {
         stateTime += delta;
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch, Player player) {
         batch.draw(getKeyFrame(),x,y,doorWidth,doorHeight);
+        // Disegna il messaggio sopra la porta se è aperta e il giocatore è nel raggio
+        if (isPlayerInRange(player.getHitBox().x+ player.getHitBox().width/2,
+                player.getHitBox().y +player.getHitBox().height/2,
+                100)) {
+            float messageX = x + 20;
+            float messageY = y + doorHeight + 20;
+
+            batch.draw(interactTexture, messageX, messageY, 96, 96);
+        }
     }
 
     public boolean isOpen() {
         return isOpen;
-    }
-
-    public void setOpen(boolean isOpen) {
-        this.isOpen = isOpen;
-        if (isOpen) {
-            stateTime = 0;
-            isClosing = true;
-            // Se la porta è aperta, il bounding box è vuoto o non collidente
-            boundingBox.set(0, 0, 0, 0);
-        } else {
-            stateTime = 0;
-            isClosing = false;
-            // Se la porta è chiusa, aggiorna il bounding box della porta
-            boundingBox.set(x, y, doorWidth , doorHeight);
-        }
     }
 
     public boolean isPlayerInRange(float playerX, float playerY, float range) {
@@ -102,5 +98,40 @@ public class Door {
     }
     public Rectangle getBoundingBox() {
         return boundingBox;
+    }
+
+    @Override
+    public void interact(Player player) {
+        if(!player.getHitBox().overlaps(new Rectangle(x, y, doorWidth, doorHeight))) {
+            if (!isOpen) {
+                openDoor();
+            } else {
+                closeDoor();
+            }
+        }
+    }
+
+    private void openDoor() {
+        stateTime = 0;
+        isOpen = true;
+        isClosing = true;
+        boundingBox.set(0, 0, 0, 0);
+    }
+
+    private void closeDoor() {
+        stateTime = 0;
+        isOpen = false;
+        isClosing = false;
+        boundingBox.set(x, y, doorWidth, doorHeight);
+    }
+
+    @Override
+    public Vector2 getPosition() {
+        return new Vector2(this.x + doorWidth/2, this.y+doorHeight/2);
+    }
+
+    @Override
+    public boolean isCollision(float x, float y, float width, float height) {
+        return !isOpen && boundingBox.overlaps(new Rectangle(x, y, width, height));
     }
 }
