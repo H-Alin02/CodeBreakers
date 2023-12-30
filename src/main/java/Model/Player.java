@@ -107,9 +107,6 @@ public class Player {
         if(canRegenerateSprint && sprintStat < 100){
             sprintStat+=0.5;
         }
-
-        //this.isSprinting = isSprinting && sprintStat > 10;
-
     }
 
     public void interactWithNearestObject(Array<Interactable> interactables) {
@@ -201,7 +198,6 @@ public class Player {
                 shootTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetShoot();
-
             }
         }
     }
