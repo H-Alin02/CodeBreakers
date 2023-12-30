@@ -13,14 +13,16 @@ public class ObjectManager {
 
     private Player player;
     private Item item;
-
+    private int medicalLife;
+    private int energy;
 
     public ObjectManager(){
         this.objects = new Array<>();
         item = new Item();
         player = Player.getInstance();
         this.objectCreator = new ObjectCreator();
-
+        medicalLife = 100;
+        energy = 25;
     }
 
     public void initializeObject(){
@@ -45,30 +47,45 @@ public class ObjectManager {
     public void checkCollision(){
         for(ObjectGame obj : objects) {
             if (obj.collide(player)) {
-                obj.setRemove(true);
-
-                if (Objects.equals(obj.getName(), "coin") && obj.isRemove()) {
-                    item.addCoin(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "key") && obj.isRemove()) {
-                    item.addKey(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "diamond") && obj.isRemove()) {
-                    item.addDiamond(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "meat") && obj.isRemove()) {
-                    item.addMeat(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "money") && obj.isRemove()) {
-                    item.addMoney(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                }else if (Objects.equals(obj.getName(), "ammunition") && obj.isRemove()) {
-                    item.addAmmunition(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                }else if (Objects.equals(obj.getName(), "medikit") && obj.isRemove()) {
-                    item.addMedikit(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
+                if (Objects.equals(obj.getName(),"medikit")){
+                    if (player.getPlayerLife()>= 100){
+                        player.setPlayerLife(0);
+                    }else {
+                        obj.setRemove(true);
+                        player.setPlayerLife(medicalLife);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                    }
                 }
+                else if(Objects.equals(obj.getName(),"meat")){
+                        if (player.getPlayerLife()>= 100){
+                            player.setPlayerLife(0);
+                        }else {
+                            obj.setRemove(true);
+                            player.setPlayerLife(energy);
+                            objects.removeIndex(objects.indexOf(obj,false));
+                        }
+                }
+                else {
+                    obj.setRemove(true);
+
+                    if (Objects.equals(obj.getName(), "coin") && obj.isRemove()) {
+                        item.addCoin(obj);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                    } else if (Objects.equals(obj.getName(), "key") && obj.isRemove()) {
+                        item.addKey(obj);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                    } else if (Objects.equals(obj.getName(), "diamond") && obj.isRemove()) {
+                        item.addDiamond(obj);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                    } else if (Objects.equals(obj.getName(), "money") && obj.isRemove()) {
+                        item.addMoney(obj);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                    }else if (Objects.equals(obj.getName(), "ammunition") && obj.isRemove()) {
+                        item.addAmmunition(obj);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                    }
+                }
+
             }
         }
     }

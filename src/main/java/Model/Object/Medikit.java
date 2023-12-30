@@ -13,8 +13,10 @@ public class Medikit implements ObjectGame{
     private final int OBJECT_HEIGHT = 32;
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
+    private boolean isAvailable;
     private final float SCALE = 1.2f;
     private String name ;
+    private int amountLife ;
     public Medikit(int medikitX, int medikitY){
         this.medikitX = medikitX;
         this.medikitY = medikitY;
@@ -22,6 +24,8 @@ public class Medikit implements ObjectGame{
 
         this.name = "medikit";
         this.remove = false;
+        this.amountLife = 20;
+        this.isAvailable = true;
     }
     @Override
     public void draw(SpriteBatch batch) {
@@ -60,4 +64,5 @@ public class Medikit implements ObjectGame{
     public String getName() {
         return this.name;
     }
+
 }
