@@ -498,5 +498,12 @@ public class Player {
     public List<Bullet> getBullets() {
         return bullets;
     }
+    public void setPlayerLife(int life){
+        this.playerLife += life;
+        if (playerLife >= 100){
+            playerLife = 100;
+        }
+        System.out.println("PLAYER LIFE "+ playerLife);
+    }
 }
 

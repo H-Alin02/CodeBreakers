@@ -15,7 +15,7 @@ public class Ammunition implements ObjectGame {
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
-
+    private int ammunitionValue;
     public Ammunition(int ammunitionX, int ammunitionY){
         this.ammunitionX = ammunitionX;
         this.ammunitionY = ammunitionY;
@@ -23,6 +23,7 @@ public class Ammunition implements ObjectGame {
 
         this.name = "ammunition";
         this.remove = false;
+        this.ammunitionValue = 50;
     }
     @Override
     public void draw(SpriteBatch batch) {
@@ -60,5 +61,15 @@ public class Ammunition implements ObjectGame {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public  int getValue() {
+        return ammunitionValue;
+    }
+
+    @Override
+    public void setValue(int value) {
+        ammunitionValue = value;
     }
 }

@@ -16,6 +16,7 @@ public class Money implements ObjectGame{
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
+    private int money;
 
     public Money(int moneyX, int moneyY){
         this.moneyX = moneyX;
@@ -24,6 +25,7 @@ public class Money implements ObjectGame{
 
         name = "money";
         remove = false;
+        money = 500;
     }
     @Override
     public void draw(SpriteBatch batch) {
@@ -59,4 +61,15 @@ public class Money implements ObjectGame{
     }
     @Override
     public String getName(){return name;}
+
+    @Override
+    public int getValue() {
+        return money;
+    }
+
+    @Override
+    public void setValue(int value) {
+        money += value;
+    }
+
 }

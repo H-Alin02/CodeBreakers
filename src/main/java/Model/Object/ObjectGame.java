@@ -13,4 +13,6 @@ public interface ObjectGame {
     boolean isRemove();
     void setRemove(boolean b);
     String getName();
+    int getValue();
+    void setValue(int value);
 }
