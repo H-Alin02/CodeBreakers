@@ -17,13 +17,16 @@ public class PlayerStats implements HudComponent{
 
     private Label lifeLabel = new Label("Life", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     private Label staminaLabel = new Label("Stamina", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-    private Skin skin = new Skin();
+    //private Skin skin = new Skin();
     private ProgressBar lifeBar;
     private ProgressBar staminaBar;
-    private Table tableStats = new Table();
+    Skin skin = new Skin();
+    private Table tableStats = new Table(skin);
     private float playerLife = 1f;
     private float playerStamina = 1f;
     public PlayerStats(){
+
+
         //skin e pixmap sono relativi a ProgressBar
         Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -48,7 +51,7 @@ public class PlayerStats implements HudComponent{
 
         //lifeBar.setSize(50, 10);
 
-        tableStats.setBackground(textureLifeBar);
+        //tableStats.setBackground(skin.getDrawable("WindowStyle"));
 
 
 

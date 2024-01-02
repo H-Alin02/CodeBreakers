@@ -121,6 +121,11 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
         hud.getStage().act(delta); //act the Hud
         hud.getStage().draw(); //draw the Hud
+        //Controlla se il gioco è finito
+        if(gameOver()){
+            Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera));
+            dispose();
+        }
 
         //DEBUG
         //renderDebug();
@@ -188,6 +193,11 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         shapeRenderer.end();
+    }
+    public boolean gameOver(){
+        if(player.isPlayerDead()){
+            return true;
+        } else return false;
     }
 
     @Override

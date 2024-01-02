@@ -52,6 +52,7 @@ public class Player {
     private List<Enemy> enemies;
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
+    private boolean playerDead = false;
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -82,6 +83,11 @@ public class Player {
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
         updateShootTimer(delta);
+
+        //controlla che il giocatore sia ancora in vita
+        //if(playerDead){
+
+        //};
 
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
@@ -283,7 +289,14 @@ public class Player {
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
             // For example, set the enemy state to a death state and stop animations
+
             System.out.println("PLAYER IS DEAD - GAME OVER");
+
+            playerDead = true;
+
+            currentState = PlayerState.DEAD;
+
+            Player.INSTANCE = null;
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
@@ -463,6 +476,10 @@ public class Player {
 
     public List<Bullet> getBullets() {
         return bullets;
+    }
+
+    public boolean isPlayerDead() {
+        return playerDead;
     }
 }
 
