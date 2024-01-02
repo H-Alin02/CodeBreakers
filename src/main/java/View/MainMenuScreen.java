@@ -1,9 +1,9 @@
 package View;
 
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,10 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen extends ScreenAdapter {
-    private Stage stage;
+    private static Stage stage;
     private OrthographicCamera camera;
-    private Music backgroundMusic;
-    private Sound buttonClickSound;
+    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
+    private static final SoundPlayer buttonClickSound = new SoundPlayer("Sound/abs-confirm-1.mp3");
 
     public MainMenuScreen(OrthographicCamera camera) {
         this.camera = camera;
@@ -31,14 +31,11 @@ public class MainMenuScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
 
         // Carica la musica dal tuo progetto (assumi che il file sia nella cartella "assets")
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));
         // Imposta la ripetizione della musica in modo che continui a suonare
         backgroundMusic.setLooping(true);
         // Avvia la musica
         backgroundMusic.play();
         backgroundMusic.setVolume(0.2f);
-
-        buttonClickSound = Gdx.audio.newSound(Gdx.files.internal("Sound/abs-confirm-1.mp3"));
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));

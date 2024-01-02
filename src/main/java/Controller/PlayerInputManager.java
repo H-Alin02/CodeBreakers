@@ -22,10 +22,10 @@ public class PlayerInputManager {
         // If no movement keys are pressed, set the player to standing
         player.setSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
 
-        Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
-        Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
-        Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
-        Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
+        boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
+        boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
+        boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             player.shoot();
@@ -37,7 +37,9 @@ public class PlayerInputManager {
             // If no attack key is pressed, check movement keys
             if ((up && down) || (left && right) || (!up && !down && !left && !right)) {
                 // If no movement keys are pressed, set the player to standing
-                if(!player.isAttacking() && !player.isShooting()) player.currentState = PlayerState.STANDING;
+                if(!player.isAttacking() && !player.isShooting())
+                    player.currentState = PlayerState.STANDING;
+
                 return;
             }
             if(!player.isAttacking() && !player.isShooting()){

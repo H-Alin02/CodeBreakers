@@ -3,10 +3,9 @@ package Model.Enemies.MetalRobot;
 import Model.Enemies.Enemy;
 import Model.MapModel;
 import Model.Player;
+import Model.SoundPlayer;
 import View.Boot;
 import View.GameScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -56,8 +55,10 @@ public class MetalRobot implements Enemy {
 
     private GameScreen gameScreen;
 
-    private static final Sound punchSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/robot_punch.wav"));
-    public static final Sound alertSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/robot_alert.wav"));
+    private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/robot_punch.wav");
+    public static final SoundPlayer alertSound = new SoundPlayer("sound_effects/robot_alert.wav");
+    public static final SoundPlayer deathSound = new SoundPlayer("sound_effects/robot_death_sound.wav");
+    public static final SoundPlayer damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -76,6 +77,11 @@ public class MetalRobot implements Enemy {
         hitBoxY = enemyY + (6*3);
 
         runStateMachine(delta);
+
+        punchSound.update(delta);
+        damageSound.update(delta);
+        alertSound.update(delta);
+        deathSound.update(delta);
 
         distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
         isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
@@ -178,7 +184,7 @@ public class MetalRobot implements Enemy {
     public void attackPlayer(){
         if (!enemyAttackStates.contains(currentState, true))
             if(!hasAttacked){
-                punchSound.play(0.1f);
+                punchSound.play(0.05f);
 
                 if(flip == 'a') {
                     currentState = MetalRobotState.ATTACK1;
@@ -341,6 +347,7 @@ public class MetalRobot implements Enemy {
             if (health <= 0) {
                 // Implement logic for enemy death or removal from the game
                 // For example, set the enemy state to a death state and stop animations
+                deathSound.play(0.1f);
                 deadAnimationComplete = false;
                 currentState = (flip == 'a') ? MetalRobotState.DEAD1 : MetalRobotState.DEAD2;
                 animationManager.resetDamage();
@@ -352,6 +359,7 @@ public class MetalRobot implements Enemy {
                 animationManager.resetDamage();
                 damageAnimationComplete = false;
                 gameScreen.shakeCamera(0.3f, 4);
+                damageSound.play(0.1f);
                 //isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
             }
         }

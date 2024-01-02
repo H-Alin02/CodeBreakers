@@ -20,6 +20,9 @@ public class Door implements Interactable{
     private final Animation<TextureRegion> doorClose;
     private float stateTime;
     private Texture interactTexture;
+    private static final SoundPlayer openingSound = new SoundPlayer("sound_effects/door_opening.mp3");
+    private static final SoundPlayer closingSound = new SoundPlayer("sound_effects/door_opening.mp3");
+
     public Door( float x, float y, float width, float height){
         this.x = x;
         this.y = y;
@@ -55,8 +58,11 @@ public class Door implements Interactable{
         }
     }
 
-    public void update(float delta){
+    public void update(float delta)
+    {
         stateTime += delta;
+        openingSound.update(delta);
+        closingSound.update(delta);
     }
 
     public void draw(SpriteBatch batch, Player player) {
@@ -116,6 +122,7 @@ public class Door implements Interactable{
         isOpen = true;
         isClosing = true;
         boundingBox.set(0, 0, 0, 0);
+        openingSound.play(0.1f);
     }
 
     private void closeDoor() {
@@ -123,6 +130,7 @@ public class Door implements Interactable{
         isOpen = false;
         isClosing = false;
         boundingBox.set(x, y, doorWidth, doorHeight);
+        closingSound.play(0.1f);
     }
 
     @Override

@@ -7,7 +7,6 @@ import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -54,11 +53,15 @@ public class Player {
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
+    private List<Door> doors;
     private boolean canRegenerateSprint = true;
 
-    private static final Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/player_damaged.mp3"));
-    private static final Sound shotSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/shot.mp3"));
-    private static final Sound punchSound = Gdx.audio.newSound(Gdx.files.internal("sound_effects/missed_punch.wav"));
+    private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
+    private static final SoundPlayer shotSound = new SoundPlayer("sound_effects/shot.mp3");
+    private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/missed_punch.wav");
+    private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
+    private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
+    //private static final SoundPlayer walkingSound = new SoundPlayer(0.5f, "sound_effects/walking_sound.wav");
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -91,6 +94,13 @@ public class Player {
         updateAttackTimer(delta);
         updateShootTimer(delta);
 
+        damageSound.update(delta);
+        shotSound.update(delta);
+        punchSound.update(delta);
+        bulletHitSound.update(delta);
+        deathSound.update(delta);
+        //walkingSound.update(delta);
+
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
             bullet.update(delta);
@@ -100,6 +110,7 @@ public class Player {
         for (Bullet bullet : bullets) {
             if (mapModel.isCollisionWithScaledObjects(bullet.getX(), bullet.getY(), 32, 32)) {
                 bullet.setBulletState(BulletState.HIT);
+                bulletHitSound.play(0.2f);
                 bullet.deactivate();
             }
         }
@@ -112,8 +123,6 @@ public class Player {
         if(canRegenerateSprint && sprintStat < 100){
             sprintStat+=0.5;
         }
-
-        //shotSound.dispose();
     }
 
     public void interactWithNearestObject(Array<Interactable> interactables) {
@@ -308,12 +317,14 @@ public class Player {
 
     public void takeDamage(int damage){
         this.playerLife -= damage;
-        damageSound.play(0.1f);
+        damageSound.play(0.2f);
 
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
             // For example, set the enemy state to a death state and stop animations
             System.out.println("PLAYER IS DEAD - GAME OVER");
+
+        deathSound.play(0.2f);
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
@@ -388,19 +399,19 @@ public class Player {
         animationManager.resetAttack();
     }
 
-    public Boolean upColliding() {
+    public boolean upColliding() {
         return isCollision(HitBoxX, HitBoxY + getSPEED());
     }
 
-    public Boolean downColliding() {
+    public boolean downColliding() {
         return isCollision(HitBoxX, HitBoxY - getSPEED());
     }
 
-    public Boolean leftColliding() {
+    public boolean leftColliding() {
         return isCollision(HitBoxX - getSPEED(), HitBoxY);
     }
 
-    public Boolean rightColliding() {
+    public boolean rightColliding() {
         return isCollision(HitBoxX + getSPEED(), HitBoxY);
     }
 
@@ -429,6 +440,10 @@ public class Player {
     }
 
     public void setSPEED(int SPEED) {
+
+        //if(!walkingSound.isPlaying())
+        //    walkingSound.play(0.2f);
+
         if (isSprinting) {
             SPEED *= 2;
             animationManager.updateAnimSpeed(0.07f);
@@ -439,7 +454,8 @@ public class Player {
         } else {
             animationManager.updateAnimSpeed(0.1f);
         }
-            this.SPEED = SPEED;
+
+        this.SPEED = SPEED;
     }
     public List<Enemy> getEnemies() {
         return enemies;
@@ -477,7 +493,7 @@ public class Player {
         return isShooting;
     }
 
-    public void setSprinting(Boolean isSprinting) {
+    public void setSprinting(boolean isSprinting) {
         this.isSprinting = isSprinting && sprintStat > 0;
         if(!isSprinting) this.canRegenerateSprint = true;
         else this.canRegenerateSprint = false;
