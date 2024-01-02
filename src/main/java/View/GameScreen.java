@@ -81,8 +81,15 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta){
-        update(delta);
+        //Gestione della Pausa
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            hud.setPauseVisibility();
 
+        }
+        if(!hud.isPause()){
+        update(delta);
+        }
+        //fine gestione pausa
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         if (shakeDuration > 0) {
             float shakeX = (MathUtils.random() - 0.5f) * 2* shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
