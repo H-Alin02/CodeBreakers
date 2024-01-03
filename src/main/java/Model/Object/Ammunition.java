@@ -70,6 +70,6 @@ public class Ammunition implements ObjectGame {
 
     @Override
     public void setValue(int value) {
-        ammunitionValue = value;
+        ammunitionValue += value;
     }
 }

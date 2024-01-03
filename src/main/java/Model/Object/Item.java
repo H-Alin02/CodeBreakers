@@ -1,5 +1,6 @@
 package Model.Object;
 
+import Model.Player;
 import com.badlogic.gdx.utils.Array;
 
 public class Item {
@@ -8,7 +9,7 @@ public class Item {
     private Array<Money> money;
     private Array<Key> key;
     private Array<Ammunition> ammunition;
-
+    private Player player;
 
     public Item(){
         this.coin = new Array<>();
@@ -16,6 +17,7 @@ public class Item {
         this.money = new Array<>();
         this.key = new Array<>();
         this.ammunition = new Array<>();
+        this.player = Player.getInstance();
     }
 
     public void addCoin(ObjectGame obj){
@@ -40,6 +42,11 @@ public class Item {
 
     public void addAmmunition(ObjectGame obj){
         ammunition.add((Ammunition) obj);
+        int value = 0;
+        for (Ammunition a : ammunition){
+            value += a.getValue();
+        }
+        player.setBulletCount(value);
     }
 
     public int getCoin() {
@@ -67,11 +74,7 @@ public class Item {
     }
 
     public int getAmmunition(){
-        int value = 0;
-        for (Ammunition a : ammunition){
-            value = a.getValue();
-        }
-        return  value;
+        return player.getBulletCount();
     }
     public void update(float delta){
         getCoin();

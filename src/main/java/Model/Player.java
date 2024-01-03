@@ -43,6 +43,7 @@ public class Player {
     private float bulletSpeed = 10;
     private int playerLife = 100;
     private float sprintStat = 100;
+    private int bulletCount = 0 ;
 
     // HitBox
     private int HitBoxX; // Player x + 8
@@ -292,9 +293,10 @@ public class Player {
 
     public void shoot() {
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting && bulletCount > 0) {
             shotSound.play(0.1f);
 
+            bulletCount--;
             isShooting = true;
             animationManager.resetShoot();
 
@@ -324,7 +326,7 @@ public class Player {
             // For example, set the enemy state to a death state and stop animations
             System.out.println("PLAYER IS DEAD - GAME OVER");
 
-        deathSound.play(0.2f);
+            deathSound.play(0.2f);
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
@@ -521,5 +523,13 @@ public class Player {
         }
         System.out.println("PLAYER LIFE "+ playerLife);
     }
+
+    public void setBulletCount(int shoot) {
+        this.bulletCount = shoot;
+    }
+    public int getBulletCount(){
+        return this.bulletCount;
+    }
+
 }
 
