@@ -70,7 +70,7 @@ public class Door implements Interactable{
         // Disegna il messaggio sopra la porta se è aperta e il giocatore è nel raggio
         if (isPlayerInRange(player.getHitBox().x+ player.getHitBox().width/2,
                 player.getHitBox().y +player.getHitBox().height/2,
-                100)) {
+                120)) {
             float messageX = x + 20;
             float messageY = y + doorHeight + 20;
 

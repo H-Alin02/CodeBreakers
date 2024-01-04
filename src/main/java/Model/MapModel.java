@@ -1,5 +1,7 @@
 package Model;
 
+import Model.NPC.NPC;
+import Model.NPC.NPCManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
@@ -18,10 +20,10 @@ public class MapModel {
     private TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final MapObjects scaledCollisionObjects;
+    private NPCManager npcManager;
     private float mapScale = 2.0f;
     private Player player;
     private Array<Interactable> interactables;
-
 
     public static MapModel getInstance() {
         if (INSTANCE == null) {
@@ -45,6 +47,14 @@ public class MapModel {
 
         // Carica le porte dalla mappa
         loadDoors();
+
+        npcManager = new NPCManager();
+        //Aggiunge gli NPC alla mappa
+        npcManager.initializeNPCs();
+
+        for(NPC npc : npcManager.getNPC()){
+            interactables.add((Interactable)npc);
+        }
     }
 
     public void update(float delta){

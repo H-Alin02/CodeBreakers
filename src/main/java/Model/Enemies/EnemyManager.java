@@ -1,6 +1,5 @@
 package Model.Enemies;
 
-import Model.Enemies.Dummy.DummyAnimationManager;
 import Model.Enemies.Dummy.DummyEnemyCreator;
 import Model.Enemies.MetalRobot.MetalRobotCreator;
 
@@ -9,13 +8,11 @@ import java.util.List;
 
 public class EnemyManager {
     private final List<Enemy> enemies;
-    private final DummyAnimationManager animationManager;
     private DummyEnemyCreator dummyEnemyCreator;
     private MetalRobotCreator metalRobotCreator;
 
     public EnemyManager(){
         this.enemies = new ArrayList<>();
-        this.animationManager = new DummyAnimationManager(); // TODO Da eliminare , rimasto dalla vecchia implementazione
         this.dummyEnemyCreator = new DummyEnemyCreator();
         this.metalRobotCreator = new MetalRobotCreator();
     }
@@ -50,7 +47,6 @@ public class EnemyManager {
         for(Enemy enemy : enemies){
             enemy.update(delta);
         }
-        animationManager.update(delta); // TODO Da eliminare , rimasto dalla vecchia implementazione
     }
 
     public List<Enemy> getEnemies() {

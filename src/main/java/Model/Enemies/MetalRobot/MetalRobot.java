@@ -1,9 +1,7 @@
 package Model.Enemies.MetalRobot;
 
+import Model.*;
 import Model.Enemies.Enemy;
-import Model.MapModel;
-import Model.Player;
-import Model.SoundPlayer;
 import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,7 +21,7 @@ public class MetalRobot implements Enemy {
     private final int enemyHeight = 32; // Altezza dell'immagine del nemico
     MetalRobotState currentState;  // Stato del nemico con enum ( per animazioni )
     private RobotState currentRobotState; // Stato del nemico con Pattern STATE
-    private Player player = Player.getInstance(); // Istanza di Player
+    private final Player player = Player.getInstance(); // Istanza di Player
 
     //Hit box
     private int hitBoxX; // Posizione x della HitBox del nemico
@@ -126,6 +124,14 @@ public class MetalRobot implements Enemy {
             if (otherEnemy != this) {
                 if (Intersector.intersectSegmentRectangle(startX, startY, playerX, playerY, otherEnemy.getHitBox())) {
                     // Collisione con un altro nemico, no Line of Sight
+                    return false;
+                }
+            }
+        }
+
+        for(Interactable interactable : mapModel.getInteractables()){
+            if(interactable instanceof Door){
+                if(Intersector.intersectSegmentRectangle(startX, startY, playerX, playerY, ((Door) interactable).getBoundingBox())){
                     return false;
                 }
             }
@@ -360,7 +366,8 @@ public class MetalRobot implements Enemy {
                 damageAnimationComplete = false;
                 gameScreen.shakeCamera(0.3f, 4);
                 damageSound.play(0.1f);
-                //isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
+                //TODO aggiungere knowback
+
             }
         }
     }

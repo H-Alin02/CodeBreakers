@@ -54,7 +54,6 @@ public class Player {
 
     private List<Enemy> enemies;
     private List<Bullet> bullets;
-    private List<Door> doors;
     private boolean canRegenerateSprint = true;
 
     private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
@@ -135,7 +134,7 @@ public class Player {
     }
 
     private Interactable findNearestInteractable(Array<Interactable> interactables) {
-        float minDistance = 100f;
+        float minDistance = 120f;
         Interactable nearestInteractable = null;
 
         for (Interactable interactable : interactables) {

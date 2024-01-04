@@ -10,7 +10,6 @@ import java.util.Objects;
 public class ObjectManager {
     private Array<ObjectGame> objects ;
     private ObjectGameCreator objectCreator;
-
     private Player player;
     private Item item;
     private int medicalLife;
@@ -89,7 +88,6 @@ public class ObjectManager {
                         objects.removeIndex(objects.indexOf(obj,false));
                     }
                 }
-
             }
         }
     }
