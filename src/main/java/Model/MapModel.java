@@ -145,4 +145,7 @@ public class MapModel {
         return this.interactables;
     }
 
+    public NPCManager getNpcManager() {
+        return npcManager;
+    }
 }

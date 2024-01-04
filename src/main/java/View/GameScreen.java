@@ -59,6 +59,8 @@ public class GameScreen extends ScreenAdapter {
         this.objects = new ObjectManager();
         this.objects.initializeObject();
         this.hud = new Hud(batch, objects);
+
+        mapModel.getNpcManager().addObserversToNPC(this.hud);
     }
 
     @Override

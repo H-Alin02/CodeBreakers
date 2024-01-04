@@ -12,6 +12,7 @@ public class DaveNPC implements NPC , Interactable {
     private Vector2 position;
     private TextureRegion texture;
     private Texture interactTexture;
+    private NPCObserver observer;
 
     public DaveNPC(Vector2 position){
         this.position = position;
@@ -21,6 +22,15 @@ public class DaveNPC implements NPC , Interactable {
     @Override
     public void interact(Player player) {
         talk();
+    }
+
+    @Override
+    public void addObserver(NPCObserver observer) {
+        this.observer = observer;
+    }
+
+    private void notifyObservers(String message) {
+        observer.onNPCTalk(message);
     }
 
     @Override
@@ -54,6 +64,7 @@ public class DaveNPC implements NPC , Interactable {
 
     @Override
     public void talk() {
-        System.out.println("Ciao sono Dave , l'istruttore dei Codebrekers, in posizione: " + position);
+        String message = "Ciao sono Dave, l'istruttore dei Codebrekers, in posizione: " + position;
+        notifyObservers(message);
     }
 }
