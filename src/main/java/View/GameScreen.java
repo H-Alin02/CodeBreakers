@@ -128,16 +128,19 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(hud.getStage().getCamera().combined); //set the spriteBatch to draw what our stageViewport sees
         hud.getStage().act(delta); //act the Hud
         hud.getStage().draw(); //draw the Hud
+
+        //DEBUG
+        renderDebug();
+        renderPlayerCollisionDebug();
+        renderEnemyDebug();
+
         //Controlla se il gioco è finito
         if(gameOver()){
             Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera));
             dispose();
         }
 
-        //DEBUG
-        //renderDebug();
-        //renderPlayerCollisionDebug();
-        //renderEnemyDebug();
+
     }
 
     public void shakeCamera(float duration , float intensity){
