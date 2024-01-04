@@ -52,35 +52,33 @@ public class ObjectManager {
             if (obj.collide(player)) {
 
                 obj.getPickSound().play(0.2f);
+                objects.removeIndex(objects.indexOf(obj,false));
+                obj.setRemove(true);
 
                 if (Objects.equals(obj.getName(),"medikit")){
                     if (player.getPlayerLife()>= 100){
                         player.setPlayerLife(0);
                     }else {
 
-                        obj.setRemove(true);
                         player.setPlayerLife(medicalLife);
-                        objects.removeIndex(objects.indexOf(obj,false));
                     }
                 }
                 else if(Objects.equals(obj.getName(),"meat")){
                         if (player.getPlayerLife()>= 100){
                             player.setPlayerLife(0);
                         }else {
-                            obj.setRemove(true);
                             player.setPlayerLife(energy);
-                            objects.removeIndex(objects.indexOf(obj,false));
+
                         }
+
                 }
                 else {
                     if (Objects.equals(obj.getName(),"ammunition"))
                         player.setBulletCount(player.getBulletCount()+50);
 
-                    obj.setRemove(true);
 
                     if (obj.isRemove()) {
                         item.add(obj);
-                        objects.removeIndex(objects.indexOf(obj,false));
                     }
                 }
             }
