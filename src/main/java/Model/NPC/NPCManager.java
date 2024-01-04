@@ -1,5 +1,6 @@
 package Model.NPC;
 
+import View.Hud.Hud;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
@@ -24,6 +25,12 @@ public class NPCManager {
 
     public List<NPC> getNPC() {
         return NPC;
+    }
+
+    public void addObserversToNPC(Hud hud){
+        for(NPC npc : NPC){
+            npc.addObserver(hud);
+        }
     }
 }
 
