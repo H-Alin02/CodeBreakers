@@ -23,7 +23,7 @@ public class MainMenuScreen extends ScreenAdapter {
     private static Stage stage;
     private OrthographicCamera camera;
     private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
-    private static final SoundPlayer buttonClickSound = new SoundPlayer("Sound/abs-confirm-1.mp3");
+    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
 
     public MainMenuScreen(OrthographicCamera camera) {
         this.camera = camera;
@@ -35,7 +35,7 @@ public class MainMenuScreen extends ScreenAdapter {
         backgroundMusic.setLooping(true);
         // Avvia la musica
         backgroundMusic.play();
-        backgroundMusic.setVolume(0.2f);
+        backgroundMusic.setVolume(0.3f);
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));

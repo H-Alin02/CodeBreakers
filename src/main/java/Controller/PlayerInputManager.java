@@ -42,27 +42,20 @@ public class PlayerInputManager {
 
                 return;
             }
+
             if(!player.isAttacking() && !player.isShooting()){
                 if ((up || down) && (left || right))
                     player.setSPEED(3);
                 else
                     player.setSPEED(4);
 
-                if (up) {
-                    player.moveUp();
-                }
+                if (up)     player.moveUp();
 
-                if (down) {
-                    player.moveDown();
-                }
+                if (down)   player.moveDown();
 
-                if (left) {
-                    player.moveLeft();
-                }
+                if (left)   player.moveLeft();
 
-                if (right) {
-                    player.moveRight();
-                }
+                if (right)  player.moveRight();
             }
         }
     }

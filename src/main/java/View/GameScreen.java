@@ -85,7 +85,7 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         if (shakeDuration > 0) {
-            float shakeX = (MathUtils.random() - 0.5f) * 2* shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
+            float shakeX = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
             float shakeY = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerY() + player.getPLAYER_HEIGHT() / 2;
 
             camera.position.set(shakeX, shakeY, 0);

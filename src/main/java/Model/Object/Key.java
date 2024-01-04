@@ -1,6 +1,5 @@
 package Model.Object;
 
-import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Key implements ObjectGame{
+public class Key implements GameObject{
     private int keyX, keyY;
     private final int OBJECT_HEIGHT = 32;
     private final int OBJECT_WIDTH = 32;
@@ -29,18 +28,7 @@ public class Key implements ObjectGame{
         batch.draw(texture,keyX,keyY,OBJECT_HEIGHT * SCALE,OBJECT_WIDTH * SCALE);
     }
 
-    @Override
-    public void update(float delta) {
-
-    }
-
-    @Override
-    public boolean collide(Player player) {
-        Rectangle rect = getArea();
-        Rectangle rect2 = player.getArea();
-
-        return rect2.overlaps(rect);
-    }
+    //public SoundPlayer getPickSound() {return  null;}
 
     @Override
     public Rectangle getArea() {

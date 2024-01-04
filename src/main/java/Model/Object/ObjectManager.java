@@ -8,7 +8,7 @@ import java.util.Objects;
 
 
 public class ObjectManager {
-    private Array<ObjectGame> objects ;
+    private Array<GameObject> objects ;
     private ObjectGameCreator objectCreator;
     private Player player;
     private Item item;
@@ -41,19 +41,23 @@ public class ObjectManager {
     }
 
     public void draw(SpriteBatch batch){
-        for(ObjectGame obj : objects){
+        for(GameObject obj : objects){
             obj.draw(batch);
         }
 
     }
 
     public void checkCollision(){
-        for(ObjectGame obj : objects) {
+        for(GameObject obj : objects) {
             if (obj.collide(player)) {
+
+                obj.getPickSound().play(0.2f);
+
                 if (Objects.equals(obj.getName(),"medikit")){
                     if (player.getPlayerLife()>= 100){
                         player.setPlayerLife(0);
                     }else {
+
                         obj.setRemove(true);
                         player.setPlayerLife(medicalLife);
                         objects.removeIndex(objects.indexOf(obj,false));
@@ -69,22 +73,13 @@ public class ObjectManager {
                         }
                 }
                 else {
+                    if (Objects.equals(obj.getName(),"ammunition"))
+                        player.setBulletCount(player.getBulletCount()+50);
+
                     obj.setRemove(true);
 
-                    if (Objects.equals(obj.getName(), "coin") && obj.isRemove()) {
-                        item.addCoin(obj);
-                        objects.removeIndex(objects.indexOf(obj,false));
-                    } else if (Objects.equals(obj.getName(), "key") && obj.isRemove()) {
-                        item.addKey(obj);
-                        objects.removeIndex(objects.indexOf(obj,false));
-                    } else if (Objects.equals(obj.getName(), "diamond") && obj.isRemove()) {
-                        item.addDiamond(obj);
-                        objects.removeIndex(objects.indexOf(obj,false));
-                    } else if (Objects.equals(obj.getName(), "money") && obj.isRemove()) {
-                        item.addMoney(obj);
-                        objects.removeIndex(objects.indexOf(obj,false));
-                    }else if (Objects.equals(obj.getName(), "ammunition") && obj.isRemove()) {
-                        item.addAmmunition(obj);
+                    if (obj.isRemove()) {
+                        item.add(obj);
                         objects.removeIndex(objects.indexOf(obj,false));
                     }
                 }
@@ -94,7 +89,7 @@ public class ObjectManager {
 
     public void update(float delta) {
         for (int i = 0; i < objects.size; i++){
-            ObjectGame obj = objects.get(i);
+            GameObject obj = objects.get(i);
             obj.update(delta);
             checkCollision();
         }

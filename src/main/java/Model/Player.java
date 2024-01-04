@@ -7,6 +7,7 @@ import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -51,7 +52,6 @@ public class Player {
     private final int  HitBoxWidht = 54;
     private final int  HitBoxHeight = 51;
     private Rectangle hitBox;
-
     private List<Enemy> enemies;
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
@@ -62,6 +62,7 @@ public class Player {
     private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
     private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
     //private static final SoundPlayer walkingSound = new SoundPlayer(0.5f, "sound_effects/walking_sound.wav");
+    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/level_music.mp3"));
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -71,6 +72,10 @@ public class Player {
         enemyManager = new EnemyManager();
         setEnemies(enemyManager.getEnemies());
         bullets = new ArrayList<>();
+
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.05f);
+        backgroundMusic.play();
     }
 
     public static Player getInstance() {
@@ -291,6 +296,7 @@ public class Player {
     }
 
     public void shoot() {
+        System.out.println("AAAA " + bulletCount);
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting && bulletCount > 0) {
             shotSound.play(0.1f);

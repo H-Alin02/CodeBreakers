@@ -1,9 +1,11 @@
 package Model.Object;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class ObjectCreator implements ObjectGameCreator{
 
     @Override
-    public ObjectGame createObject(String nameObject, int posX, int posY) {
+    public GameObject createObject(String nameObject, int posX, int posY) {
         if (nameObject == null){
             return null;
         }
@@ -25,5 +27,12 @@ public class ObjectCreator implements ObjectGameCreator{
             return new Medikit(posX,posY);
         }
         return null;
+    }
+
+    public <T extends GameObject> GameObject
+    createObject(Class<T> type, int posX, int posY)
+            throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException
+    {
+        return type.getDeclaredConstructor(int.class, int.class).newInstance(posX, posY);
     }
 }
