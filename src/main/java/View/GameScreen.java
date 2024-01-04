@@ -83,8 +83,15 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta){
-        update(delta);
+        //Gestione della Pausa
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            hud.setPauseVisibility();
 
+        }
+        if(!hud.isPause()){
+        update(delta);
+        }
+        //fine gestione pausa
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         if (shakeDuration > 0) {
             float shakeX = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
@@ -125,9 +132,17 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().draw(); //draw the Hud
 
         //DEBUG
-        //renderDebug();
-        //renderPlayerCollisionDebug();
-        //renderEnemyDebug();
+        renderDebug();
+        renderPlayerCollisionDebug();
+        renderEnemyDebug();
+
+        //Controlla se il gioco è finito
+        if(gameOver()){
+            Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera));
+            dispose();
+        }
+
+
     }
 
     public void shakeCamera(float duration , float intensity){
@@ -199,6 +214,11 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         shapeRenderer.end();
+    }
+    public boolean gameOver(){
+        if(player.isPlayerDead()){
+            return true;
+        } else return false;
     }
 
     @Override

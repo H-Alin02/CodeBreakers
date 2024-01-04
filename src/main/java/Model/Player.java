@@ -55,6 +55,7 @@ public class Player {
     private List<Enemy> enemies;
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
+    private boolean playerDead = false;
 
     private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
     private static final SoundPlayer shotSound = new SoundPlayer("sound_effects/shot.mp3");
@@ -99,12 +100,14 @@ public class Player {
         updateAttackTimer(delta);
         updateShootTimer(delta);
 
+
         damageSound.update(delta);
         shotSound.update(delta);
         punchSound.update(delta);
         bulletHitSound.update(delta);
         deathSound.update(delta);
         //walkingSound.update(delta);
+
 
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
@@ -329,9 +332,18 @@ public class Player {
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
             // For example, set the enemy state to a death state and stop animations
+
             System.out.println("PLAYER IS DEAD - GAME OVER");
 
+
+            playerDead = true;
+
+            currentState = PlayerState.DEAD;
+
+            Player.INSTANCE = null;
+
             deathSound.play(0.2f);
+
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
@@ -521,6 +533,11 @@ public class Player {
     public List<Bullet> getBullets() {
         return bullets;
     }
+
+    public boolean isPlayerDead() {
+        return playerDead;
+    }
+
     public void setPlayerLife(int life){
         this.playerLife += life;
         if (playerLife >= 100){
@@ -535,6 +552,7 @@ public class Player {
     public int getBulletCount(){
         return this.bulletCount;
     }
+
 
 }
 
