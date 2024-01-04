@@ -3,90 +3,59 @@ package Model.Object;
 import com.badlogic.gdx.utils.Array;
 
 public class Item {
-    private Array<Coin> coin;
-    private Array<Diamond> diamond;
-    private Array<Money> money;
-    private Array<Meat> meat;
-    private Array<Key> key;
-    private Array<Ammunition> ammunition;
-    private Array<Medikit> medikit;
+
+    private final Array<GameObject> items;
+
+    public <T extends GameObject> void add(T item)
+    {
+        items.add(item);
+        System.out.println(item.getName() + " picked, number of items: " + items.size);
+    }
 
     public Item(){
-        this.coin = new Array<>();
-        this.diamond = new Array<>();
-        this.money = new Array<>();
-        this.meat = new Array<>();
-        this.key = new Array<>();
-        this.ammunition = new Array<>();
-        this.medikit = new Array<>();
+        this.items = new Array<>();
     }
 
-    public void addCoin(ObjectGame obj){
-        coin.add((Coin) obj);
-        System.out.println("coin " + coin.size);
+    public <T extends GameObject> int typeCount(Class<T> type)
+    {
+        int value = 0;
+
+        for (GameObject item : items)
+            if(type.isInstance(item))
+                value ++;
+
+        return value;
     }
 
-    public void addDiamond(ObjectGame obj){
-        diamond.add((Diamond) obj);
-        System.out.println("diamond "+ diamond.size);
-    }
+    public <T extends GameObject> int typeValue(Class<T> type)
+    {
+        int value = 0;
 
-    public void addMoney(ObjectGame obj){
-        money.add((Money) obj);
-        System.out.println("money " + money.size);
-    }
+        for (GameObject item : items)
+            if(type.isInstance(item))
+                value += item.getValue();
 
-    public void addMeat(ObjectGame obj){
-        meat.add((Meat) obj);
-        System.out.println("meat " + meat.size);
-    }
-
-    public void addKey(ObjectGame obj){
-        key.add((Key) obj);
-        System.out.println("key " + key.size);
-    }
-
-    public void addAmmunition(ObjectGame obj){
-        ammunition.add((Ammunition) obj);
-    }
-    public void addMedikit(ObjectGame obj){
-        medikit.add((Medikit) obj);
+        return value;
     }
 
     public int getCoin() {
-        return coin.size;
+        return typeValue(Coin.class);
     }
 
     public int getDiamond() {
-        return diamond.size;
+        return typeCount(Diamond.class);
     }
 
     public int getMoney() {
-        return money.size;
+        return typeValue(Money.class);
     }
 
-    public int getMeat() {
-        return meat.size;
-    }
-
-    public int getKey() {
-        return key.size;
-    }
+    public int getKey() { return typeCount(Key.class); }
 
     public int getAmmunition(){
-        return  ammunition.size;
+        return typeValue(Ammunition.class);
     }
-    public int getMedikit(){
-        return medikit.size;
-    }
-
     public void update(float delta){
-        getCoin();
-        getKey();
-        getMeat();
-        getMoney();
-        getDiamond();
-        getAmmunition();
-        getMedikit();
+
     }
 }

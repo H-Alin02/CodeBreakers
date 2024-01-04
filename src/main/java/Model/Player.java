@@ -7,8 +7,11 @@ import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ public class Player {
     private float bulletSpeed = 10;
     private int playerLife = 100;
     private float sprintStat = 100;
+    private int bulletCount = 0 ;
 
     // HitBox
     private int HitBoxX; // Player x + 8
@@ -48,11 +52,18 @@ public class Player {
     private final int  HitBoxWidht = 54;
     private final int  HitBoxHeight = 51;
     private Rectangle hitBox;
-
     private List<Enemy> enemies;
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
     private boolean playerDead = false;
+
+    private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
+    private static final SoundPlayer shotSound = new SoundPlayer("sound_effects/shot.mp3");
+    private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/missed_punch.wav");
+    private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
+    private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
+    //private static final SoundPlayer walkingSound = new SoundPlayer(0.5f, "sound_effects/walking_sound.wav");
+    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/level_music.mp3"));
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -62,6 +73,10 @@ public class Player {
         enemyManager = new EnemyManager();
         setEnemies(enemyManager.getEnemies());
         bullets = new ArrayList<>();
+
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.05f);
+        backgroundMusic.play();
     }
 
     public static Player getInstance() {
@@ -78,16 +93,21 @@ public class Player {
     public void update(float delta) {
         if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
         inputManager.handleInput();
+        inputManager.handleInteractInput(mapModel.getInteractables());
         animationManager.update(delta);
         enemyManager.update(delta);
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
         updateShootTimer(delta);
 
-        //controlla che il giocatore sia ancora in vita
-        //if(playerDead){
 
-        //};
+        damageSound.update(delta);
+        shotSound.update(delta);
+        punchSound.update(delta);
+        bulletHitSound.update(delta);
+        deathSound.update(delta);
+        //walkingSound.update(delta);
+
 
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
@@ -98,6 +118,7 @@ public class Player {
         for (Bullet bullet : bullets) {
             if (mapModel.isCollisionWithScaledObjects(bullet.getX(), bullet.getY(), 32, 32)) {
                 bullet.setBulletState(BulletState.HIT);
+                bulletHitSound.play(0.2f);
                 bullet.deactivate();
             }
         }
@@ -110,9 +131,31 @@ public class Player {
         if(canRegenerateSprint && sprintStat < 100){
             sprintStat+=0.5;
         }
+    }
 
-        //this.isSprinting = isSprinting && sprintStat > 10;
+    public void interactWithNearestObject(Array<Interactable> interactables) {
+        Interactable nearestInteractable = findNearestInteractable(interactables);
 
+        if (nearestInteractable != null) {
+            nearestInteractable.interact(this);
+        }
+    }
+
+    private Interactable findNearestInteractable(Array<Interactable> interactables) {
+        float minDistance = 120f;
+        Interactable nearestInteractable = null;
+
+        for (Interactable interactable : interactables) {
+            float distance = new Vector2(getHitBox().x + getHitBox().width/2, getHitBox().y + getHitBox().height/2).dst(
+                    interactable.getPosition());
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestInteractable = interactable;
+            }
+        }
+
+        return nearestInteractable;
     }
 
     public void checkMeleeAttack() {
@@ -179,7 +222,6 @@ public class Player {
                 shootTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
                 animationManager.resetShoot();
-
             }
         }
     }
@@ -257,28 +299,27 @@ public class Player {
     }
 
     public void shoot() {
+        System.out.println("AAAA " + bulletCount);
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting && bulletCount > 0) {
+            shotSound.play(0.1f);
+
+            bulletCount--;
+            isShooting = true;
+            animationManager.resetShoot();
+
             switch (getDirection()) {
                 case 'w':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_UP;
-                    animationManager.resetShoot();
                     break;
                 case 's':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_DOWN;
-                    animationManager.resetShoot();
                     break;
                 case 'd':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_RIGHT;
-                    animationManager.resetShoot();
                     break;
                 case 'a':
-                    isShooting = true;
                     currentState = PlayerState.SHOOT_LEFT;
-                    animationManager.resetShoot();
                     break;
             }
         }
@@ -286,17 +327,23 @@ public class Player {
 
     public void takeDamage(int damage){
         this.playerLife -= damage;
+        damageSound.play(0.2f);
+
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
             // For example, set the enemy state to a death state and stop animations
 
             System.out.println("PLAYER IS DEAD - GAME OVER");
 
+
             playerDead = true;
 
             currentState = PlayerState.DEAD;
 
             Player.INSTANCE = null;
+
+            deathSound.play(0.2f);
+
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
@@ -344,42 +391,46 @@ public class Player {
     }
 
     public void attackUp() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_UP;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackDown() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_DOWN;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackRight() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_RIGHT;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
     public void attackLeft() {
+        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_LEFT;
         isAttacking = true;
         animationManager.resetAttack();
     }
 
-    public Boolean upColliding() {
+    public boolean upColliding() {
         return isCollision(HitBoxX, HitBoxY + getSPEED());
     }
 
-    public Boolean downColliding() {
+    public boolean downColliding() {
         return isCollision(HitBoxX, HitBoxY - getSPEED());
     }
 
-    public Boolean leftColliding() {
+    public boolean leftColliding() {
         return isCollision(HitBoxX - getSPEED(), HitBoxY);
     }
 
-    public Boolean rightColliding() {
+    public boolean rightColliding() {
         return isCollision(HitBoxX + getSPEED(), HitBoxY);
     }
 
@@ -408,6 +459,10 @@ public class Player {
     }
 
     public void setSPEED(int SPEED) {
+
+        //if(!walkingSound.isPlaying())
+        //    walkingSound.play(0.2f);
+
         if (isSprinting) {
             SPEED *= 2;
             animationManager.updateAnimSpeed(0.07f);
@@ -418,7 +473,8 @@ public class Player {
         } else {
             animationManager.updateAnimSpeed(0.1f);
         }
-            this.SPEED = SPEED;
+
+        this.SPEED = SPEED;
     }
     public List<Enemy> getEnemies() {
         return enemies;
@@ -456,7 +512,7 @@ public class Player {
         return isShooting;
     }
 
-    public void setSprinting(Boolean isSprinting) {
+    public void setSprinting(boolean isSprinting) {
         this.isSprinting = isSprinting && sprintStat > 0;
         if(!isSprinting) this.canRegenerateSprint = true;
         else this.canRegenerateSprint = false;
@@ -481,5 +537,22 @@ public class Player {
     public boolean isPlayerDead() {
         return playerDead;
     }
+
+    public void setPlayerLife(int life){
+        this.playerLife += life;
+        if (playerLife >= 100){
+            playerLife = 100;
+        }
+        System.out.println("PLAYER LIFE "+ playerLife);
+    }
+
+    public void setBulletCount(int shoot) {
+        this.bulletCount = shoot;
+    }
+    public int getBulletCount(){
+        return this.bulletCount;
+    }
+
+
 }
 

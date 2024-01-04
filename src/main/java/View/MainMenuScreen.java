@@ -1,7 +1,9 @@
 package View;
 
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,13 +20,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen extends ScreenAdapter {
-    private Stage stage;
+    private static Stage stage;
     private OrthographicCamera camera;
+    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
+    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
 
     public MainMenuScreen(OrthographicCamera camera) {
         this.camera = camera;
         stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(),Boot.INSTANCE.getScreenHeight() ,camera));
         Gdx.input.setInputProcessor(stage);
+
+        // Carica la musica dal tuo progetto (assumi che il file sia nella cartella "assets")
+        // Imposta la ripetizione della musica in modo che continui a suonare
+        backgroundMusic.setLooping(true);
+        // Avvia la musica
+        backgroundMusic.play();
+        backgroundMusic.setVolume(0.3f);
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -56,6 +67,8 @@ public class MainMenuScreen extends ScreenAdapter {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                buttonClickSound.play(0.1f);
+                backgroundMusic.dispose();
                 Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
             }
         });
@@ -64,6 +77,7 @@ public class MainMenuScreen extends ScreenAdapter {
         loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                buttonClickSound.play(0.1f);
                 // Aggiungi qui la logica per il pulsante "Load Game"
                 System.out.println("Load Game clicked");
             }
@@ -73,6 +87,7 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Aggiungi qui la logica per il pulsante "Options"
+                buttonClickSound.play(0.1f);
                 System.out.println("Options clicked");
             }
         });
@@ -153,6 +168,8 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        // Libera le risorse quando la schermata viene chiusa
+        buttonClickSound.dispose();
         stage.dispose();
     }
 }

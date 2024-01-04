@@ -1,10 +1,12 @@
 
 package Controller;
 
+import Model.Interactable;
 import Model.Player;
 import Model.PlayerState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.utils.Array;
 
 public class PlayerInputManager {
     private final Player player;
@@ -19,7 +21,7 @@ public class PlayerInputManager {
         // Update the player state based on input
         // If no movement keys are pressed, set the player to standing
         player.setSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
-
+      
         Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
         Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
         Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
@@ -61,6 +63,12 @@ public class PlayerInputManager {
                     }
                 }
             }
+        }
+    }
+
+    public void handleInteractInput(Array<Interactable> interactables){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            player.interactWithNearestObject(interactables);
         }
     }
     public void update(float delta){

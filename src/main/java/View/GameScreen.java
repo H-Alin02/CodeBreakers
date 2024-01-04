@@ -1,13 +1,11 @@
 package View;
 
 import Controller.PlayerInputManager;
-import Model.Bullet;
+import Model.*;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
 import Model.Enemies.MetalRobot.MetalRobot;
-import Model.MapModel;
 import Model.Object.ObjectManager;
-import Model.Player;
 import View.Hud.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -61,6 +59,8 @@ public class GameScreen extends ScreenAdapter {
         this.objects = new ObjectManager();
         this.objects.initializeObject();
         this.hud = new Hud(batch, objects);
+
+        mapModel.getNpcManager().addObserversToNPC(this.hud);
     }
 
     @Override
@@ -73,10 +73,12 @@ public class GameScreen extends ScreenAdapter {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             Gdx.app.exit();
         }
+        mapModel.update(delta);
         player.update(delta);
         playerInputManager.update(delta);
         enemyManager.update(delta);
         objects.update(delta);
+
     }
 
     @Override
@@ -92,7 +94,7 @@ public class GameScreen extends ScreenAdapter {
         //fine gestione pausa
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         if (shakeDuration > 0) {
-            float shakeX = (MathUtils.random() - 0.5f) * 2* shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
+            float shakeX = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
             float shakeY = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerY() + player.getPLAYER_HEIGHT() / 2;
 
             camera.position.set(shakeX, shakeY, 0);
@@ -166,6 +168,8 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
 
     }
+
+
     private void renderDebug() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -177,6 +181,13 @@ public class GameScreen extends ScreenAdapter {
                 shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             }
             // Add additional checks for other object types if needed
+        }
+
+        for(Interactable door : mapModel.getInteractables()){
+            if(door instanceof Door){
+                Rectangle rect = ((Door) door).getBoundingBox();
+                shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            }
         }
         shapeRenderer.end();
     }

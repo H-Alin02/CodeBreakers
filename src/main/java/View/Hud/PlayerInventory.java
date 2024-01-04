@@ -32,19 +32,15 @@ public class PlayerInventory {
     private Label labelCoin;
     private Label labelKey;
     private Label labelMoney;
-    private Label labelMeat;
     private Label labelDiamond;
     private Label labelAmmunition;
-    private Label labelMedikit;
 
     //objects counters
     private int coinValue;
     private int keyValue;
     private int moneyValue;
-    private int meatValue;
     private int diamondValue;
     private int ammunitionValue;
-    private int medikitValue;
     public PlayerInventory(ObjectManager objectManager){
         //item = new Item();
         //stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
@@ -60,10 +56,8 @@ public class PlayerInventory {
         coinValue = objectManager.getItem().getCoin();
         keyValue = objectManager.getItem().getKey();
         moneyValue = objectManager.getItem().getMoney();
-        meatValue = objectManager.getItem().getMeat();
         diamondValue = objectManager.getItem().getDiamond();
         ammunitionValue = objectManager.getItem().getAmmunition();
-        medikitValue = objectManager.getItem().getMedikit();
 
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));
         Image icon1 = new Image(image1);
@@ -77,10 +71,6 @@ public class PlayerInventory {
         Image icon3 = new Image(image3);
         icon3.setSize(image3.getWidth()*SCALE, image3.getHeight()*SCALE);
 
-        Texture image4 = new Texture(Gdx.files.internal("inventory/meat/meat.png"));
-        Image icon4 = new Image(image4);
-        icon4.setSize(image4.getWidth()*SCALE, image4.getHeight()*SCALE);
-
         Texture image5 = new Texture(Gdx.files.internal("inventory/diamond/diamond.png"));
         Image icon5 = new Image(image5);
         icon5.setSize(image5.getWidth()*0.1f, image5.getHeight()*SCALE);
@@ -89,17 +79,11 @@ public class PlayerInventory {
         Image icon6 = new Image(image6);
         icon6.setSize(image6.getWidth()*SCALE, image6.getHeight()*SCALE);
 
-        Texture image7 = new Texture(Gdx.files.internal("inventory/medikit/medikit.png"));
-        Image icon7 = new Image(image7);
-        icon7.setSize(image7.getWidth()*SCALE, image7.getHeight()*SCALE);
-
         labelCoin = new Label(String.format("%01d",coinValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelKey = new Label(String.format("%01d",keyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelMoney = new Label(String.format("%01d",moneyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        labelMeat = new Label(String.format("%01d",meatValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelDiamond = new Label(String.format("%01d",diamondValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelAmmunition = new Label(String.format("%01d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-        labelMedikit = new Label(String.format("%01d",medikitValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
 
         table.add(icon1).padRight(5);
@@ -108,14 +92,10 @@ public class PlayerInventory {
         table.add(labelCoin).padRight(5);
         table.add(icon3).padRight(5);
         table.add(labelMoney).padRight(5);
-        table.add(icon4).padRight(5);
-        table.add(labelMeat).padRight(5);
         table.add(icon5).padRight(5);
         table.add(labelDiamond).padRight(5);
         table.add(icon6).padRight(5);
         table.add(labelAmmunition).padRight(5);
-        table.add(icon7).padRight(5);
-        table.add(labelMedikit);
 
         table.setVisible(false);
 
@@ -147,17 +127,12 @@ public class PlayerInventory {
         moneyValue = objectManager.getItem().getMoney();
         labelMoney.setText(String.format("%01d", moneyValue));
 
-        meatValue = objectManager.getItem().getMeat();
-        labelMeat.setText(String.format("%01d", meatValue));
-
         diamondValue = objectManager.getItem().getDiamond();
         labelDiamond.setText(String.format("%01d", diamondValue));
 
         ammunitionValue = objectManager.getItem().getAmmunition();
         labelAmmunition.setText(String.format("%01d", ammunitionValue));
 
-        medikitValue = objectManager.getItem().getMedikit();
-        labelMedikit.setText(String.format("%01d", medikitValue));
     }
 
 }

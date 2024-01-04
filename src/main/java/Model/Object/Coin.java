@@ -1,6 +1,6 @@
 package Model.Object;
 
-import Model.Player;
+import Model.SoundPlayer;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-public class Coin implements ObjectGame{
+public class Coin implements GameObject{
     private final Animation<TextureRegion> coin;
     private int coinX, coinY;
     private final int OBJECT_HEIGHT = 32;
@@ -31,20 +31,17 @@ public class Coin implements ObjectGame{
 
         name = "coin";
         remove = false;
-        coinValue = 500;
+        coinValue = 50;
 
+    }
+
+    public SoundPlayer getPickSound()
+    {
+        return new SoundPlayer("sound_effects/pick_coin.wav");
     }
 
     public void update(float delta){
         stateTime += delta;
-    }
-
-    @Override
-    public boolean collide(Player player) {
-        Rectangle rect = getArea();
-        Rectangle rect2 = player.getArea();
-
-        return rect2.overlaps(rect);
     }
 
     @Override
@@ -72,7 +69,13 @@ public class Coin implements ObjectGame{
     @Override
     public String getName(){return name;}
 
-    public int getCoinValue(){
+    @Override
+    public int getValue(){
         return coinValue;
+    }
+
+    @Override
+    public void setValue(int value) {
+        coinValue += value;
     }
 }

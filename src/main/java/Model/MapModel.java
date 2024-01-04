@@ -1,5 +1,7 @@
 package Model;
 
+import Model.NPC.NPC;
+import Model.NPC.NPCManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class MapModel {
@@ -17,7 +20,10 @@ public class MapModel {
     private TiledMap map;
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final MapObjects scaledCollisionObjects;
+    private NPCManager npcManager;
     private float mapScale = 2.0f;
+    private Player player;
+    private Array<Interactable> interactables;
 
     public static MapModel getInstance() {
         if (INSTANCE == null) {
@@ -38,6 +44,21 @@ public class MapModel {
         }else {
             throw new GdxRuntimeException("Object layer 'collisioni'not found in the map");
         }
+
+        // Carica le porte dalla mappa
+        loadDoors();
+
+        npcManager = new NPCManager();
+        //Aggiunge gli NPC alla mappa
+        npcManager.initializeNPCs();
+
+        for(NPC npc : npcManager.getNPC()){
+            interactables.add((Interactable)npc);
+        }
+    }
+
+    public void update(float delta){
+        this.player = Player.getInstance();
     }
 
     // Scale the collision objects
@@ -77,20 +98,54 @@ public class MapModel {
                 }
             }
         }
+
+        // Itera attraverso le porte
+        for (Interactable interactable : interactables) {
+            if (interactable.isCollision(x, y, width, height)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    public void update(float delta){
-
+    private void loadDoors() {
+        interactables = new Array<>();
+        MapLayer doorsLayer = map.getLayers().get("porte");
+        if (doorsLayer != null) {
+            for (MapObject object : doorsLayer.getObjects()) {
+                if (object instanceof RectangleMapObject rectObject) {
+                    interactables.add(new Door(rectObject.getRectangle().x * mapScale,
+                            rectObject.getRectangle().y * mapScale,
+                            rectObject.getRectangle().width * mapScale,
+                            rectObject.getRectangle().height * mapScale));
+                }
+            }
+        }
+        else {
+            throw new GdxRuntimeException("Object layer 'porte' not found in the map");
+        }
     }
+
+
 
     public void render(SpriteBatch spriteBatch, OrthographicCamera camera){
         mapRenderer.setView(camera);
         mapRenderer.render();
+
+        for (Interactable door : interactables){
+            door.draw(spriteBatch, this.player);
+        }
     }
 
     public MapObjects getScaledCollisionObjects() {
         return scaledCollisionObjects;
     }
 
+    public Array<Interactable> getInteractables(){
+        return this.interactables;
+    }
+
+    public NPCManager getNpcManager() {
+        return npcManager;
+    }
 }

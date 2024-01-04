@@ -1,13 +1,13 @@
 package Model.Object;
 
-import Model.Player;
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Ammunition implements ObjectGame {
+public class Ammunition implements GameObject {
     private int ammunitionX, ammunitionY;
     private TextureRegion texture;
     private final int OBJECT_HEIGHT = 32;
@@ -15,7 +15,7 @@ public class Ammunition implements ObjectGame {
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
-
+    private int ammunitionValue;
     public Ammunition(int ammunitionX, int ammunitionY){
         this.ammunitionX = ammunitionX;
         this.ammunitionY = ammunitionY;
@@ -23,23 +23,17 @@ public class Ammunition implements ObjectGame {
 
         this.name = "ammunition";
         this.remove = false;
+        this.ammunitionValue = 50;
     }
+
+    public SoundPlayer getPickSound()
+    {
+        return  new SoundPlayer("sound_effects/pick_ammo.mp3");
+    }
+
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(texture,ammunitionX,ammunitionY,OBJECT_HEIGHT * SCALE,OBJECT_WIDTH * SCALE);
-    }
-
-    @Override
-    public void update(float delta) {
-
-    }
-
-    @Override
-    public boolean collide(Player player) {
-        Rectangle rect = getArea();
-        Rectangle rect2 = player.getArea();
-
-        return rect2.overlaps(rect);
     }
 
     @Override
@@ -60,5 +54,15 @@ public class Ammunition implements ObjectGame {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public  int getValue() {
+        return ammunitionValue;
+    }
+
+    @Override
+    public void setValue(int value) {
+        ammunitionValue += value;
     }
 }

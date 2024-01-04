@@ -1,5 +1,6 @@
 package View.Hud;
 
+import Model.NPC.NPCObserver;
 import Model.Object.ObjectManager;
 import Model.Player;
 import View.Boot;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class Hud extends WidgetGroup {
+public class Hud extends WidgetGroup implements NPCObserver {
 
     private Stage stage;
     private FitViewport stageViewport;
@@ -25,6 +26,8 @@ public class Hud extends WidgetGroup {
     private MapName mapName;
 
     private PlayerInventory inventory;
+    private DialogueBox dialogueBox;
+    private boolean npcReadyToTalk = false;
 
     private boolean pause = false;
 
@@ -114,6 +117,18 @@ public class Hud extends WidgetGroup {
             pauseContainer.setVisible(true);
             pause = true;
         }
+      
+        if(npcReadyToTalk){
+            dialogueBox.show(dialogueBox.getText());
+        }
+
+        }
+
+    @Override
+    public void onNPCTalk(String message) {
+        System.out.println(message);
+        dialogueBox = new DialogueBox(message);
+        npcReadyToTalk = true;
     }
 
     public void dispose(){

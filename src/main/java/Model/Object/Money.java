@@ -1,6 +1,5 @@
 package Model.Object;
 
-import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Money implements ObjectGame{
+public class Money implements GameObject{
     private int moneyX, moneyY;
     private TextureRegion texture;
     private final int OBJECT_HEIGHT = 32;
@@ -16,6 +15,7 @@ public class Money implements ObjectGame{
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
+    private int money;
 
     public Money(int moneyX, int moneyY){
         this.moneyX = moneyX;
@@ -24,23 +24,14 @@ public class Money implements ObjectGame{
 
         name = "money";
         remove = false;
+        money = 500;
     }
+
+    //public SoundPlayer getPickSound() {return  null;}
+
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(texture,moneyX,moneyY,OBJECT_HEIGHT * SCALE,OBJECT_WIDTH * SCALE);
-    }
-
-    @Override
-    public void update(float delta) {
-
-    }
-
-    @Override
-    public boolean collide(Player player) {
-        Rectangle rect = getArea();
-        Rectangle rect2 = player.getArea();
-
-        return rect2.overlaps(rect);
     }
 
     @Override
@@ -59,4 +50,15 @@ public class Money implements ObjectGame{
     }
     @Override
     public String getName(){return name;}
+
+    @Override
+    public int getValue() {
+        return money;
+    }
+
+    @Override
+    public void setValue(int value) {
+        money += value;
+    }
+
 }
