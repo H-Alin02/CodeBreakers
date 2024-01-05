@@ -41,6 +41,8 @@ public class GameScreen extends ScreenAdapter {
     private float shakeDuration = 0f;
     private float shakeIntensity = 5f;
 
+    private boolean isPaused = false;
+
     public GameScreen(OrthographicCamera camera) {
         this.batch = new SpriteBatch();
 
@@ -85,10 +87,17 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta){
         //Gestione della Pausa
         if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            hud.setPauseVisibility();
+
+            if (isPaused) {
+                isPaused = false;
+            } else if (!(isPaused)) {
+                isPaused = true;
+            }
+            hud.setMenuVisibility();
+
 
         }
-        if(!hud.isPause()){
+        if(!isPaused){
         update(delta);
         }
         //fine gestione pausa

@@ -12,15 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class PlayerInventory {
-    /*
-        Francesco: ho provato a rendere l'inventario funzionale, con il numero di monete raccolte rappresentano nell'inventario, ma
-        purtropp non ci sono riuscito in quanto il numero di monete e all' interno dell'istanza item nella classe ObjectManager.
-        Ciò significa che dovrei in qualche modo passare item da Objectmanager a Hud per poi finire su PlayerInventory. Urge quindi
-        l'implementazione del pattern Observer.
-
-
-
-     */
 
     private Stage stage;
     private Model.Object.Item item;

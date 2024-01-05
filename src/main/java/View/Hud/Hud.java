@@ -34,6 +34,8 @@ public class Hud extends WidgetGroup implements NPCObserver {
     Label pauseLabel = new Label("PAUSE", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     Container pauseContainer = new Container(pauseLabel);
 
+    Menu menu;
+
     public Hud(SpriteBatch spriteBatch, ObjectManager objectManager) {
         stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
@@ -41,7 +43,9 @@ public class Hud extends WidgetGroup implements NPCObserver {
         playerStats = new PlayerStats();
         mapName = new MapName();
         inventory = new PlayerInventory(objectManager);
+        dialogueBox = new DialogueBox("");
 
+        menu = new Menu();
 
 
         pauseContainer.setVisible(false);
@@ -50,28 +54,21 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
         Table rootTable = new Table();
         rootTable.setFillParent(true);
+
         stage.addActor(rootTable);
-
-        /*/-------------------test inventario--------------------------
-        Label inventoryLabel = new Label("INVENTORY", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
-
-        inventory= new Container(inventoryLabel);
-        inventory.center();
-        inventory.setFillParent(true);
-
-        inventory.setVisible(false);
-
-        stage.addActor(inventory);
-        //--------------------------------------------------------------/*/
+        //popolazione stage e posizionamento degli elementi
         rootTable.top().left();
-        rootTable.add(playerStats.getTableStats()).expandX();
+        rootTable.add(playerStats.getTableStats());
 
-        rootTable.add(mapName.getSceneName()).expandX();
+        //rootTable.add(mapName.getSceneName()).expandX();
 
-        rootTable.add(inventory.getTable()).expandX();
+        rootTable.add(inventory.getTable());
         rootTable.row();
-        rootTable.add(pauseContainer).expandX().expandY();
+        //rootTable.add(pauseContainer).expandX().expandY();
+        rootTable.add(menu.getTable());
+        rootTable.row();
+        rootTable.add(dialogueBox.getTable());
+
 
     }
 
@@ -80,24 +77,25 @@ public class Hud extends WidgetGroup implements NPCObserver {
     }
 
     public void update(Player player, float delta) {
+
         this.playerStats.update(player);
         this.mapName.update(player);
         this.inventory.update();
+        this.menu.update(player);
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             this.inventory.visibilitySwitch();
         }
 
-        /*/----------------test inventario---------------------
-        if(Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-
-            boolean visible = inventory.isVisible();
-            if (visible) {
-                inventory.setVisible(false);
-            } else if (!(visible)) {
-                inventory.setVisible(true);
-            }
+        if(npcReadyToTalk){
+            dialogueBox.show(dialogueBox.getText());
         }
-        //----------------------------------------------------/*/
+
+        /*if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            this.inventory.visibilitySwitch();
+        }*/
+
+
     }
 
     public boolean isPause() {
@@ -127,11 +125,16 @@ public class Hud extends WidgetGroup implements NPCObserver {
     @Override
     public void onNPCTalk(String message) {
         System.out.println(message);
-        dialogueBox = new DialogueBox(message);
+        dialogueBox.setMessage(message);
         npcReadyToTalk = true;
     }
 
     public void dispose(){
         stage.dispose();
+    }
+
+    public void setMenuVisibility() {
+        menu.visibilitySwitch();
+
     }
 }
