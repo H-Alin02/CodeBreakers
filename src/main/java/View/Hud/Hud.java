@@ -99,15 +99,13 @@ public class Hud extends WidgetGroup implements NPCObserver {
             this.inventory.visibilitySwitch();
         }*/
 
-        if(npcReadyToTalk){
-            dialogueBox.show(dialogueBox.getText());
-        }
-
         /*if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             this.inventory.visibilitySwitch();
         }*/
-
-
+        System.out.println(npcReadyToTalk);
+        if(npcReadyToTalk){
+            dialogueBox.show(dialogueBox.getText());
+        }else dialogueBox.hide();
     }
 
     public boolean isPause() {
@@ -136,9 +134,16 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
     @Override
     public void onNPCTalk(String message) {
-        System.out.println(message);
+        this.npcReadyToTalk = true;
+        System.out.println(message + "dialogue box " + dialogueBox);
+        System.out.println("OnNPCTalk Called");
         dialogueBox.setMessage(message);
-        npcReadyToTalk = true;
+    }
+
+    @Override
+    public void onNPCFinishedTalk() {
+        System.out.println("NPC FInisched to talk");
+        this.npcReadyToTalk = false;
     }
 
     public void dispose(){

@@ -61,10 +61,10 @@ public class MapModel {
 
     public void update(float delta){
         this.player = Player.getInstance();
-        System.out.println(player.getPlayerX()+ " - " + player.getPlayerY());
         if(player.getHitBox().overlaps(new Rectangle(2470,970,64,64))){
             teleportPlayer();
         }
+        npcManager.update(delta);
     }
 
     // Scale the collision objects

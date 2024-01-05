@@ -44,6 +44,9 @@ public class DialogueBox {
     public void show(String text) {
         dialogueLabel.setText(text);
         table.setVisible(true);
+        if(table.isVisible()){
+            System.out.println("TABLE IS VISIBLE");
+        }
         isVisible = true;
     }
 

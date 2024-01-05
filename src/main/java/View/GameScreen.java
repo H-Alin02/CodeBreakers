@@ -62,12 +62,12 @@ public class GameScreen extends ScreenAdapter {
         this.objects.initializeObject();
         this.hud = new Hud(batch, objects);
 
-        mapModel.getNpcManager().addObserversToNPC(this.hud);
+
     }
 
     @Override
     public void show(){
-
+        mapModel.getNpcManager().addObserversToNPC(this.hud);
     }
     public void update(float delta){
         world.step(1/60f, 6, 2);
@@ -141,9 +141,9 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().draw(); //draw the Hud
 
         //DEBUG
-        renderDebug();
-        renderPlayerCollisionDebug();
-        renderEnemyDebug();
+        //renderDebug();
+        //renderPlayerCollisionDebug();
+        //renderEnemyDebug();
 
         //Controlla se il gioco è finito
         if(gameOver()){

@@ -4,45 +4,41 @@ import Model.Interactable;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
-public class DaveNPC implements NPC , Interactable {
+public class DrGarfield implements NPC , Interactable {
     private Vector2 position;
-    private TextureRegion texture;
+    private Animation<TextureRegion> animation1;
     private Texture interactTexture;
     private NPCObserver observer;
+    private float stateTime ;
     private boolean hasTalked = false;
 
-    public DaveNPC(Vector2 position){
+    public DrGarfield(Vector2 position){
         this.position = position;
-        this.texture = new TextureRegion(new Texture(Gdx.files.internal("NPC/Dave/Dave.png")));
+
+        stateTime = 0;
+        Array<TextureRegion> idleFrames = new Array<>();
+        for (int i = 1; i<=4; i++){
+            idleFrames.add(new TextureRegion(new Texture("NPC/DrGarfild/DrGarfild" + i + ".png")));
+        }
+        animation1 = new Animation<>(0.2f, idleFrames, Animation.PlayMode.LOOP);
+
         interactTexture = new Texture(Gdx.files.internal("map/Interaction/Interaction.png"));
     }
+
     @Override
     public void interact(Player player) {
         talk();
     }
 
     @Override
-    public void addObserver(NPCObserver observer) {
-        this.observer = observer;
-        System.out.println("Added observer for Dave : " + observer);
-    }
-
-    @Override
-    public void update(float delta) {
-
-    }
-
-    private void notifyObservers(String message) {
-        observer.onNPCTalk(message);
-    }
-
-    @Override
     public Vector2 getPosition() {
-        return new Vector2(position.x+ texture.getRegionHeight()/2,position.y+texture.getRegionHeight()/2);
+        return new Vector2(position.x+ 32/2,position.y+32/2);
     }
 
     @Override
@@ -52,33 +48,49 @@ public class DaveNPC implements NPC , Interactable {
 
     @Override
     public void draw(SpriteBatch batch, Player player) {
-        batch.draw(texture,position.x,position.y,texture.getRegionWidth()*3,texture.getRegionHeight()*3);
+        batch.draw(getKeyFrame(),position.x,position.y,32*3,32*3);
 
         if (isPlayerInRange(player.getHitBox().x+ player.getHitBox().width/2,
                 player.getHitBox().y +player.getHitBox().height/2,
                 120)) {
             float messageX = position.x + 10;
-            float messageY = position.y + texture.getRegionHeight()*2;
+            float messageY = position.y + 32*2;
 
             batch.draw(interactTexture, messageX, messageY, 96, 96);
-        }else if (!hasTalked) {
+        } else if (!hasTalked) {
             observer.onNPCFinishedTalk();
             hasTalked = true; // Imposta la variabile a true dopo la chiamata
         }
-
-        System.out.println("Has talked : "+ hasTalked);
-
     }
 
     public boolean isPlayerInRange(float playerX, float playerY, float range) {
-        float distance = new Vector2(playerX, playerY).dst(position.x + texture.getRegionHeight()/2, position.y + texture.getRegionHeight()/2);
+        float distance = new Vector2(playerX, playerY).dst(position.x + 32/2, position.y + 32/2);
         return distance <= range;
+    }
+
+    public TextureRegion getKeyFrame() {
+        return animation1.getKeyFrame(stateTime, true);
     }
 
     @Override
     public void talk() {
-        String message = "Lorem ipsum dolor";
         hasTalked = false;
-        notifyObservers("SONO DAVE : "+message);
+        String message = "SONO FOTTUTAMENTE PAZZO ";
+        notifyObservers("SONO PAZZO " + message);
+    }
+
+    @Override
+    public void addObserver(NPCObserver observer) {
+        this.observer = observer;
+        System.out.println("Added observer for DrGarfield : " + observer);
+    }
+
+    @Override
+    public void update(float delta) {
+        stateTime += delta;
+    }
+
+    private void notifyObservers(String message) {
+        observer.onNPCTalk(message);
     }
 }

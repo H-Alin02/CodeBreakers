@@ -8,19 +8,22 @@ import java.util.List;
 
 public class NPCManager {
     private final List<NPC> NPC;
-    private DaveNPCFactory daveNPCFactory;
+    private NPCFactoryImp NPCFactory;
 
     public NPCManager(){
        this.NPC = new ArrayList<>();
-       this.daveNPCFactory = new DaveNPCFactory();
+       this.NPCFactory = new NPCFactoryImp();
     }
 
     public void initializeNPCs(){
-        NPC.add(daveNPCFactory.createNPC(new Vector2(2176,2816)));
+        NPC.add(NPCFactory.createNPC("Dave",new Vector2(2176,2816)));
+        NPC.add(NPCFactory.createNPC("DrGarfild", new Vector2(1940, 2816)));
     }
 
     public void update( float delta){
-
+        for(NPC npc : NPC){
+            npc.update(delta);
+        }
     }
 
     public List<NPC> getNPC() {
