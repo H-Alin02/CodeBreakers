@@ -81,6 +81,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
         rootTable.add(dialogueBox.getTable()).colspan(3).fill().expand();
 
 
+
     }
 
     public Stage getStage() {

@@ -34,6 +34,7 @@ public class MapModel {
 
     private MapModel(){
         //Load the map
+
         map = new TmxMapLoader().load("map/MappaNUOVA.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map , 2.0f);
 
@@ -55,10 +56,15 @@ public class MapModel {
         for(NPC npc : npcManager.getNPC()){
             interactables.add((Interactable)npc);
         }
+
     }
 
     public void update(float delta){
         this.player = Player.getInstance();
+        System.out.println(player.getPlayerX()+ " - " + player.getPlayerY());
+        if(player.getHitBox().overlaps(new Rectangle(2470,970,64,64))){
+            teleportPlayer();
+        }
     }
 
     // Scale the collision objects
@@ -148,4 +154,10 @@ public class MapModel {
     public NPCManager getNpcManager() {
         return npcManager;
     }
+
+    private void teleportPlayer(){
+        this.player.setPlayerX(8448);
+        this.player.setPlayerY(1216);
+    }
+
 }
