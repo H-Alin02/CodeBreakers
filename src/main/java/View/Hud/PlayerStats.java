@@ -39,7 +39,7 @@ public class PlayerStats implements HudComponent{
         lifeBar = new ProgressBar(0, 100, 0.5f, false, lifeBarStyle);
         lifeBar.setValue(playerLife);
         lifeBarStyle.knobBefore = lifeBarStyle.knob;
-        //lifeBar.setSize(50, 10);
+        lifeBar.setSize(50, 10);
 
         //stamina bar
         TextureRegionDrawable textureStaminaBar = new TextureRegionDrawable(new TextureRegion(new Texture("hudAssets/barBlue_horizontalMid.png")));
@@ -49,7 +49,7 @@ public class PlayerStats implements HudComponent{
         staminaBarStyle.knobBefore = staminaBarStyle.knob;
         staminaBarStyle.disabledKnob = staminaBarStyle.knob;
 
-        //lifeBar.setSize(50, 10);
+        staminaBar.setSize(50, 10);
 
         //tableStats.setBackground(skin.getDrawable("WindowStyle"));
 

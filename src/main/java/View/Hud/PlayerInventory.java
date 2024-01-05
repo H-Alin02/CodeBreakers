@@ -42,7 +42,7 @@ public class PlayerInventory {
         table.right().top();
         //table.setFillParent(true);
 
-        table.setDebug(true);
+        //table.setDebug(true);
 
         coinValue = objectManager.getItem().getCoin();
         keyValue = objectManager.getItem().getKey();
@@ -88,7 +88,7 @@ public class PlayerInventory {
         table.add(icon6).padRight(5);
         table.add(labelAmmunition).padRight(5);
 
-        table.setVisible(false);
+        table.setVisible(true);
 
     }
 

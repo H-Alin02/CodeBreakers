@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class DialogueBox {
     private Table table;
@@ -18,18 +19,19 @@ public class DialogueBox {
     public DialogueBox(String message){
         this.text = message;
         table = new Table();
-
+        //table.setDebug(true);
 
 
         // Aggiungi il background o l'immagine della finestra di dialogo
-        Texture backgroundTexture = new Texture(Gdx.files.internal("NPC/DialogueBox.png"));
-        Image backgroundImage = new Image(backgroundTexture);
-        backgroundImage.setSize(600,200);
+        TextureRegionDrawable backgroundTexture = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("NPC/DialogueBox.png"))));
+        table.setBackground(backgroundTexture);
+        //Image backgroundImage = new Image(backgroundTexture);
+        //backgroundImage.setSize(600,200);
 
 
         //popolazione table
-        table.add(backgroundImage).width(600).height(200);
-        table.add(dialogueLabel);
+        //table.add(backgroundImage).width(600).height(200);
+        table.add(dialogueLabel).left();
 
         table.setVisible(false);
         isVisible = false;
@@ -60,5 +62,6 @@ public class DialogueBox {
 
     public void setMessage(String message) {
         this.text = message;
+        this.dialogueLabel.setText(message);
     }
 }

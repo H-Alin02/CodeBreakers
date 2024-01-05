@@ -4,8 +4,6 @@ import Model.NPC.NPCObserver;
 import Model.Object.ObjectManager;
 import Model.Player;
 import View.Boot;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -40,6 +38,8 @@ public class Hud extends WidgetGroup implements NPCObserver {
         stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
 
+        Table filler = new Table();
+
         playerStats = new PlayerStats();
         mapName = new MapName();
         inventory = new PlayerInventory(objectManager);
@@ -54,20 +54,31 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
         Table rootTable = new Table();
         rootTable.setFillParent(true);
+        rootTable.setRound(false);
+
+        //rootTable.setDebug(true);
 
         stage.addActor(rootTable);
         //popolazione stage e posizionamento degli elementi
         rootTable.top().left();
-        rootTable.add(playerStats.getTableStats());
+
+        rootTable.add(playerStats.getTableStats()).uniform();
+        rootTable.add(filler).fill().uniform();
 
         //rootTable.add(mapName.getSceneName()).expandX();
 
-        rootTable.add(inventory.getTable());
-        rootTable.row();
+        rootTable.add(inventory.getTable()).uniform();
+
+        rootTable.row().height(300);
+
+        rootTable.add(filler).fill();
         //rootTable.add(pauseContainer).expandX().expandY();
         rootTable.add(menu.getTable());
+        rootTable.add(filler).fill();
+
         rootTable.row();
-        rootTable.add(dialogueBox.getTable());
+
+        rootTable.add(dialogueBox.getTable()).colspan(3).fill().expand();
 
 
     }
@@ -83,9 +94,9 @@ public class Hud extends WidgetGroup implements NPCObserver {
         this.inventory.update();
         this.menu.update(player);
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
+        /*if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
             this.inventory.visibilitySwitch();
-        }
+        }*/
 
         if(npcReadyToTalk){
             dialogueBox.show(dialogueBox.getText());

@@ -3,10 +3,10 @@ package View.Hud;
 import Model.Player;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class Menu implements HudComponent{
     private Table menuTable;
@@ -19,18 +19,18 @@ public class Menu implements HudComponent{
         TextButton continueButton = new TextButton("Continue", textButtonStyle);
 
         menuTable = new Table();
+        //menuTable.setDebug(true);
 
         //aggiunta listener ai pulsanti
-        continueButton.addListener(new ChangeListener() {
+        continueButton.addListener(new ClickListener() {
             @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                System.out.println("Continue Button Pressed");
-
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("sheeeeeeeeeeeeeeeeeesh");
             }
         });
 
         //aggiunta pulsanti a table
-        menuTable.add(continueButton);
+        menuTable.add(continueButton).center().fill();
 
         menuTable.setVisible(false);
 
