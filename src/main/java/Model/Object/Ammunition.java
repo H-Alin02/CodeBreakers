@@ -16,6 +16,8 @@ public class Ammunition implements GameObject {
     private final float SCALE = 1.2f;
     private String name ;
     private int ammunitionValue;
+    private final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_ammo.mp3");
+
     public Ammunition(int ammunitionX, int ammunitionY){
         this.ammunitionX = ammunitionX;
         this.ammunitionY = ammunitionY;
@@ -28,7 +30,7 @@ public class Ammunition implements GameObject {
 
     public SoundPlayer getPickSound()
     {
-        return  new SoundPlayer("sound_effects/pick_ammo.mp3");
+        return pickSound;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class Ammunition implements GameObject {
     }
 
     @Override
-    public  int getValue() {
+    public int getValue() {
         return ammunitionValue;
     }
 

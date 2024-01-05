@@ -225,9 +225,7 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
     }
     public boolean gameOver(){
-        if(player.isPlayerDead()){
-            return true;
-        } else return false;
+        return player.isPlayerDead();
     }
 
     @Override

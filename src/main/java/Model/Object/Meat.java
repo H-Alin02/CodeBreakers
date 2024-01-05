@@ -1,5 +1,6 @@
 package Model.Object;
 
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +17,7 @@ public class Meat implements GameObject{
     private final float SCALE = 1.2f;
     private String name ;
     private int meatValue;
+    private final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_food.mp3");
 
     public Meat(int meatX, int meatY){
         this.meatX = meatX;
@@ -59,4 +61,7 @@ public class Meat implements GameObject{
     public void setValue(int value) {
         meatValue = value;
     }
+
+    @Override
+    public SoundPlayer getPickSound() {return pickSound;}
 }

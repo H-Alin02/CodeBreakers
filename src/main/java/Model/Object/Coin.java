@@ -18,6 +18,8 @@ public class Coin implements GameObject{
     private final float SCALE = 1.2f;
     private String name ;
     private int coinValue;
+    private final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_coin.wav");
+
     public Coin(int coinX, int coinY) {
         this.coinX = coinX;
         this.coinY = coinY;
@@ -35,10 +37,7 @@ public class Coin implements GameObject{
 
     }
 
-    public SoundPlayer getPickSound()
-    {
-        return new SoundPlayer("sound_effects/pick_coin.wav");
-    }
+    public SoundPlayer getPickSound() {return pickSound;}
 
     public void update(float delta){
         stateTime += delta;

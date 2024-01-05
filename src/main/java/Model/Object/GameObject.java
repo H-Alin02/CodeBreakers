@@ -19,7 +19,7 @@ public interface GameObject {
     void setRemove(boolean b);
     String getName();
     int getValue();
-    void setValue(int value);
+    public void setValue(int value);
     default SoundPlayer getPickSound() {
         return new SoundPlayer("sound_effects/item_pick_sound.wav");
     }

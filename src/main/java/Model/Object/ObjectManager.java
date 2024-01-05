@@ -54,33 +54,26 @@ public class ObjectManager {
                 obj.getPickSound().play(0.2f);
                 objects.removeIndex(objects.indexOf(obj,false));
                 obj.setRemove(true);
+                item.add(obj);
 
-                if (Objects.equals(obj.getName(),"medikit")){
+                if (obj instanceof  Medikit){
                     if (player.getPlayerLife()>= 100){
                         player.setPlayerLife(0);
                     }else {
-
                         player.setPlayerLife(medicalLife);
                     }
                 }
-                else if(Objects.equals(obj.getName(),"meat")){
-                        if (player.getPlayerLife()>= 100){
-                            player.setPlayerLife(0);
-                        }else {
-                            player.setPlayerLife(energy);
-
-                        }
-
-                }
-                else {
-                    if (Objects.equals(obj.getName(),"ammunition"))
-                        player.setBulletCount(player.getBulletCount()+50);
-
-
-                    if (obj.isRemove()) {
-                        item.add(obj);
+                if(obj instanceof  Meat){
+                    if (player.getPlayerLife()>= 100){
+                        player.setPlayerLife(0);
+                    }else {
+                        player.setPlayerLife(energy);
                     }
+
                 }
+
+                if (Objects.equals(obj.getName(),"ammunition"))
+                    player.setBulletCount(player.getBulletCount()+50);
             }
         }
     }

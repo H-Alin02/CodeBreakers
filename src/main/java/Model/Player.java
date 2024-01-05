@@ -2,6 +2,7 @@ package Model;
 
 import Controller.PlayerInputManager;
 import Model.Enemies.Enemy;
+import Model.Enemies.EnemyManager;
 import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.Gdx;
@@ -26,6 +27,7 @@ public class Player {
     private final PlayerInputManager inputManager;
     private final PlayerAnimationManager animationManager;
     private final MapModel mapModel;
+    private final EnemyManager enemyManager;
     private GameScreen gameScreen;
     private int playerX = 1984;
     private int playerY = 3436;
@@ -68,6 +70,8 @@ public class Player {
         inputManager = new PlayerInputManager(this);
         animationManager = new PlayerAnimationManager();
         mapModel = MapModel.getInstance();
+        enemyManager = new EnemyManager();
+        setEnemies(enemyManager.getEnemies());
         bullets = new ArrayList<>();
 
         backgroundMusic.setLooping(true);
@@ -91,6 +95,7 @@ public class Player {
         inputManager.handleInput();
         inputManager.handleInteractInput(mapModel.getInteractables());
         animationManager.update(delta);
+        enemyManager.update(delta);
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
         updateShootTimer(delta);
@@ -322,7 +327,6 @@ public class Player {
 
     public void takeDamage(int damage){
         this.playerLife -= damage;
-        damageSound.play(0.2f);
 
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
@@ -330,19 +334,17 @@ public class Player {
 
             System.out.println("PLAYER IS DEAD - GAME OVER");
 
+
             playerDead = true;
-
             currentState = PlayerState.DEAD;
-
             Player.INSTANCE = null;
-
             deathSound.play(0.2f);
-
             backgroundMusic.dispose();
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
             System.out.println("PLAYER HIT , OUCH!! , LIFE = " + playerLife);
+            damageSound.play(0.2f);
         }
     }
 
@@ -548,12 +550,13 @@ public class Player {
         return this.bulletCount;
     }
 
-    public void setPlayerX(int playerX) {
-        this.playerX = playerX;
+
+    public void setPlayerX(int x) {
+        this.playerX = x;
     }
 
-    public void setPlayerY(int playerY) {
-        this.playerY = playerY;
+    public void setPlayerY(int y) {
+        this.playerY = y;
     }
 }
 
