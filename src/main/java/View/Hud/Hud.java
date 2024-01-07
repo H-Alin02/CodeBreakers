@@ -96,7 +96,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
         this.playerStats.update(player);
         this.mapName.update(player);
-        this.inventory.update();
+        this.inventory.update(player);
         this.menu.update(player);
 
         System.out.println(npcReadyToTalk);

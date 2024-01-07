@@ -1,6 +1,7 @@
 package View.Hud;
 
 import Model.Object.ObjectManager;
+import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,11 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class PlayerInventory {
+public class PlayerInventory implements HudComponent{
 
     private Stage stage;
     private Model.Object.Item item;
     private FitViewport stageViewport;
+    private Player player;
     private ObjectManager objectManager ;
     private final float SCALE = 0.2f;
 
@@ -72,9 +74,9 @@ public class PlayerInventory {
 
         labelCoin = new Label(String.format("%01d",coinValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelKey = new Label(String.format("%01d",keyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        labelMoney = new Label(String.format("%01d",moneyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelMoney = new Label(String.format("%04d",moneyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelDiamond = new Label(String.format("%01d",diamondValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        labelAmmunition = new Label(String.format("%01d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        labelAmmunition = new Label(String.format("%03d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
 
         table.add(icon1).padRight(5);
@@ -126,4 +128,22 @@ public class PlayerInventory {
 
     }
 
+    @Override
+    public void update(Player player) {
+        //coinValue = item.getCoin();
+        coinValue = objectManager.getItem().getCoin();
+        labelCoin.setText(String.format("%01d", coinValue));
+
+        keyValue = objectManager.getItem().getKey();
+        labelKey.setText(String.format("%01d", keyValue));
+
+        moneyValue = objectManager.getItem().getMoney();
+        labelMoney.setText(String.format("%04d", moneyValue));
+
+        diamondValue = objectManager.getItem().getDiamond();
+        labelDiamond.setText(String.format("%01d", diamondValue));
+
+        ammunitionValue = player.getBulletCount();
+        labelAmmunition.setText(String.format("%03d", ammunitionValue));
+    }
 }
