@@ -1,5 +1,6 @@
 package View;
 
+import Controller.MenuMediator;
 import Controller.PlayerInputManager;
 import Model.*;
 import Model.Enemies.Enemy;
@@ -43,9 +44,10 @@ public class GameScreen extends ScreenAdapter {
 
     private boolean isPaused = false;
 
+    private MenuMediator menuMediator;
+
     public GameScreen(OrthographicCamera camera) {
         this.batch = new SpriteBatch();
-
         this.camera = camera;
         this.camera.position.set(new Vector3(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2,0 ));
         this.playerViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2, Boot.INSTANCE.getScreenHeight()/2, camera);
@@ -60,7 +62,8 @@ public class GameScreen extends ScreenAdapter {
         this.shapeRenderer = new ShapeRenderer();
         this.objects = new ObjectManager();
         this.objects.initializeObject();
-        this.hud = new Hud(batch, objects);
+        this.menuMediator = new MenuMediator();
+        this.hud = new Hud(batch, objects, menuMediator);
 
 
     }
@@ -72,9 +75,6 @@ public class GameScreen extends ScreenAdapter {
     public void update(float delta){
         world.step(1/60f, 6, 2);
         batch.setProjectionMatrix(camera.combined);
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-            Gdx.app.exit();
-        }
         mapModel.update(delta);
         player.update(delta);
         playerInputManager.update(delta);
@@ -86,17 +86,31 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta){
         //Gestione della Pausa
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
-            if (isPaused) {
+
+           if (isPaused) {
                 isPaused = false;
             } else if (!(isPaused)) {
                 isPaused = true;
             }
+
+
+
             hud.setMenuVisibility();
 
 
         }
+        //se continua nel menu è stato premuto
+        if(menuMediator.isChangeGameState()){
+            menuMediator.changeGameStatus();
+            hud.setMenuVisibility();
+            isPaused = false;
+
+
+        }
+
+
         if(!isPaused){
         update(delta);
         }
@@ -144,6 +158,15 @@ public class GameScreen extends ScreenAdapter {
         //renderDebug();
         //renderPlayerCollisionDebug();
         //renderEnemyDebug();
+
+        //se exit nel menu è stato premuto
+        if(menuMediator.isChangeScreen()){
+            menuMediator.changeScreen();
+            hud.setMenuVisibility();
+            returnToMainMenuScreen();
+
+
+        }
 
         //Controlla se il gioco è finito
         if(gameOver()){
@@ -226,6 +249,12 @@ public class GameScreen extends ScreenAdapter {
     }
     public boolean gameOver(){
         return player.isPlayerDead();
+    }
+
+    private void returnToMainMenuScreen(){
+        player.resetPlayer();
+        Boot.INSTANCE.setScreen(new MainMenuScreen(GameScreen.this.camera));
+        dispose();
     }
 
     @Override

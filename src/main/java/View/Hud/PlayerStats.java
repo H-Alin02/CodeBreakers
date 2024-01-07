@@ -56,7 +56,7 @@ public class PlayerStats implements HudComponent{
 
 
         //tables
-        tableStats.setDebug(true);
+        //tableStats.setDebug(true);
         tableStats.left();
         tableStats.top();
         //tableStats.setFillParent(true);

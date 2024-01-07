@@ -319,6 +319,10 @@ public class Player {
             }
         }
     }
+    public void resetPlayer(){
+        Player.INSTANCE = null;
+        backgroundMusic.dispose();
+    };
 
     public void takeDamage(int damage){
         this.playerLife -= damage;
@@ -332,9 +336,9 @@ public class Player {
 
             playerDead = true;
             currentState = PlayerState.DEAD;
-            Player.INSTANCE = null;
+            resetPlayer();
             deathSound.play(0.2f);
-            backgroundMusic.dispose();
+
 
         } else {
             gameScreen.shakeCamera(0.3f, 4);
@@ -553,5 +557,7 @@ public class Player {
     public void setPlayerY(int y) {
         this.playerY = y;
     }
+
+
 }
 

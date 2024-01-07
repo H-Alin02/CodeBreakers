@@ -62,6 +62,7 @@ public class MainMenuScreen extends ScreenAdapter {
         TextButton startButton = createTextButton("Start Game");
         TextButton loadButton = createTextButton("Load Game");
         TextButton optionsButton = createTextButton("Options");
+        TextButton exitGameButton = createTextButton("Exit Game");
 
         // Aggiungi azione per la transizione alla schermata di gioco quando il pulsante viene premuto
         startButton.addListener(new ClickListener() {
@@ -92,9 +93,21 @@ public class MainMenuScreen extends ScreenAdapter {
             }
         });
 
+        exitGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Aggiungi qui la logica per il pulsante "Options"
+                buttonClickSound.play(0.1f);
+                System.out.println("Exit Game clicked");
+                Gdx.app.exit();
+
+            }
+        });
+
         table.add(startButton).padBottom(20).row();
         table.add(loadButton).padBottom(20).row();
         table.add(optionsButton).padBottom(20).row();
+        table.add(exitGameButton).padBottom(20).row();
     }
 
     private TextButton createTextButton(String text) {

@@ -1,9 +1,11 @@
 package View.Hud;
 
+import Controller.MenuMediator;
 import Model.NPC.NPCObserver;
 import Model.Object.ObjectManager;
 import Model.Player;
 import View.Boot;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -34,7 +36,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
     Menu menu;
 
-    public Hud(SpriteBatch spriteBatch, ObjectManager objectManager) {
+    public Hud(SpriteBatch spriteBatch, ObjectManager objectManager, MenuMediator menuMediator) {
         stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
 
@@ -45,7 +47,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
         inventory = new PlayerInventory(objectManager);
         dialogueBox = new DialogueBox("");
 
-        menu = new Menu();
+        menu = new Menu(menuMediator);
 
 
         pauseContainer.setVisible(false);
@@ -80,6 +82,8 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
         rootTable.add(dialogueBox.getTable()).colspan(3).fill().expand();
 
+        Gdx.input.setInputProcessor(stage);
+
 
 
     }
@@ -95,13 +99,6 @@ public class Hud extends WidgetGroup implements NPCObserver {
         this.inventory.update();
         this.menu.update(player);
 
-        /*if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
-            this.inventory.visibilitySwitch();
-        }*/
-
-        /*if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            this.inventory.visibilitySwitch();
-        }*/
         System.out.println(npcReadyToTalk);
         if(npcReadyToTalk){
             dialogueBox.show(dialogueBox.getText());
