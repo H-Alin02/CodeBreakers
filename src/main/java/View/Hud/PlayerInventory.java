@@ -107,27 +107,6 @@ public class PlayerInventory implements HudComponent{
         }
     }
 
-
-
-    public void update(){
-        //coinValue = item.getCoin();
-        coinValue = objectManager.getItem().getCoin();
-        labelCoin.setText(String.format("%01d", coinValue));
-
-        keyValue = objectManager.getItem().getKey();
-        labelKey.setText(String.format("%01d", keyValue));
-
-        moneyValue = objectManager.getItem().getMoney();
-        labelMoney.setText(String.format("%01d", moneyValue));
-
-        diamondValue = objectManager.getItem().getDiamond();
-        labelDiamond.setText(String.format("%01d", diamondValue));
-
-        ammunitionValue = objectManager.getItem().getAmmunition();
-        labelAmmunition.setText(String.format("%01d", ammunitionValue));
-
-    }
-
     @Override
     public void update(Player player) {
         //coinValue = item.getCoin();
