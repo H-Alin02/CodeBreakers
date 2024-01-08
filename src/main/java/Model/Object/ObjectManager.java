@@ -4,6 +4,8 @@ import Model.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Objects;
+
 
 public class ObjectManager {
     private Array<GameObject> objects ;
@@ -48,35 +50,34 @@ public class ObjectManager {
     public void checkCollision(){
         for(GameObject obj : objects) {
             if (obj.collide(player)) {
-
-                boolean removeItem = true;
-
                 if (obj instanceof  Medikit){
                     if (player.getPlayerLife()>= 100){
                         player.setPlayerLife(0);
-                        removeItem = false;
                     }else {
+                        obj.getPickSound().play(0.2f);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                        obj.setRemove(true);
+                        item.add(obj);
                         player.setPlayerLife(medicalLife);
                     }
-                }
-                if(obj instanceof  Meat){
-                    if (player.getPlayerLife()>= 100){
+                } else if (obj instanceof  Meat) {
+                    if (player.getPlayerLife() >= 100){
                         player.setPlayerLife(0);
-                        removeItem = false;
-                    }else {
+                    }else{
+                        obj.getPickSound().play(0.2f);
+                        objects.removeIndex(objects.indexOf(obj,false));
+                        obj.setRemove(true);
+                        item.add(obj);
                         player.setPlayerLife(energy);
                     }
-
-                }
-
-                if (obj instanceof Ammunition)
-                    player.setBulletCount(player.getBulletCount()+50);
-
-                if(removeItem) {
+                }else {
                     obj.getPickSound().play(0.2f);
-                    objects.removeIndex(objects.indexOf(obj, false));
+                    objects.removeIndex(objects.indexOf(obj,false));
                     obj.setRemove(true);
                     item.add(obj);
+
+                    if (Objects.equals(obj.getName(),"ammunition"))
+                        player.setBulletCount(player.getBulletCount()+50);
                 }
             }
         }
