@@ -17,7 +17,7 @@ public class NPCManager {
 
     public void initializeNPCs(){
         NPC.add(NPCFactory.createNPC("Dave",new Vector2(2176,2816)));
-        NPC.add(NPCFactory.createNPC("DrGarfild", new Vector2(1940, 2816)));
+        NPC.add(NPCFactory.createNPC("DrGarfild", new Vector2(6528, 4352)));
     }
 
     public void update( float delta){

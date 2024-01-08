@@ -25,6 +25,7 @@ public class ObjectManager {
     }
 
     public void initializeObject(){
+        //mappa tutorial
         objects.add(objectCreator.createObject("chest",1650,1200));
         objects.add(objectCreator.createObject("coin",3600,1800));
         objects.add(objectCreator.createObject("coin",3500,1800));
@@ -38,6 +39,13 @@ public class ObjectManager {
         objects.add(objectCreator.createObject("money",2100,1400));
         objects.add(objectCreator.createObject("ammunition",850,1000));
         objects.add(objectCreator.createObject("medikit",850,1300));
+
+        //Mappa di gioco
+        objects.add(objectCreator.createObject("medikit",6336,2048));
+        objects.add(objectCreator.createObject("ammunition",6080,2048));
+        objects.add(objectCreator.createObject("medikit",8320,3520));
+
+
     }
 
     public void draw(SpriteBatch batch){

@@ -32,13 +32,14 @@ public class EnemyManager {
         enemies.add(dummyEnemyCreator.createEnemy(876, 1846));
 
         //Moving enemies
-        enemies.add(metalRobotCreator.createEnemy(1664,1014));
-        //enemies.add(metalRobotCreator.createEnemy(350,118));
-        //enemies.add(metalRobotCreator.createEnemy(500,118));
+        enemies.add(metalRobotCreator.createEnemy(6912,1280));
+        enemies.add(metalRobotCreator.createEnemy(6848,1856));
+        enemies.add(metalRobotCreator.createEnemy(6848,2688));
+        enemies.add(metalRobotCreator.createEnemy(7616,2520));
+        enemies.add(metalRobotCreator.createEnemy(7872,2496));
+        enemies.add(metalRobotCreator.createEnemy(7808,3224));
+        enemies.add(metalRobotCreator.createEnemy(8960,3820));
 
-        /*enemies.add(metalRobotCreator.createEnemy(1452,1142));
-        enemies.add(metalRobotCreator.createEnemy(1260,1142));
-        enemies.add(metalRobotCreator.createEnemy(1580,886));*/
 
     }
 
