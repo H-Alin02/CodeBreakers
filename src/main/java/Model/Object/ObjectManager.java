@@ -1,10 +1,9 @@
 package Model.Object;
 
+import Model.Bullet;
 import Model.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.Objects;
 
 
 public class ObjectManager {
@@ -51,14 +50,12 @@ public class ObjectManager {
         for(GameObject obj : objects) {
             if (obj.collide(player)) {
 
-                obj.getPickSound().play(0.2f);
-                objects.removeIndex(objects.indexOf(obj,false));
-                obj.setRemove(true);
-                item.add(obj);
+                boolean removeItem = true;
 
                 if (obj instanceof  Medikit){
                     if (player.getPlayerLife()>= 100){
                         player.setPlayerLife(0);
+                        removeItem = false;
                     }else {
                         player.setPlayerLife(medicalLife);
                     }
@@ -66,14 +63,22 @@ public class ObjectManager {
                 if(obj instanceof  Meat){
                     if (player.getPlayerLife()>= 100){
                         player.setPlayerLife(0);
+                        removeItem = false;
                     }else {
                         player.setPlayerLife(energy);
                     }
 
                 }
 
-                if (Objects.equals(obj.getName(),"ammunition"))
+                if (obj instanceof Bullet)
                     player.setBulletCount(player.getBulletCount()+50);
+
+                if(removeItem) {
+                    obj.getPickSound().play(0.2f);
+                    objects.removeIndex(objects.indexOf(obj, false));
+                    obj.setRemove(true);
+                    item.add(obj);
+                }
             }
         }
     }
