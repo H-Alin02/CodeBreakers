@@ -1,6 +1,5 @@
 package Model.Object;
 
-import Model.Bullet;
 import Model.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -70,7 +69,7 @@ public class ObjectManager {
 
                 }
 
-                if (obj instanceof Bullet)
+                if (obj instanceof Ammunition)
                     player.setBulletCount(player.getBulletCount()+50);
 
                 if(removeItem) {
