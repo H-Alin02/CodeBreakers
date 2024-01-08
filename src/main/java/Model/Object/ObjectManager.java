@@ -60,6 +60,7 @@ public class ObjectManager {
                         item.add(obj);
                         player.setPlayerLife(medicalLife);
                     }
+
                 } else if (obj instanceof  Meat) {
                     if (player.getPlayerLife() >= 100){
                         player.setPlayerLife(0);
@@ -70,6 +71,7 @@ public class ObjectManager {
                         item.add(obj);
                         player.setPlayerLife(energy);
                     }
+
                 }else {
                     obj.getPickSound().play(0.2f);
                     objects.removeIndex(objects.indexOf(obj,false));
