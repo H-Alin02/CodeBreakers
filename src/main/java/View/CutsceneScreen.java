@@ -23,7 +23,9 @@ public class CutsceneScreen extends ScreenAdapter {
     private BitmapFont font;
     private List<String> cutsceneTexts;
     private List<String> imagePaths;
+    private Image background;
     private Image currentImage;
+    private Image textBox;
     private Label currentTextLabel;
     private int currentIndex;
 
@@ -39,13 +41,12 @@ public class CutsceneScreen extends ScreenAdapter {
                 "Un piccolo gruppo di ricche famiglie si spartisce il controllo della città, con misure sempre più restrittive e autoritarie. " +
                         "Queste famiglie controllano ogni singolo cittadino grazie a nuove ed avanzatissime tecnologie di " +
                         "sorveglianza, impianti cibernetici e vere proprie compagnie militari private.",
-                "In questo scenario distopico, solo un piccolo gruppo di individui ha il coraggio di combattere l oligarchia della città: i Codebreaker. " +
-                        "I Codebreaker, da semplice crew hacker, hanno via via ampliato i loro ranghi e le loro capacità da semplici hacker " +
-                        "a veri e propri guerriglieri: con le loro abilità riescono a intercettare le comunicazioni delle cmp, " +
-                        "eseguire imboscate e riciclare le apparecchiature e le armi catturate.",
+                "In questo scenario distopico, i coraggiosi Codebreaker, partiti come una modesta crew hacker, hanno evoluto le loro abilità da semplici " +
+                        "hacker a veri guerriglieri. Intercettano comunicazioni, eseguono imboscate e riciclano apparecchiature e armi catturate nella " +
+                        "lotta contro l'oligarchia cittadina.",
                 "Il Giocatore, uno dei migliori membri dei Codebreaker, si unisce al gruppo per vendicare la perdita della sua famiglia a " +
                         "causa della violenza oligarchica. L'obiettivo è liberare la città, ottenendo informazioni cruciali sulla base segreta di una " +
-                        "famiglia e intraprendendo una missione di sabotaggio per svelarne le attività. \nLa missione è pronta a iniziare."
+                        "famiglia e intraprendendo una missione di sabotaggio per svelarne le attività. \nLa missione inizia."
         );
         imagePaths = Arrays.asList(
                 "Cutscene/img1.png",
@@ -62,20 +63,34 @@ public class CutsceneScreen extends ScreenAdapter {
     private void loadContent() {
         if (currentIndex < imagePaths.size()) {
             // Carica l'immagine PNG dal tuo progetto
+            Texture back = new Texture(Gdx.files.internal("Cutscene/img.png"));
+            back.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            background = new Image(back);
+            background.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
+            stage.addActor(background);
+
             Texture cutsceneImage = new Texture(Gdx.files.internal(imagePaths.get(currentIndex)));
-            currentImage = new Image(cutsceneImage);
             cutsceneImage.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            currentImage.setSize(stage.getWidth() / 2, stage.getHeight() / 2);
-            currentImage.setPosition(stage.getWidth() / 4, stage.getHeight() / 3 );
+            currentImage = new Image(cutsceneImage);
+            currentImage.setSize(stage.getWidth() / 2 + 100, stage.getHeight() / 2 +  100);
+            currentImage.setPosition(stage.getWidth() / 4 - 50, stage.getHeight() / 3 );
             stage.addActor(currentImage);
+
+            Texture texture = new Texture(Gdx.files.internal("Cutscene/TextBox.png"));
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            textBox = new Image(texture);
+            textBox.setSize(stage.getWidth(), stage.getHeight()/4 + 50);
+            textBox.setPosition(0,0);
+            stage.addActor(textBox);
+
 
             // Aggiungi un Label per il testo
             Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
             currentTextLabel = new Label("", labelStyle);
             currentTextLabel.setWrap(true);
             currentTextLabel.setAlignment(Align.center);
-            currentTextLabel.setWidth(stage.getWidth() - 20); // Larghezza del Label
-            currentTextLabel.setPosition(10, 120); // Posizione del Label
+            currentTextLabel.setWidth(stage.getWidth() - 100); // Larghezza del Label
+            currentTextLabel.setPosition(50, 120); // Posizione del Label
             currentTextLabel.setFontScale(2f); // Scala il testo
             stage.addActor(currentTextLabel);
 
