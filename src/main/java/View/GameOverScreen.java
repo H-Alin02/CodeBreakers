@@ -18,24 +18,40 @@ public class GameOverScreen extends ScreenAdapter {
     private Viewport viewport;
     private Stage stage;
     private OrthographicCamera camera;
+    Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
-    public GameOverScreen(OrthographicCamera camera) {
+    public GameOverScreen(OrthographicCamera camera, boolean gameEndingWon) {
         this.camera = camera;
         viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2, new OrthographicCamera());
         stage = new Stage(viewport, batch);
-
-        Label gameOverLabel = new Label("GAME OVER", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Label returnToMenuLabel = new Label("Return to menu", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
         Table table = new Table();
         table.center();
         table.setFillParent(true);
-        table.add(gameOverLabel).expandX();
-        table.row();
-        table.add(returnToMenuLabel).expandX().padTop(10f);
+
+        if(gameEndingWon){
+            Label gameWonLabel = new Label("DEMO COMPLETATA", font);
+            Label congratulationsLabel = new Label("Complimenti! hai completato la demo", font);
+            Label returnToMenuLabel = new Label("Clicca per ritornare al menù", font);
+            table.add(gameWonLabel).expandX();
+            table.row();
+            table.add(congratulationsLabel).expandX();
+            table.add(returnToMenuLabel).expandX().padTop(10f);
+
+
+
+        } else {
+            Label gameOverLabel = new Label("GAME OVER", font);
+            Label returnToMenuLabel = new Label("Clicca per ritornare al menù", font);
+            table.add(gameOverLabel).expandX();
+            table.row();
+            table.add(returnToMenuLabel).expandX().padTop(10f);
+
+        }
+
+
+
         stage.addActor(table);
     }
-
 
     @Override
     public void render(float delta) {

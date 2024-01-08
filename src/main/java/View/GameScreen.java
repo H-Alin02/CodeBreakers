@@ -168,10 +168,11 @@ public class GameScreen extends ScreenAdapter {
 
         }
 
-        //Controlla se il gioco è finito
-        if(gameOver()){
-            Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera));
-            dispose();
+        //se il giocatore ha finito il gioco vincendo o morendo
+        if(player.hasPlayerWon()){
+            endGame(true);
+        } else if (player.isPlayerDead()){
+            endGame(false);
         }
 
 
@@ -248,7 +249,14 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
     }
     public boolean gameOver(){
+
         return player.isPlayerDead();
+    }
+
+    public void endGame(boolean gameEnding ){
+        player.resetPlayer();
+        Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera, gameEnding));
+        dispose();
     }
 
     private void returnToMainMenuScreen(){

@@ -54,6 +54,7 @@ public class Player {
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
     private boolean playerDead = false;
+    private boolean playerWon = false;
 
     private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
     private static final SoundPlayer shotSound = new SoundPlayer("sound_effects/shot.mp3");
@@ -532,6 +533,14 @@ public class Player {
 
     public boolean isPlayerDead() {
         return playerDead;
+    }
+
+    public boolean hasPlayerWon() {
+        return playerWon;
+    }
+
+    public void setPlayerWon(boolean playerWon) {
+        this.playerWon = playerWon;
     }
 
     public void setPlayerLife(int life){
