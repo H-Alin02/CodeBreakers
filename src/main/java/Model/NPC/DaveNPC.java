@@ -64,8 +64,9 @@ public class DaveNPC implements NPC , Interactable {
         }else if (!hasTalked) {
             observer.onNPCFinishedTalk();
             hasTalked = true; // Imposta la variabile a true dopo la chiamata
-            System.out.println("Has talked");
         }
+
+        System.out.println("Has talked : "+ hasTalked);
 
     }
 

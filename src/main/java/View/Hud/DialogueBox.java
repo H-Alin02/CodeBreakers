@@ -11,12 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class DialogueBox {
     private Table table;
-    private Label dialogueLabel = new Label("", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+    private BitmapFont font;
+    private Label dialogueLabel;
     private boolean isVisible;
     private String text;
 
 
     public DialogueBox(String message){
+        font = new BitmapFont();
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        dialogueLabel = new Label("", new Label.LabelStyle(font, Color.BLACK));
         this.text = message;
         table = new Table();
         //table.setDebug(true);
@@ -44,9 +48,6 @@ public class DialogueBox {
     public void show(String text) {
         dialogueLabel.setText(text);
         table.setVisible(true);
-        if(table.isVisible()){
-            System.out.println("TABLE IS VISIBLE");
-        }
         isVisible = true;
     }
 

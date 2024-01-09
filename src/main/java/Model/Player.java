@@ -158,7 +158,7 @@ public class Player {
     }
 
     private Interactable findNearestInteractable(Array<Interactable> interactables) {
-        float minDistance = 120f;
+        float minDistance = 150f;
         Interactable nearestInteractable = null;
 
         for (Interactable interactable : interactables) {
@@ -483,7 +483,7 @@ public class Player {
         if (isSprinting) {
             SPEED *= 2;
             animationManager.updateAnimSpeed(0.07f);
-            sprintStat -= 1;
+            sprintStat -= 0.5f;
             if(sprintStat <= 0){
                 this.isSprinting = false;
             }

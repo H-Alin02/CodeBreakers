@@ -1,7 +1,7 @@
 package View;
 
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -28,6 +28,7 @@ public class CutsceneScreen extends ScreenAdapter {
     private Image textBox;
     private Label currentTextLabel;
     private int currentIndex;
+    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
 
 
     public CutsceneScreen(OrthographicCamera camera) {
@@ -35,6 +36,7 @@ public class CutsceneScreen extends ScreenAdapter {
         stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(), Boot.INSTANCE.getScreenHeight(), camera));
         font = new BitmapFont();
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
         cutsceneTexts = Arrays.asList(
                 "New Thebes, la città del futuro. Una metropoli dove la tecnologia, il lusso e il potere si fondono " +
                         "in un armonia apparente. Ma dietro la facciata scintillante, si nasconde una realtà oscura e crudele.",
@@ -113,7 +115,8 @@ public class CutsceneScreen extends ScreenAdapter {
         stage.draw();
 
         // Controlla se è stato premuto il tasto Enter
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if (Gdx.input.justTouched()) {
+            buttonClickSound.play(0.1f);
             currentIndex++;
             stage.clear(); // Rimuovi attori precedenti
             loadContent(); // Carica il nuovo contenuto
@@ -122,6 +125,7 @@ public class CutsceneScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        buttonClickSound.dispose();
         stage.dispose();
     }
 }
