@@ -28,7 +28,7 @@ public class PlayerStats implements HudComponent{
 
 
         //skin e pixmap sono relativi a ProgressBar
-        Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(1, 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -39,7 +39,7 @@ public class PlayerStats implements HudComponent{
         lifeBar = new ProgressBar(0, 100, 0.5f, false, lifeBarStyle);
         lifeBar.setValue(playerLife);
         lifeBarStyle.knobBefore = lifeBarStyle.knob;
-        lifeBar.setSize(50, 10);
+        //lifeBar.setSize(50, 10);
 
         //stamina bar
         TextureRegionDrawable textureStaminaBar = new TextureRegionDrawable(new TextureRegion(new Texture("hudAssets/barBlue_horizontalMid.png")));
@@ -49,7 +49,7 @@ public class PlayerStats implements HudComponent{
         staminaBarStyle.knobBefore = staminaBarStyle.knob;
         staminaBarStyle.disabledKnob = staminaBarStyle.knob;
 
-        staminaBar.setSize(50, 10);
+        //staminaBar.setSize(50, 10);
 
         //tableStats.setBackground(skin.getDrawable("WindowStyle"));
 
@@ -61,12 +61,12 @@ public class PlayerStats implements HudComponent{
         tableStats.top();
         //tableStats.setFillParent(true);
 
-        tableStats.add(lifeLabel);
-        tableStats.add(lifeBar).spaceRight(10);
+        tableStats.add(lifeLabel).spaceRight(10);
+        tableStats.add(lifeBar);
 
         tableStats.row();
-        tableStats.add(staminaLabel);
-        tableStats.add(staminaBar).spaceRight(10);
+        tableStats.add(staminaLabel).spaceRight(10);
+        tableStats.add(staminaBar);
 
     }
 

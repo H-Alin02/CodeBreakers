@@ -64,14 +64,14 @@ public class Hud extends WidgetGroup implements NPCObserver {
         //popolazione stage e posizionamento degli elementi
         rootTable.top().left();
 
-        rootTable.add(playerStats.getTableStats()).uniform();
-        rootTable.add(filler).fill().uniform();
+        rootTable.add(playerStats.getTableStats());
+        rootTable.add(filler).fill();
 
         //rootTable.add(mapName.getSceneName()).expandX();
 
-        rootTable.add(inventory.getTable()).uniform();
+        rootTable.add(inventory.getTable());
 
-        rootTable.row().height(300);
+        rootTable.row().height(Boot.INSTANCE.getScreenHeight()/3);
 
         rootTable.add(filler).fill();
         //rootTable.add(pauseContainer).expandX().expandY();
