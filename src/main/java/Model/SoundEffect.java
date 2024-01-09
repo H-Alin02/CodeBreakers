@@ -11,9 +11,6 @@ public class SoundEffect {
     private float passedTime = 0;
     private float duration;
 
-
-    //Il file da cui prendere il suono
-
     // costruttore che prende il path del file audio e la sua durata
     public SoundEffect(float duration)
     {
@@ -23,9 +20,7 @@ public class SoundEffect {
     public boolean isPlaying()
         {return  isPlaying;}
 
-    public void setDuration(float duration)
-        {this.duration = duration;}
-
+    // viene dato il volume e il file sonoro per poi essere riprodotto
     public void play(float volume, FileHandle soundFile)
     {
         System.out.println("PLAYING SOUND");
