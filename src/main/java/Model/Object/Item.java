@@ -42,14 +42,6 @@ public class Item {
         return typeValue(Coin.class);
     }
 
-    public int getDiamond() {
-        return typeCount(Diamond.class);
-    }
-
-    public int getMoney() {
-        return typeValue(Money.class);
-    }
-
     public int getKey() { return typeCount(Key.class); }
 
     public int getAmmunition(){

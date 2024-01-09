@@ -24,18 +24,11 @@ public class ObjectManager {
 
     public void initializeObject(){
         //mappa tutorial
-        objects.add(new Chest(1650,1200));
 
         objects.add(new Coin(3600,1800));
         objects.add(new Coin(3500,1800));
         objects.add(new Coin(3400,1800));
 
-        objects.add(new Diamond(1850,1850));
-        objects.add(new Diamond(1200,1850));
-
-        objects.add(new Money(1100,1300));
-        objects.add(new Money(3100,1300));
-        objects.add(new Money(2100,1400));
 
         objects.add(new Key(3100,2800));
         objects.add(new Meat(1600,1000));

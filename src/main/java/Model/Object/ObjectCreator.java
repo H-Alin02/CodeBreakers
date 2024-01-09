@@ -6,19 +6,12 @@ public class ObjectCreator implements ObjectGameCreator{
     public GameObject createObject(String nameObject, int posX, int posY) {
         if (nameObject == null){
             return null;
-        }
-        else if (nameObject.equalsIgnoreCase("chest")){
-            return new Chest(posX,posY);
         } else if (nameObject.equalsIgnoreCase("coin")) {
             return new Coin(posX,posY);
-        } else if (nameObject.equalsIgnoreCase("diamond")) {
-            return new Diamond(posX,posY);
-        } else if (nameObject.equalsIgnoreCase("key")) {
+        }  else if (nameObject.equalsIgnoreCase("key")) {
             return new Key(posX,posY);
         } else if (nameObject.equalsIgnoreCase("meat")) {
             return new Meat(posX,posY);
-        }else if (nameObject.equalsIgnoreCase("money")){
-            return new Money(posX,posY);
         } else if (nameObject.equalsIgnoreCase("ammunition")){
             return new Ammunition(posX,posY);
         }else if (nameObject.equalsIgnoreCase("medikit")){
