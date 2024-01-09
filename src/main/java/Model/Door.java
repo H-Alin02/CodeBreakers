@@ -83,6 +83,14 @@ public class Door implements Interactable{
         }
     }
 
+    @Override
+    public void reset() {
+        stateTime = 0;
+        isOpen = false;
+        isClosing = false;
+        boundingBox.set(x, y, doorWidth, doorHeight);
+    }
+
     public boolean isOpen() {
         return isOpen;
     }
@@ -147,4 +155,6 @@ public class Door implements Interactable{
     public boolean isCollision(float x, float y, float width, float height) {
         return !isOpen && boundingBox.overlaps(new Rectangle(x, y, width, height));
     }
+
+
 }

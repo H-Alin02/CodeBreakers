@@ -162,4 +162,9 @@ public class MapModel {
         this.player.setPlayerY(y);
     }
 
+    public void resetMapModel(){
+        for(Interactable interactable : interactables){
+            interactable.reset();
+        }
+    }
 }

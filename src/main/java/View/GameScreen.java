@@ -256,12 +256,14 @@ public class GameScreen extends ScreenAdapter {
 
     public void endGame(boolean gameEnding ){
         player.resetPlayer();
+        mapModel.resetMapModel();
         Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera, gameEnding));
         dispose();
     }
 
     private void returnToMainMenuScreen(){
         player.resetPlayer();
+        mapModel.resetMapModel();
         Boot.INSTANCE.setScreen(new MainMenuScreen(GameScreen.this.camera));
         dispose();
     }

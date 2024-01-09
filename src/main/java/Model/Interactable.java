@@ -10,4 +10,6 @@ public interface Interactable {
     boolean isCollision(float x, float y, float width, float height);
 
     void draw(SpriteBatch batch, Player player);
+
+    void reset();
 }

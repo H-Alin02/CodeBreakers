@@ -63,6 +63,11 @@ public class DrGarfield implements NPC , Interactable {
         }
     }
 
+    @Override
+    public void reset() {
+
+    }
+
     public boolean isPlayerInRange(float playerX, float playerY, float range) {
         float distance = new Vector2(playerX, playerY).dst(position.x + 32/2, position.y + 32/2);
         return distance <= range;
