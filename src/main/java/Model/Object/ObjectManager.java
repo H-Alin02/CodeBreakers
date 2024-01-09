@@ -39,7 +39,7 @@ public class ObjectManager {
 
         objects.add(new Key(3100,2800));
         objects.add(new Meat(1600,1000));
-        objects.add(new Ammunition(850,1000));
+        objects.add(new Ammunition(2944,2816));
         objects.add(new Medikit(850,1300));
 
         //Mappa di gioco

@@ -50,7 +50,7 @@ public class DaveNPC implements NPC , Interactable {
                 "",
                 "Ecco il tuo incarico: infíltrati nella base segreta dei fanatici.",
                 "Attenzione, ci sono guardie robot pronte a farti fuori. \nTrova il Dr. Garfild, recupera quella preziosa chiavetta. ",
-                "Senza di essa, l'IA potrebbe benissimo conquistare il mondo. Ma niente di troppo serio, giusto?",
+                "Senza di essa, l'IA potrebbe benissimo conquistare il mondo. \nMa niente di troppo serio, giusto?",
                 "Vai nella stanza in basso , le scale ti porteranno attraverso\nun tunnel creato da noi ,direttamente nel sotterraneo della base.",
                 "Spero di rivederti fuori da quella base , vai ora \nnon c'è altro tempo da perdere !"
         );
