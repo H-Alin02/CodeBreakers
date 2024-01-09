@@ -99,7 +99,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
         this.inventory.update(player);
         this.menu.update(player);
 
-        System.out.println(npcReadyToTalk);
+        //System.out.println(npcReadyToTalk);
         if(npcReadyToTalk){
             dialogueBox.show(dialogueBox.getText());
         }else dialogueBox.hide();

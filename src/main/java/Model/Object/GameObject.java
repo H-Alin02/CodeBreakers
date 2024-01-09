@@ -7,10 +7,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 
 public interface GameObject {
+    SoundPlayer pickSound = new SoundPlayer("sound_effects/item_pick_sound.wav");
     void draw(SpriteBatch batch);
-    default void update(float delta) {
-        getPickSound().update(delta);
-    }
+    default void update(float delta) {}
     default boolean collide(Player player) {
         return player.getArea().overlaps(getArea());
     }
@@ -21,6 +20,6 @@ public interface GameObject {
     int getValue();
     public void setValue(int value);
     default SoundPlayer getPickSound() {
-        return new SoundPlayer("sound_effects/item_pick_sound.wav");
+        return pickSound;
     }
 }

@@ -1,73 +1,57 @@
 package Model;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 
 public class SoundPlayer {
-    private Sound sound;
-    private float passedTime;
-    private boolean isPlaying;
-    private float duration;
-
-    //Il file da cui prendere il suono
+    private SoundEffect[] sounds = new SoundEffect[5];
+    private int count = 0;
     private FileHandle soundFile;
 
-    // costruttore che prende il path del file audio e la sua durata
+    public SoundPlayer(String path)
+    {
+        this(1, path);
+    }
     public SoundPlayer(float duration, String path)
     {
-        passedTime = 0;
-        isPlaying = false;
         soundFile = Gdx.files.internal(path);
-        this.duration = duration;
+
+        sounds[0] = new SoundEffect(duration);
+        sounds[1] = new SoundEffect(duration);
+        sounds[2] = new SoundEffect(duration);
+        sounds[3] = new SoundEffect(duration);
+        sounds[4] = new SoundEffect(duration);
     }
-
-    // se la durata non è specificata, sarà di 3 secondi di default
-    public SoundPlayer(String path)
-        {this(3, path);}
-
-    public boolean isPlaying()
-        {return  isPlaying;}
-
-    public void setDuration(float duration)
-        {this.duration = duration;}
 
     public void play(float volume)
     {
-        // sound deve essere dichiarato ogni volta che si vuole riprodurre il suono di nuovo,
-        // perché "dispose" blocca il suono permanentemente
-        sound = Gdx.audio.newSound(soundFile);
-
-        sound.play(volume);
-        isPlaying = true;
-
-        System.out.println("PLAYING SOUND");
-    }
-
-    //si deve sempre un update per ogni frame per ciascun suono,
-    // altrimenti vengono sprecate risorse senza motivo
-    public void update(float delta)
-    {
-        if(passedTime > duration)
-        {
-            System.out.println("DISPOSING SOUND");
-            System.out.println("PASSED TIME: " + passedTime);
-
-            isPlaying = false;
-            passedTime = 0;
-            sound.dispose();
+        if(sounds[count].isPlaying()) {
+            count++;
+            if (count == 5)
+                count = 0;
         }
 
-        if(isPlaying)
-            passedTime += delta;
+        System.out.println("current sound index:  " + count);
+        sounds[count].play(volume, soundFile);
     }
 
-    public void setPitch(float pitch)
+    public void update(float delta)
     {
-        sound.setPitch(0, pitch);
+        sounds[0].update(delta);
+        sounds[1].update(delta);
+        sounds[2].update(delta);
+        sounds[3].update(delta);
+        sounds[4].update(delta);
     }
 
-    //funzione per annullare manualmente la riproduzione del suono
     public void dispose()
-        {sound.dispose();}
+    {
+        System.out.println("DISPOSING SOUND");
+
+        sounds[0].dispose();
+        sounds[1].dispose();
+        sounds[2].dispose();
+        sounds[3].dispose();
+        sounds[4].dispose();
+    }
 }

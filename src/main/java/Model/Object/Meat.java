@@ -17,7 +17,8 @@ public class Meat implements GameObject{
     private final float SCALE = 1.2f;
     private String name ;
     private int meatValue;
-    private final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_food.mp3");
+    private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_food.mp3");
+    public static void updateSound(float delta) {pickSound.update(delta);}
 
     public Meat(int meatX, int meatY){
         this.meatX = meatX;

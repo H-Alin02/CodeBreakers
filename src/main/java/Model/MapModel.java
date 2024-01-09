@@ -24,6 +24,7 @@ public class MapModel {
     private float mapScale = 2.0f;
     private Player player;
     private Array<Interactable> interactables;
+    private static Rectangle stairHitbox = new Rectangle(2470,970,64,64);
 
     public static MapModel getInstance() {
         if (INSTANCE == null) {
@@ -61,8 +62,9 @@ public class MapModel {
 
     public void update(float delta){
         this.player = Player.getInstance();
-        if(player.getHitBox().overlaps(new Rectangle(2470,970,64,64))){
-            teleportPlayer();
+        if(player.getHitBox().overlaps(stairHitbox)){
+            teleportPlayer(8448, 1216);
+            Player.playLevelMusic();
         }
         npcManager.update(delta);
     }
@@ -155,9 +157,9 @@ public class MapModel {
         return npcManager;
     }
 
-    private void teleportPlayer(){
-        this.player.setPlayerX(8448);
-        this.player.setPlayerY(1216);
+    private void teleportPlayer(int x, int y){
+        this.player.setPlayerX(x);
+        this.player.setPlayerY(y);
     }
 
 }

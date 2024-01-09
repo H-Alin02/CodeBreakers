@@ -55,8 +55,16 @@ public class MetalRobot implements Enemy {
 
     private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/robot_punch.wav");
     public static final SoundPlayer alertSound = new SoundPlayer("sound_effects/robot_alert.wav");
-    public static final SoundPlayer deathSound = new SoundPlayer("sound_effects/robot_death_sound.wav");
+    public static final SoundPlayer deathSound = new SoundPlayer(1.3f, "sound_effects/robot_death_sound.wav");
     public static final SoundPlayer damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
+
+    public static void updateSound(float delta)
+    {
+        punchSound.update(delta);
+        damageSound.update(delta);
+        alertSound.update(delta);
+        deathSound.update(delta);
+    }
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -75,11 +83,6 @@ public class MetalRobot implements Enemy {
         hitBoxY = enemyY + (6*3);
 
         runStateMachine(delta);
-
-        punchSound.update(delta);
-        damageSound.update(delta);
-        alertSound.update(delta);
-        deathSound.update(delta);
 
         distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
         isChasing = distanceToPlayer < chasingArea && hasLineOfSight();

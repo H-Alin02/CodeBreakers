@@ -70,8 +70,8 @@ public class MainMenuScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 buttonClickSound.play(0.1f);
                 backgroundMusic.dispose();
-                //Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
-                Boot.INSTANCE.setScreen(new CutsceneScreen(MainMenuScreen.this.camera));
+                Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
+                //Boot.INSTANCE.setScreen(new CutsceneScreen(MainMenuScreen.this.camera));
             }
         });
 

@@ -23,6 +23,11 @@ public class Door implements Interactable{
     private static final SoundPlayer openingSound = new SoundPlayer("sound_effects/door_opening.mp3");
     private static final SoundPlayer closingSound = new SoundPlayer("sound_effects/door_opening.mp3");
 
+    public static void updateSound(float delta){
+        openingSound.update(delta);
+        closingSound.update(delta);
+    }
+
     public Door( float x, float y, float width, float height){
         this.x = x;
         this.y = y;

@@ -62,7 +62,28 @@ public class Player {
     private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
     private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
     //private static final SoundPlayer walkingSound = new SoundPlayer(0.5f, "sound_effects/walking_sound.wav");
-    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/level_music.mp3"));
+    private static final Music tutorialMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/tutorial_music.mp3"));
+    private static final Music levelMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/level_music.mp3"));
+
+    static {
+        tutorialMusic.setLooping(true);
+        tutorialMusic.setVolume(0.2f);
+
+        levelMusic.setLooping(true);
+        levelMusic.setVolume(0.1f);
+    }
+
+    public static void playTutorialMusic()
+    {
+        levelMusic.dispose();
+        tutorialMusic.play();
+    }
+
+    public static void playLevelMusic()
+    {
+        tutorialMusic.dispose();
+        levelMusic.play();
+    }
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -71,9 +92,16 @@ public class Player {
         mapModel = MapModel.getInstance();
         bullets = new ArrayList<>();
 
-        backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(0.05f);
-        backgroundMusic.play();
+        playTutorialMusic();
+    }
+
+    public static void updateSound(float delta)
+    {
+        damageSound.update(delta);
+        shotSound.update(delta);
+        punchSound.update(delta);
+        bulletHitSound.update(delta);
+        deathSound.update(delta);
     }
 
     public static Player getInstance() {
@@ -95,15 +123,7 @@ public class Player {
         // Check for melee attack and collisions with enemies
         updateAttackTimer(delta);
         updateShootTimer(delta);
-
-
-        damageSound.update(delta);
-        shotSound.update(delta);
-        punchSound.update(delta);
-        bulletHitSound.update(delta);
-        deathSound.update(delta);
-        //walkingSound.update(delta);
-
+        updateSound(delta);
 
         // Aggiorna i proiettili
         for (Bullet bullet : bullets) {
@@ -295,7 +315,6 @@ public class Player {
     }
 
     public void shoot() {
-        System.out.println("AAAA " + bulletCount);
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting && bulletCount > 0) {
             shotSound.play(0.1f);
@@ -322,7 +341,8 @@ public class Player {
     }
     public void resetPlayer(){
         Player.INSTANCE = null;
-        backgroundMusic.dispose();
+        tutorialMusic.dispose();
+        levelMusic.dispose();
     };
 
     public void takeDamage(int damage){

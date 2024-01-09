@@ -81,6 +81,7 @@ public class GameScreen extends ScreenAdapter {
         enemyManager.update(delta);
         objects.update(delta);
 
+        Door.updateSound(delta);
     }
 
     @Override

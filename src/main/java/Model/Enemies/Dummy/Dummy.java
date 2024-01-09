@@ -27,6 +27,9 @@ public class Dummy implements Enemy {
 
 
     private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_punch.mp3");
+    public static void updateSound(float delta){
+        damageSound.update(delta);
+    }
 
     public Dummy(int initialHealth , int startX, int startY){
         this.health = initialHealth;
@@ -41,7 +44,6 @@ public class Dummy implements Enemy {
 
     @Override
     public void update(float delta){
-        damageSound.update(delta);
         animationManager.update(delta);
         // Check for damage state and animation completion
         if (enemyStates.contains(currentState,true) && !damageAnimationComplete) {

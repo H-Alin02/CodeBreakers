@@ -16,6 +16,7 @@ public class Boot extends Game {
 
     @Override
     public void create() {
+
         this.screenWidth = Gdx.graphics.getWidth();
         this.screenHeight = Gdx.graphics.getHeight();
         this.orthographicCamera = new OrthographicCamera();
