@@ -28,16 +28,22 @@ public class OptionScreen extends ScreenAdapter {
     private Viewport viewport;
     private Stage stage;
     private OrthographicCamera camera;
-    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
+    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
     private float soundMusic = MusicPlayer.getVolumeFactor();
     private float backmusic = SoundPlayer.getVolumeFactor();
+    private boolean returnToGame= false;
     private float volume;
-    public OptionScreen(OrthographicCamera camera){
+    public OptionScreen(OrthographicCamera camera, boolean returnToGame){
         this.camera = camera;
+        this.returnToGame = returnToGame;
         viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2, new OrthographicCamera());
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
+        create();
+
+    }
+    private void create(){
 
         setVolume(MusicPlayer.getVolumeFactor());
 
@@ -74,7 +80,13 @@ public class OptionScreen extends ScreenAdapter {
         TextButton musicN = createTextButton("[-]");
         TextButton effectP = createTextButton("[+]");
         TextButton effectN = createTextButton("[-]");
-        TextButton ritorno = createTextButton("Ritorna al menù");
+        TextButton ritorno;
+        if(returnToGame){
+            ritorno = createTextButton("Ritorna al gioco");
+        } else {
+            ritorno = createTextButton("Ritorna al menù");
+        }
+
 
 
         mute.addListener(new ClickListener() {
@@ -159,19 +171,27 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
-                Boot.INSTANCE.setScreen(new MainMenuScreen(camera));
+                if(!returnToGame){
+                    Boot.INSTANCE.setScreen(new MainMenuScreen(camera));
+                    OptionScreen.this.dispose();
+                } else {
+                    Boot.INSTANCE.setScreen(Boot.INSTANCE.getGameScreen());
+                    OptionScreen.this.dispose();
+                }
             }
         });
 
-        table.add(mute).padRight(50);
-        table.add(unMute).row();
-        table.add(musicVolume).padTop(10).padRight(30);
-        table.add(musicP).padTop(10).padRight(30);
-        table.add(musicN).padTop(10).row();
+        table.add(mute).uniform().padLeft(20);
+        table.add(unMute).uniform().row();
+        table.add(musicVolume).padTop(30).padRight(30);
+        table.add(musicP).padTop(30).padRight(30);
+        table.add(musicN).padTop(30).row();
         table.add(effectVolume).padRight(30).padTop(10);
         table.add(effectP).padRight(30).padTop(10);
         table.add(effectN).padTop(10).row();
-        table.add(ritorno).padTop(50);
+        table.add(ritorno).padTop(50).colspan(2);
+        //table.setDebug(true);
+
     }
     private TextButton createTextButton(String text) {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
@@ -245,7 +265,8 @@ public class OptionScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         // Libera le risorse quando la schermata viene chiusa
-        buttonClickSound.dispose();
+        //buttonClickSound.dispose();
+        batch.dispose();
         stage.dispose();
     }
 

@@ -88,30 +88,13 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta){
-        //Gestione della Pausa
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-
-
-            isPaused = !isPaused;
-
-            hud.setMenuVisibility();
-
-
-        }
-        //se continua nel menu è stato premuto
-        if(menuMediator.isChangeGameState()){
-            menuMediator.changeGameStatus();
-            hud.setMenuVisibility();
-            isPaused = false;
-
-
-        }
 
 
         if(!isPaused){
-        update(delta);
+            update(delta);
         }
-        //fine gestione pausa
+
+
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         if (shakeDuration > 0) {
             float shakeX = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
@@ -156,9 +139,43 @@ public class GameScreen extends ScreenAdapter {
         //renderPlayerCollisionDebug();
         //renderEnemyDebug();
 
+        //Gestione della Pausa
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
+
+            isPaused = !isPaused;
+
+            hud.setMenuVisibility();
+
+
+        }
+        //se continua nel menu è stato premuto
+        if(menuMediator.isChangeGameState()){
+            menuMediator.changeGameStatus();
+            hud.setMenuVisibility();
+            isPaused = false;
+
+
+        }
+
+        if(menuMediator.isChangeToOptionsScreen()){
+            menuMediator.changeToOptionsScreen();
+            Boot.INSTANCE.setScreen(new OptionScreen(this.camera, true ));
+            //hud.setMenuVisibility();
+            //hud.setMenuVisibility();//va richiamato due volte per evitare glitch menù
+
+        } else {
+            hud.setMenuVisibility();
+            hud.setMenuVisibility();//va richiamato due volte per evitare glitch menù
+        }
+
+
+        //fine gestione pausa
+
         //se exit nel menu è stato premuto
-        if(menuMediator.isChangeScreen()){
-            menuMediator.changeScreen();
+        if(menuMediator.isChangeToMainMenuScreen()){
+            menuMediator.changeToMenuScreen();
             hud.setMenuVisibility();
             returnToMainMenuScreen();
 

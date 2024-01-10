@@ -102,7 +102,13 @@ public class CutsceneScreen extends ScreenAdapter {
             // Fine della cutscene
             // Aggiungi qui la logica per passare alla schermata successiva
             System.out.println("Fine della cutscene");
-            Boot.INSTANCE.setScreen(new GameScreen(CutsceneScreen.this.camera));
+            GameScreen gameScreen =  new GameScreen(CutsceneScreen.this.camera);
+
+            Boot.INSTANCE.setGameScreen(gameScreen);
+
+            Boot.INSTANCE.setScreen(gameScreen);
+
+            //CutsceneScreen.this.dispose();
         }
     }
 

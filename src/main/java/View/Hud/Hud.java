@@ -152,6 +152,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
     public void setMenuVisibility() {
         menu.visibilitySwitch();
+        Gdx.input.setInputProcessor(stage);
 
     }
 }

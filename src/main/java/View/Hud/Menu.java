@@ -1,7 +1,6 @@
 package View.Hud;
 
 import Controller.MenuMediator;
-import Model.MusicPlayer;
 import Model.Player;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -24,6 +23,7 @@ public class Menu implements HudComponent{
 
         //creazione pulsanti
         TextButton continueButton = createTextButton("Continua");
+        TextButton optionsButton = createTextButton("Opzioni");
         TextButton mainMenuButton = createTextButton("Torna al menù");
 
         menuTable = new Table();
@@ -36,7 +36,7 @@ public class Menu implements HudComponent{
 
         menuTable.setBackground(textureBackground);
 
-        bgPixmap.dispose();
+
 
         //aggiunta listener ai pulsanti
         continueButton.addListener(new ClickListener() {
@@ -48,10 +48,19 @@ public class Menu implements HudComponent{
             }
         });
 
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                menuMediator.changeToOptionsScreen();
+
+
+            }
+        });
+
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                menuMediator.changeScreen();
+                menuMediator.changeToMenuScreen();
 
 
             }
@@ -62,10 +71,13 @@ public class Menu implements HudComponent{
         //aggiunta pulsanti a table
         menuTable.add(continueButton).center();
         menuTable.row();
+        menuTable.add(optionsButton).center().padTop(20f);
+        menuTable.row();
         menuTable.add(mainMenuButton).center().padTop(20f);
 
         menuTable.setVisible(false);
 
+        bgPixmap.dispose();
 
 
 
@@ -74,12 +86,8 @@ public class Menu implements HudComponent{
         boolean visible = this.menuTable.isVisible();
 
         this.menuTable.setVisible(!visible);
-        MusicPlayer.currentMusic.multiplyVolume(visible ? 5 : 0.2f);
     }
 
-    public void changeGameStatus(){
-
-    };
     public Table getTable() {
         return menuTable;
     }

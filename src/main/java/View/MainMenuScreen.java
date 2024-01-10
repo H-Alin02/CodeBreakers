@@ -90,8 +90,9 @@ public class MainMenuScreen extends ScreenAdapter {
                 // Aggiungi qui la logica per il pulsante "Options"
                 buttonClickSound.play(0.1f);
                 System.out.println("Options clicked");
-                OptionScreen optionScreen = new OptionScreen(camera);
+                OptionScreen optionScreen = new OptionScreen(MainMenuScreen.this.camera, false );
                 Boot.INSTANCE.setScreen(optionScreen);
+                MainMenuScreen.this.dispose();
             }
         });
 
