@@ -64,7 +64,7 @@ public class DrGarfield implements NPC , Interactable {
         }
 
         if(currentIndex == 5){
-            objectManager.addObject(new ObjectCreator().createObject("key",(int)position.x+128,(int)position.y));
+            objectManager.addObject(new ObjectCreator().createObject("keyUSB",(int)position.x+128,(int)position.y));
         }
     }
 
