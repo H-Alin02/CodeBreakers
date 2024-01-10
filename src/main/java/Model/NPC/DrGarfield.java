@@ -93,7 +93,6 @@ public class DrGarfield implements NPC , Interactable {
             observer.onNPCFinishedTalk();
             hasTalked = true; // Imposta la variabile a true dopo la chiamata
         }
-        System.out.println(currentIndex);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Object.ObjectManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -12,4 +13,6 @@ public interface Interactable {
     void draw(SpriteBatch batch, Player player);
 
     void reset();
+
+    void addObjectManager(ObjectManager objectManager);
 }

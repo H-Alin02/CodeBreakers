@@ -123,10 +123,11 @@ public class MapModel {
         if (doorsLayer != null) {
             for (MapObject object : doorsLayer.getObjects()) {
                 if (object instanceof RectangleMapObject rectObject) {
+                    boolean bloccata = (boolean)rectObject.getProperties().get("bloccata");
                     interactables.add(new Door(rectObject.getRectangle().x * mapScale,
                             rectObject.getRectangle().y * mapScale,
                             rectObject.getRectangle().width * mapScale,
-                            rectObject.getRectangle().height * mapScale));
+                            rectObject.getRectangle().height * mapScale, bloccata));
                 }
             }
         }
@@ -170,10 +171,8 @@ public class MapModel {
     }
 
     public void addObjectManager(ObjectManager objectManager){
-        for(Interactable npc : interactables){
-            if(npc instanceof NPC){
-                ((NPC) npc).addObjectManager(objectManager);
-            }
+        for(Interactable interactable : interactables){
+            interactable.addObjectManager(objectManager);
         }
     }
 }

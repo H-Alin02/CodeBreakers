@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Object.Key;
+import Model.Object.ObjectManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -15,6 +17,8 @@ public class Door implements Interactable{
     private float doorHeight;
     private boolean isOpen;
     private boolean isClosing; // Nuovo flag per gestire l'animazione di chiusura
+    private boolean startIsLocked;
+    private boolean isLocked;
     private Rectangle boundingBox;
     private final Animation<TextureRegion> doorOpen;
     private final Animation<TextureRegion> doorClose;
@@ -22,19 +26,22 @@ public class Door implements Interactable{
     private Texture interactTexture;
     private static final SoundPlayer openingSound = new SoundPlayer("sound_effects/door_opening.mp3");
     private static final SoundPlayer closingSound = new SoundPlayer("sound_effects/door_opening.mp3");
+    private ObjectManager objectManager;
 
     public static void updateSound(float delta){
         openingSound.update(delta);
         closingSound.update(delta);
     }
 
-    public Door( float x, float y, float width, float height){
+    public Door( float x, float y, float width, float height, boolean isLocked){
         this.x = x;
         this.y = y;
         this.doorWidth = width;
         this.doorHeight = height;
         this.isOpen = false;
         this.isClosing = false;
+        this.isLocked = isLocked;
+        this.startIsLocked = isLocked;
         this.boundingBox = new Rectangle(x,y, width, height);
         interactTexture = new Texture(Gdx.files.internal("map/Interaction/Interaction.png"));
 
@@ -88,7 +95,13 @@ public class Door implements Interactable{
         stateTime = 0;
         isOpen = false;
         isClosing = false;
+        isLocked = startIsLocked;
         boundingBox.set(x, y, doorWidth, doorHeight);
+    }
+
+    @Override
+    public void addObjectManager(ObjectManager objectManager) {
+        this.objectManager = objectManager;
     }
 
     public boolean isOpen() {
@@ -121,13 +134,21 @@ public class Door implements Interactable{
 
     @Override
     public void interact(Player player) {
-        if(!player.getHitBox().overlaps(new Rectangle(x, y, doorWidth, doorHeight))) {
-            if (!isOpen) {
-                openDoor();
-            } else {
-                closeDoor();
+        if(isLocked && objectManager.getItem().getKey() > 0){
+            objectManager.getItem().remove(Key.class);
+            this.isLocked = false;
+        }
+
+        if(!isLocked){
+            if(!player.getHitBox().overlaps(new Rectangle(x, y, doorWidth, doorHeight))) {
+                if (!isOpen) {
+                    openDoor();
+                } else {
+                    closeDoor();
+                }
             }
         }
+
     }
 
     private void openDoor() {

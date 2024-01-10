@@ -38,6 +38,15 @@ public class Item {
         return value;
     }
 
+    public <T extends GameObject> void remove(Class<T> type){
+        for(GameObject item : items){
+            if(type.isInstance(item)){
+                items.removeIndex(items.indexOf(item,false));
+                return;
+            }
+        }
+    }
+
     public int getCoin() {
         return typeValue(Coin.class);
     }

@@ -39,7 +39,7 @@ public class ObjectManager {
         objects.add(objectCreator.createObject("ammunition",6336,2048));
         objects.add(objectCreator.createObject("ammunition",6080,2048));
         objects.add(objectCreator.createObject("medikit",8320,3520));
-
+        objects.add(objectCreator.createObject("key",8192,3968));
 
     }
 
