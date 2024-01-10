@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PlayerStats implements HudComponent{
 
-    private Label lifeLabel = new Label("Life", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+    private Label lifeLabel = new Label("Vita", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     private Label staminaLabel = new Label("Stamina", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     //private Skin skin = new Skin();
     private ProgressBar lifeBar;
@@ -52,21 +52,27 @@ public class PlayerStats implements HudComponent{
         //staminaBar.setSize(50, 10);
 
         //tableStats.setBackground(skin.getDrawable("WindowStyle"));
+        pixmap.dispose();
 
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0,0,0,0.5f);
+        bgPixmap.fill();
+        TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+
+        tableStats.setBackground(textureBackground);
+
+        bgPixmap.dispose();
 
 
         //tables
         //tableStats.setDebug(true);
-        tableStats.left();
-        tableStats.top();
-        //tableStats.setFillParent(true);
 
-        tableStats.add(lifeLabel).spaceRight(10);
-        tableStats.add(lifeBar);
+        tableStats.add(lifeLabel).padRight(10).padLeft(10);
+        tableStats.add(lifeBar).padRight(10);
 
         tableStats.row();
-        tableStats.add(staminaLabel).spaceRight(10);
-        tableStats.add(staminaBar);
+        tableStats.add(staminaLabel).padRight(10).padLeft(10);
+        tableStats.add(staminaBar).padRight(10);
 
     }
 

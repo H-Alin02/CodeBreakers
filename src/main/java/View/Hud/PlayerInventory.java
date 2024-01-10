@@ -4,11 +4,14 @@ import Model.Object.ObjectManager;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PlayerInventory implements HudComponent{
 
@@ -33,8 +36,6 @@ public class PlayerInventory implements HudComponent{
 
         this.objectManager = objectManager;
         table = new Table();
-        table.right().top();
-        //table.setFillParent(true);
 
         //table.setDebug(true);
 
@@ -63,6 +64,15 @@ public class PlayerInventory implements HudComponent{
         labelKey = new Label(String.format("%01d",keyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelAmmunition = new Label(String.format("%03d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         labelUSB = new Label(String.format("%01d",USB), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0,0,0,0.5f);
+        bgPixmap.fill();
+        TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+
+        table.setBackground(textureBackground);
+
+        bgPixmap.dispose();
 
 
         table.add(icon1).padRight(5);
@@ -95,13 +105,13 @@ public class PlayerInventory implements HudComponent{
     public void update(Player player) {
 
         coinValue = objectManager.getItem().getCoin();
-        labelCoin.setText(String.format("%01d", coinValue));
+        labelCoin.setText(String.format("%4d", coinValue));
 
         keyValue = objectManager.getItem().getKey();
         labelKey.setText(String.format("%01d", keyValue));
 
         ammunitionValue = player.getBulletCount();
-        labelAmmunition.setText(String.format("%03d", ammunitionValue));
+        labelAmmunition.setText(String.format("%3d", ammunitionValue));
 
         USB = objectManager.getItem().getUSB();
         labelUSB.setText(String.format("%01d",USB));

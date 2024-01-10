@@ -4,14 +4,17 @@ import Controller.MenuMediator;
 import Model.MusicPlayer;
 import Model.Player;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class Menu implements HudComponent{
     private Table menuTable;
@@ -20,11 +23,20 @@ public class Menu implements HudComponent{
         this.menuMediator = menuMediator;
 
         //creazione pulsanti
-        TextButton continueButton = createTextButton("Continue");
-        TextButton mainMenuButton = createTextButton("Exit Game");
+        TextButton continueButton = createTextButton("Continua");
+        TextButton mainMenuButton = createTextButton("Torna al menù");
 
         menuTable = new Table();
         //menuTable.setDebug(true);
+
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0,0,0,0.5f);
+        bgPixmap.fill();
+        TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+
+        menuTable.setBackground(textureBackground);
+
+        bgPixmap.dispose();
 
         //aggiunta listener ai pulsanti
         continueButton.addListener(new ClickListener() {
@@ -77,7 +89,7 @@ public class Menu implements HudComponent{
 
         // Stile del testo normale
         buttonStyle.font = new BitmapFont();
-        buttonStyle.font.getData().setScale(1f);
+        buttonStyle.font.getData().setScale(1.5f);
         // Migliora la risoluzione della scritta dopo lo Scale
         buttonStyle.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 

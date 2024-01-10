@@ -57,10 +57,10 @@ public class MainMenuScreen extends ScreenAdapter {
         stage.addActor(table);
 
         // Aggiungi pulsanti
-        TextButton startButton = createTextButton("Start Game");
-        TextButton loadButton = createTextButton("Load Game");
-        TextButton optionsButton = createTextButton("Options");
-        TextButton exitGameButton = createTextButton("Exit Game");
+        TextButton startButton = createTextButton("Nuova Partita");
+        TextButton loadButton = createTextButton("Carica Partita");
+        TextButton optionsButton = createTextButton("Opzioni");
+        TextButton exitGameButton = createTextButton("Esci dal gioco");
 
         // Aggiungi azione per la transizione alla schermata di gioco quando il pulsante viene premuto
         startButton.addListener(new ClickListener() {

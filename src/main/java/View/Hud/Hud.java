@@ -4,22 +4,25 @@ import Controller.MenuMediator;
 import Model.NPC.NPCObserver;
 import Model.Object.ObjectManager;
 import Model.Player;
-import View.Boot;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Hud extends WidgetGroup implements NPCObserver {
 
     private Stage stage;
-    private FitViewport stageViewport;
+    private ScreenViewport stageViewport;
 
     private PlayerStats playerStats;
 
@@ -37,10 +40,25 @@ public class Hud extends WidgetGroup implements NPCObserver {
     Menu menu;
 
     public Hud(SpriteBatch spriteBatch, ObjectManager objectManager, MenuMediator menuMediator) {
-        stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
+        stageViewport = new ScreenViewport();
+        stageViewport.setUnitsPerPixel(0.6f);
+
+
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
 
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0,0,0,0.5f);
+        bgPixmap.fill();
+        TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+
+
+
+
+
         Table filler = new Table();
+        Table topFiller = new Table();
+        topFiller.setBackground(textureBackground);
+        bgPixmap.dispose();
 
         playerStats = new PlayerStats();
         mapName = new MapName();
@@ -53,31 +71,27 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
         Table rootTable = new Table();
         rootTable.setFillParent(true);
-        rootTable.setRound(false);
+
 
         //rootTable.setDebug(true);
 
         stage.addActor(rootTable);
         //popolazione stage e posizionamento degli elementi
-        rootTable.top().left();
 
-        rootTable.add(playerStats.getTableStats());
+        //prima riga
+        rootTable.add(playerStats.getTableStats()).left().uniform().padLeft(10).fill().padTop(15);
+        rootTable.add(filler).fill().uniform().padTop(15);
+        rootTable.add(inventory.getTable()).center().uniform().padRight(10).fill().padTop(15);
+
+        rootTable.row();
+        //seconda riga
         rootTable.add(filler).fill();
-
-        //rootTable.add(mapName.getSceneName()).expandX();
-
-        rootTable.add(inventory.getTable());
-
-        rootTable.row().height(Boot.INSTANCE.getScreenHeight()/3);
-
-        rootTable.add(filler).fill();
-        //rootTable.add(pauseContainer).expandX().expandY();
-        rootTable.add(menu.getTable());
+        rootTable.add(menu.getTable()).fill().expand().center().padLeft(30).padRight(30).padTop(50).padBottom(50);
         rootTable.add(filler).fill();
 
         rootTable.row();
-
-        rootTable.add(dialogueBox.getTable()).colspan(3).fill().expand();
+        //terza riga
+        rootTable.add(dialogueBox.getTable()).colspan(3).height(100).padBottom(25);
 
         Gdx.input.setInputProcessor(stage);
 

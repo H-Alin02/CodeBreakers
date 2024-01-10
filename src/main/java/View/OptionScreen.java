@@ -59,8 +59,8 @@ public class OptionScreen extends ScreenAdapter {
         stage.addActor(logo);
 
         //creare i label
-        Label musicVolume = new Label("music Volume", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Label effectVolume = new Label("effect volume", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label musicVolume = new Label("Volume musica", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label effectVolume = new Label("Volume effetti", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         Table table = new Table();
         table.setFillParent(true);
@@ -68,13 +68,13 @@ public class OptionScreen extends ScreenAdapter {
 
         // Aggiungi pulsanti
 
-        TextButton mute = createTextButton("Mute");
-        TextButton unMute = createTextButton("UnMute");
-        TextButton musicP = createTextButton("+");
-        TextButton musicN = createTextButton("-");
-        TextButton effectP = createTextButton("+");
-        TextButton effectN = createTextButton("-");
-        TextButton ritorno = createTextButton("return");
+        TextButton mute = createTextButton("Disattiva volume");
+        TextButton unMute = createTextButton("Attiva volume");
+        TextButton musicP = createTextButton("[+]");
+        TextButton musicN = createTextButton("[-]");
+        TextButton effectP = createTextButton("[+]");
+        TextButton effectN = createTextButton("[-]");
+        TextButton ritorno = createTextButton("Ritorna al menù");
 
 
         mute.addListener(new ClickListener() {

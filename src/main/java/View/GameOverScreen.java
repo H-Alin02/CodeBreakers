@@ -34,7 +34,8 @@ public class GameOverScreen extends ScreenAdapter {
             Label returnToMenuLabel = new Label("Clicca per ritornare al menù", font);
             table.add(gameWonLabel).expandX();
             table.row();
-            table.add(congratulationsLabel).expandX();
+            table.add(congratulationsLabel).expandX().padTop(10f);
+            table.row();
             table.add(returnToMenuLabel).expandX().padTop(10f);
 
 
