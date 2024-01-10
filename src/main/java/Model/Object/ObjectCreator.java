@@ -16,6 +16,8 @@ public class ObjectCreator implements ObjectGameCreator{
             return new Ammunition(posX,posY);
         }else if (nameObject.equalsIgnoreCase("medikit")){
             return new Medikit(posX,posY);
+        }else if (nameObject.equalsIgnoreCase("keyUsb")){
+            return new KeyUSB(posX,posY);
         }
         return null;
     }
