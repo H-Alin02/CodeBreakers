@@ -1,6 +1,7 @@
 package Model.NPC;
 
 import Model.Interactable;
+import Model.Object.ObjectCreator;
 import Model.Object.ObjectManager;
 import Model.Player;
 import Model.SoundPlayer;
@@ -88,6 +89,9 @@ public class DaveNPC implements NPC , Interactable {
         talk();
         if(currentIndex < dialogues.size()-1)
             currentIndex++;
+        if(currentIndex == 23){
+            objectManager.addObject(new ObjectCreator().createObject("key",(int)position.x-128,(int)position.y));
+        }
     }
 
     @Override
@@ -141,7 +145,6 @@ public class DaveNPC implements NPC , Interactable {
     public void reset() {
         this.currentIndex = 0;
         this.position = positions.get(currentIndex);
-
     }
 
     public boolean isPlayerInRange(float playerX, float playerY, float range) {
