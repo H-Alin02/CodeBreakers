@@ -33,11 +33,14 @@ public class OptionScreen extends ScreenAdapter {
     private float soundMusic = MusicPlayer.getVolumeFactor();
     private float backmusic = SoundPlayer.getVolumeFactor();
     private float currentVolume;
+    private float volume;
     public OptionScreen(OrthographicCamera camera){
         this.camera = camera;
         viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2, new OrthographicCamera());
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
+
+        setVolume(MusicPlayer.getVolumeFactor());
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -90,8 +93,8 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
-                MusicPlayer.setGeneralVolume(backmusic);
-                SoundPlayer.setGlobalVolume(backmusic);
+                MusicPlayer.setGeneralVolume(volume);
+                SoundPlayer.setGlobalVolume(volume);
             }
         });
 
@@ -120,6 +123,7 @@ public class OptionScreen extends ScreenAdapter {
                     backmusic = 0;
                 }
                 MusicPlayer.setGeneralVolume(backmusic);
+                volume = MusicPlayer.getVolumeFactor();
             }
         });
 
@@ -244,5 +248,9 @@ public class OptionScreen extends ScreenAdapter {
         // Libera le risorse quando la schermata viene chiusa
         buttonClickSound.dispose();
         stage.dispose();
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
     }
 }
