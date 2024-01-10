@@ -29,6 +29,10 @@ public class Door implements Interactable{
     private static final SoundPlayer errorSound = new SoundPlayer("sound_effects/door_error.mp3");
     private ObjectManager objectManager;
 
+    static {
+        errorSound.setParallel(false);
+    }
+
     public static void updateSound(float delta){
         openingSound.update(delta);
         closingSound.update(delta);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 public class SoundPlayer {
     private SoundEffect[] sounds = new SoundEffect[5];
     private int count = 0;
+    private boolean parallel = true;
     private FileHandle soundFile;
     private static float volumeFactor = 0.5f;
 
@@ -29,6 +30,9 @@ public class SoundPlayer {
         sounds[4] = new SoundEffect(duration);
     }
 
+    public void setParallel(boolean value)
+        {parallel = false;}
+
     public static float getVolumeFactor() {
         return volumeFactor;
     }
@@ -42,6 +46,8 @@ public class SoundPlayer {
             if (count == 5)
                 count = 0;
         }
+
+        if(!parallel) count=0;
 
         System.out.println("current sound index:  " + count);
 
