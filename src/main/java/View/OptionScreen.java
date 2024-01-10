@@ -4,36 +4,43 @@ import Model.MusicPlayer;
 import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MainMenuScreen extends ScreenAdapter {
-    private static Stage stage;
+public class OptionScreen extends ScreenAdapter {
+    private SpriteBatch batch = new SpriteBatch();
+    private Viewport viewport;
+    private Stage stage;
     private OrthographicCamera camera;
+    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
-
-    public MainMenuScreen(OrthographicCamera camera) {
+    private float soundMusic = 0f;
+    private float backmusic ;
+    private float currentVolume;
+    public OptionScreen(OrthographicCamera camera){
         this.camera = camera;
-        stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(),Boot.INSTANCE.getScreenHeight() ,camera));
+        viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2, new OrthographicCamera());
+        stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
 
-        // Carica la musica dal tuo progetto (assumi che il file sia nella cartella "assets")
-        // Imposta la ripetizione della musica in modo che continui a suonare
-
-        // Avvia la musica
-        MusicPlayer.play("main menu");
+        //inizializzazione del volume
+        backmusic = MusicPlayer.getVolumeFactor();
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -52,83 +59,136 @@ public class MainMenuScreen extends ScreenAdapter {
         stage.addActor(background);
         stage.addActor(logo);
 
+        //creare i label
+        Label musicVolume = new Label("music Volume", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label effectVolume = new Label("effect volume", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
         // Aggiungi pulsanti
-        TextButton startButton = createTextButton("Start Game");
-        TextButton loadButton = createTextButton("Load Game");
-        TextButton optionsButton = createTextButton("Options");
-        TextButton exitGameButton = createTextButton("Exit Game");
 
-        // Aggiungi azione per la transizione alla schermata di gioco quando il pulsante viene premuto
-        startButton.addListener(new ClickListener() {
+        TextButton mute = createTextButton("Mute");
+        TextButton unMute = createTextButton("UnMute");
+        TextButton musicP = createTextButton("+");
+        TextButton musicN = createTextButton("-");
+        TextButton effectP = createTextButton("+");
+        TextButton effectN = createTextButton("-");
+        TextButton ritorno = createTextButton("return");
+
+
+        mute.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 buttonClickSound.play(0.1f);
-                MusicPlayer.currentMusic.dispose();
-                //Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
-                Boot.INSTANCE.setScreen(new CutsceneScreen(MainMenuScreen.this.camera));
-                MainMenuScreen.this.dispose();
+                currentVolume = backmusic;
+                backmusic = 0;
+                MusicPlayer.setGeneralVolume(backmusic);
             }
         });
 
-        // Aggiungi azioni per i pulsanti "Load Game" e "Options"
-        loadButton.addListener(new ClickListener() {
+        unMute.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
                 buttonClickSound.play(0.1f);
-                // Aggiungi qui la logica per il pulsante "Load Game"
-                System.out.println("Load Game clicked");
+                backmusic = currentVolume;
+                MusicPlayer.setGeneralVolume(backmusic);
             }
         });
 
-        optionsButton.addListener(new ClickListener() {
+        musicP.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Aggiungi qui la logica per il pulsante "Options"
+
                 buttonClickSound.play(0.1f);
-                System.out.println("Options clicked");
-                OptionScreen optionScreen = new OptionScreen(camera);
-                Boot.INSTANCE.setScreen(optionScreen);
+                backmusic += 0.1f;
+                if (backmusic > 1){
+                    backmusic = 1;
+                }
+                MusicPlayer.setGeneralVolume(backmusic);
             }
         });
 
-        exitGameButton.addListener(new ClickListener() {
+        musicN.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Aggiungi qui la logica per il pulsante "Options"
-                buttonClickSound.play(0.1f);
-                System.out.println("Exit Game clicked");
-                Gdx.app.exit();
 
+                buttonClickSound.play(0.1f);
+                backmusic -= 0.1f;
+                if (backmusic < 0){
+                    backmusic = 0;
+                }
+                MusicPlayer.setGeneralVolume(backmusic);
             }
         });
 
-        table.add(startButton).padBottom(20).row();
-        table.add(loadButton).padBottom(20).row();
-        table.add(optionsButton).padBottom(20).row();
-        table.add(exitGameButton).padBottom(20).row();
+        effectP.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                buttonClickSound.play(0.1f);
+                if (soundMusic >= 1){
+                    soundMusic = 1f;
+                }else {
+                    soundMusic += 0.1f;
+                }
+                SoundPlayer.setGlobalVolume(soundMusic);
+            }
+        });
+
+        effectN.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                buttonClickSound.play(0.1f);
+                if (soundMusic <= 0){
+                    soundMusic = 0;
+                }else {
+                    soundMusic -= 0.1f;
+                }
+                SoundPlayer.setGlobalVolume(soundMusic);
+            }
+        });
+
+        ritorno.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+                buttonClickSound.play(0.1f);
+                Boot.INSTANCE.setScreen(new MainMenuScreen(camera));
+            }
+        });
+
+        table.add(mute).padRight(50);
+        table.add(unMute).row();
+        table.add(musicVolume).padTop(10).padRight(30);
+        table.add(musicP).padTop(10).padRight(30);
+        table.add(musicN).padTop(10).row();
+        table.add(effectVolume).padRight(30).padTop(10);
+        table.add(effectP).padRight(30).padTop(10);
+        table.add(effectN).padTop(10).row();
+        table.add(ritorno).padTop(50);
     }
-
     private TextButton createTextButton(String text) {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
 
         // Stile del testo normale
         buttonStyle.font = new BitmapFont();
-        buttonStyle.font.getData().setScale(2f);
+        buttonStyle.font.getData().setScale(1.2f);
         // Migliora la risoluzione della scritta dopo lo Scale
         buttonStyle.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         // Colore del testo normale
-        buttonStyle.fontColor = Color.WHITE;
+        buttonStyle.fontColor = Color.YELLOW;
 
         // Colore del testo quando il pulsante è focused
-        buttonStyle.overFontColor = Color.YELLOW; // Puoi cambiare il colore del testo focused secondo le tue preferenze
+        buttonStyle.overFontColor = Color.RED; // Puoi cambiare il colore del testo focused secondo le tue preferenze
 
         // Colore del testo quando il pulsante è attivo (premuto)
-        buttonStyle.downFontColor = Color.RED; // Puoi cambiare il colore del testo quando il pulsante è attivo secondo le tue preferenze
+        buttonStyle.downFontColor = Color.BLUE; // Puoi cambiare il colore del testo quando il pulsante è attivo secondo le tue preferenze
 
         // Crea un TextButton direttamente impostando il colore del testo
         TextButton button = new TextButton(text, buttonStyle);
@@ -184,7 +244,7 @@ public class MainMenuScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         // Libera le risorse quando la schermata viene chiusa
-        //backgroundMusic.dispose();
+        buttonClickSound.dispose();
         stage.dispose();
     }
 }

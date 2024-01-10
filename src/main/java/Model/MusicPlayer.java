@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Music;
 public class MusicPlayer {
     private final Music music;
     private final float volume;
-    private static float volumeFactor = 0.5f;
+    private static float volumeFactor = 0.3f;
 
     public MusicPlayer(float volume, String path)
     {
@@ -60,10 +60,14 @@ public class MusicPlayer {
     // Imposta il volume generale per tutte le istanze
     public static void setGeneralVolume(float volumeFactor)
     {
-        MusicPlayer.volumeFactor = volumeFactor;
+        MusicPlayer.volumeFactor += volumeFactor;
 
         mainMenuMusic.resetVolumeFactor(volumeFactor);
         tutorialMusic.resetVolumeFactor(volumeFactor);
         levelMusic.resetVolumeFactor(volumeFactor);
+    }
+
+    public static float getVolumeFactor() {
+        return volumeFactor;
     }
 }
