@@ -4,6 +4,8 @@ import Model.Enemies.Dummy.Dummy;
 import Model.Enemies.Dummy.DummyEnemyCreator;
 import Model.Enemies.MetalRobot.MetalRobot;
 import Model.Enemies.MetalRobot.MetalRobotCreator;
+import Model.Object.ObjectCreator;
+import Model.Object.ObjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +14,14 @@ public class EnemyManager {
     private final List<Enemy> enemies;
     private DummyEnemyCreator dummyEnemyCreator;
     private MetalRobotCreator metalRobotCreator;
+    private ObjectManager objectManager;
+    private ObjectCreator objectCreator;
 
     public EnemyManager(){
         this.enemies = new ArrayList<>();
         this.dummyEnemyCreator = new DummyEnemyCreator();
         this.metalRobotCreator = new MetalRobotCreator();
+        this.objectCreator = new ObjectCreator();
     }
 
     public void initializeEnemies(){
@@ -46,8 +51,16 @@ public class EnemyManager {
     }
 
     public void update( float delta){
-        enemies.removeIf(enemy -> enemy.isDead() && enemy.isDamageAnimationComplete());
+        //enemies.removeIf(enemy -> enemy.isDead() && enemy.isDamageAnimationComplete());
         for(Enemy enemy : enemies){
+            if(enemy.isDead() && enemy.isDamageAnimationComplete()){
+                objectManager.addObject(objectCreator.createObject("coin",(int)enemy.getEnemyX(),(int)enemy.getEnemyY()));
+            }
+        }
+
+        enemies.removeIf(enemy -> enemy.isDead() && enemy.isDamageAnimationComplete());
+
+        for (Enemy enemy : enemies){
             enemy.update(delta);
         }
 
@@ -57,6 +70,10 @@ public class EnemyManager {
 
     public List<Enemy> getEnemies() {
         return enemies;
+    }
+
+    public void addObjectManager(ObjectManager objectManager){
+        this.objectManager = objectManager;
     }
 
 }

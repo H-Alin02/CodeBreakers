@@ -30,7 +30,7 @@ public class DaveNPC implements NPC , Interactable {
         dialogues = Arrays.asList(
                 "Ciao! Sono Dave, il tuo intraprendente istruttore. \nProva a esplorare la base, per iniziare fai un salto nella palestra ",
                 "",
-                "Benvenuto nella palestra delle arti marziali! \nPuoi allenarti per diventare un supereroe o solo per sfogarti. \nE, oh, sopra ci sono i bagni. Non so perché, ma sembra un'informazione importante.",
+                "Benvenuto nella palestra delle arti marziali! \nPuoi allenarti per diventare un supereroe o solo per sfogarti. \nE, oh, sopra ci sono i bagni. \nNon so perché, ma sembra un'informazione importante.",
                 "",
                 "Premi \"K\" e sfoga la tua rabbia sul povero manichino. \nPoi vieni a trovarmi nella zona relax, perché dopo una lotta, \ntutti abbiamo bisogno di un po' di relax... o forse anche prima.",
                 "",

@@ -105,4 +105,8 @@ public class ObjectManager {
     public Item getItem(){
         return this.item;
     }
+
+    public void addObject(GameObject object){
+        this.objects.add(object);
+    }
 }

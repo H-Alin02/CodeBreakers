@@ -72,6 +72,7 @@ public class MainMenuScreen extends ScreenAdapter {
                 backgroundMusic.dispose();
                 //Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
                 Boot.INSTANCE.setScreen(new CutsceneScreen(MainMenuScreen.this.camera));
+                MainMenuScreen.this.dispose();
             }
         });
 
@@ -183,7 +184,7 @@ public class MainMenuScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         // Libera le risorse quando la schermata viene chiusa
-        buttonClickSound.dispose();
+        //backgroundMusic.dispose();
         stage.dispose();
     }
 }
