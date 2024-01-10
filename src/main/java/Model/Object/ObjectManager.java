@@ -25,20 +25,20 @@ public class ObjectManager {
     public void initializeObject(){
         //mappa tutorial
 
-        objects.add(new Coin(3600,1800));
-        objects.add(new Coin(3500,1800));
-        objects.add(new Coin(3400,1800));
+        objects.add(objectCreator.createObject("coin",3600,1800));
+        objects.add(objectCreator.createObject("coin",3500,1800));
+        objects.add(objectCreator.createObject("coin",3400,1800));
 
 
-        objects.add(new Key(3100,2800));
-        objects.add(new Meat(1600,1000));
-        objects.add(new Ammunition(2944,2816));
-        objects.add(new Medikit(850,1300));
+        objects.add(objectCreator.createObject("meat",3100,2800));
+        objects.add(objectCreator.createObject("meat",1600,1000));
+        objects.add(objectCreator.createObject("ammunition",2944,2816));
+        objects.add(objectCreator.createObject("medikit",850,1300));
 
         //Mappa di gioco
-        objects.add(new Medikit(6336,2048));
-        objects.add(new Ammunition(6080,2048));
-        objects.add(new Medikit(8320,3520));
+        objects.add(objectCreator.createObject("ammunition",6336,2048));
+        objects.add(objectCreator.createObject("ammunition",6080,2048));
+        objects.add(objectCreator.createObject("medikit",8320,3520));
 
 
     }
