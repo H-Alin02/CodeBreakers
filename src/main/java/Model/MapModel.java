@@ -65,7 +65,7 @@ public class MapModel {
         this.player = Player.getInstance();
         if(player.getHitBox().overlaps(stairHitbox)){
             teleportPlayer(8448, 1216);
-            Player.playLevelMusic();
+            MusicPlayer.play("level");
         }
         npcManager.update(delta);
     }

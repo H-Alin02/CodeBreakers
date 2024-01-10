@@ -49,10 +49,7 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
         menu = new Menu(menuMediator);
 
-
         pauseContainer.setVisible(false);
-
-
 
         Table rootTable = new Table();
         rootTable.setFillParent(true);
@@ -115,19 +112,14 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
     public void setPauseVisibility(){
         boolean visible = pauseContainer.isVisible();
-        if (visible) {
-            pauseContainer.setVisible(false);
-            pause = false;
-        } else if (!(visible)) {
-            pauseContainer.setVisible(true);
-            pause = true;
-        }
+
+        pauseContainer.setVisible(pause = !visible);
       
         if(npcReadyToTalk){
             dialogueBox.show(dialogueBox.getText());
         }
 
-        }
+    }
 
     @Override
     public void onNPCTalk(String message) {

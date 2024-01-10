@@ -92,13 +92,7 @@ public class GameScreen extends ScreenAdapter {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
 
-           if (isPaused) {
-                isPaused = false;
-            } else if (!(isPaused)) {
-                isPaused = true;
-            }
-
-
+            isPaused = !isPaused;
 
             hud.setMenuVisibility();
 

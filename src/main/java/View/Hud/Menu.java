@@ -1,6 +1,7 @@
 package View.Hud;
 
 import Controller.MenuMediator;
+import Model.MusicPlayer;
 import Model.Player;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -59,11 +60,9 @@ public class Menu implements HudComponent{
     }
     public void visibilitySwitch(){
         boolean visible = this.menuTable.isVisible();
-        if (visible) {
-            this.menuTable.setVisible(false);
-        } else if (!(visible)) {
-            this.menuTable.setVisible(true);
-        }
+
+        this.menuTable.setVisible(!visible);
+        MusicPlayer.currentMusic.multiplyVolume(visible ? 5 : 0.2f);
     }
 
     public void changeGameStatus(){

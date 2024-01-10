@@ -1,9 +1,9 @@
 package View;
 
+import Model.MusicPlayer;
 import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class MainMenuScreen extends ScreenAdapter {
     private static Stage stage;
     private OrthographicCamera camera;
-    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
 
     public MainMenuScreen(OrthographicCamera camera) {
@@ -32,10 +31,9 @@ public class MainMenuScreen extends ScreenAdapter {
 
         // Carica la musica dal tuo progetto (assumi che il file sia nella cartella "assets")
         // Imposta la ripetizione della musica in modo che continui a suonare
-        backgroundMusic.setLooping(true);
+
         // Avvia la musica
-        backgroundMusic.play();
-        backgroundMusic.setVolume(0.3f);
+        MusicPlayer.play("main menu");
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -69,7 +67,7 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 buttonClickSound.play(0.1f);
-                backgroundMusic.dispose();
+                MusicPlayer.currentMusic.dispose();
                 //Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
                 Boot.INSTANCE.setScreen(new CutsceneScreen(MainMenuScreen.this.camera));
                 MainMenuScreen.this.dispose();

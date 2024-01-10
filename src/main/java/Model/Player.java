@@ -6,7 +6,6 @@ import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -62,28 +61,6 @@ public class Player {
     private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
     private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
     //private static final SoundPlayer walkingSound = new SoundPlayer(0.5f, "sound_effects/walking_sound.wav");
-    private static final Music tutorialMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/tutorial_music.mp3"));
-    private static final Music levelMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/level_music.mp3"));
-
-    static {
-        tutorialMusic.setLooping(true);
-        tutorialMusic.setVolume(0.2f);
-
-        levelMusic.setLooping(true);
-        levelMusic.setVolume(0.1f);
-    }
-
-    public static void playTutorialMusic()
-    {
-        levelMusic.dispose();
-        tutorialMusic.play();
-    }
-
-    public static void playLevelMusic()
-    {
-        tutorialMusic.dispose();
-        levelMusic.play();
-    }
 
     private Player() {
         currentState = PlayerState.STANDING;
@@ -92,7 +69,7 @@ public class Player {
         mapModel = MapModel.getInstance();
         bullets = new ArrayList<>();
 
-        playTutorialMusic();
+        MusicPlayer.play("tutorial");
     }
 
     public static void updateSound(float delta)
@@ -341,8 +318,7 @@ public class Player {
     }
     public void resetPlayer(){
         Player.INSTANCE = null;
-        tutorialMusic.dispose();
-        levelMusic.dispose();
+        MusicPlayer.dispose();
     };
 
     public void takeDamage(int damage){

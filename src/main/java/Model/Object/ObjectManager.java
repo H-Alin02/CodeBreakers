@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
 
 
 public class ObjectManager {
-    private Array<GameObject> objects ;
+    private Array<GameObject> objects;
     private ObjectGameCreator objectCreator;
     private Player player;
     private Item item;

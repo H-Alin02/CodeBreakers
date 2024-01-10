@@ -7,11 +7,11 @@ public class SoundPlayer {
     private SoundEffect[] sounds = new SoundEffect[5];
     private int count = 0;
     private FileHandle soundFile;
-    private static float volumeFactor = 1f;
+    private static float volumeFactor = 0.5f;
 
     // Imposta il fattore tra 0 e 1 per cui vengono moltiplicati i volumi di tutti i suoni
-    public static void setVolumeFactor(float value)
-        {volumeFactor = value;}
+    public static void setGlobalVolume(float volumeFactor)
+        {SoundPlayer.volumeFactor = volumeFactor;}
 
     // La durata dei suoni è di un secondo se non specificata
     public SoundPlayer(String path)
