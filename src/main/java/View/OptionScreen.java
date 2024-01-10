@@ -32,7 +32,6 @@ public class OptionScreen extends ScreenAdapter {
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
     private float soundMusic = MusicPlayer.getVolumeFactor();
     private float backmusic = SoundPlayer.getVolumeFactor();
-    private float currentVolume;
     private float volume;
     public OptionScreen(OrthographicCamera camera){
         this.camera = camera;
@@ -83,8 +82,8 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
-                MusicPlayer.setGeneralVolume(currentVolume);
-                SoundPlayer.setGlobalVolume(currentVolume);
+                MusicPlayer.setGeneralVolume(0);
+                SoundPlayer.setGlobalVolume(0);
             }
         });
 

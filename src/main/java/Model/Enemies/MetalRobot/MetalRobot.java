@@ -55,7 +55,7 @@ public class MetalRobot implements Enemy {
 
     private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/robot_punch.wav");
     public static final SoundPlayer alertSound = new SoundPlayer("sound_effects/robot_alert.wav");
-    public static final SoundPlayer deathSound = new SoundPlayer(1.3f, "sound_effects/robot_death_sound.wav");
+    public static final SoundPlayer deathSound = new SoundPlayer(1.3f, 5, "sound_effects/robot_death_sound.wav");
     public static final SoundPlayer damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
 
     public static void updateSound(float delta)

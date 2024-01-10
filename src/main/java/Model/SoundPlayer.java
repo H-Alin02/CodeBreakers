@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 public class SoundPlayer {
-    private SoundEffect[] sounds = new SoundEffect[5];
+    private SoundEffect[] sounds;
     private int count = 0;
+    private int maxCount;
     private boolean parallel = true;
     private FileHandle soundFile;
     private static float volumeFactor = 0.5f;
@@ -16,22 +17,18 @@ public class SoundPlayer {
 
     // La durata dei suoni è di un secondo se non specificata
     public SoundPlayer(String path)
-        {this(1, path);}
+        {this(1, 5, path);}
 
     // Costruttore che imposta la durata di un suono e il path del file sonoro
-    public SoundPlayer(float duration, String path)
+    public SoundPlayer(float duration, int maxCount, String path)
     {
+        this.maxCount = maxCount;
+        sounds = new SoundEffect[maxCount];
         soundFile = Gdx.files.internal(path);
 
-        sounds[0] = new SoundEffect(duration);
-        sounds[1] = new SoundEffect(duration);
-        sounds[2] = new SoundEffect(duration);
-        sounds[3] = new SoundEffect(duration);
-        sounds[4] = new SoundEffect(duration);
+        for(int i=0; i<maxCount; i++)
+            sounds[i] = new SoundEffect(duration);
     }
-
-    public void setParallel(boolean value)
-        {parallel = false;}
 
     public static float getVolumeFactor() {
         return volumeFactor;
@@ -43,11 +40,9 @@ public class SoundPlayer {
         // se l'effetto sonoro corrente è in esecuzione, passa al prossimo in modo ciclico
         if(sounds[count].isPlaying()) {
             count++;
-            if (count == 5)
+            if (count >= maxCount)
                 count = 0;
         }
-
-        if(!parallel) count=0;
 
         System.out.println("current sound index:  " + count);
 
@@ -59,11 +54,8 @@ public class SoundPlayer {
     // fai l'update di ogni singolo suono contenuto
     public void update(float delta)
     {
-        sounds[0].update(delta);
-        sounds[1].update(delta);
-        sounds[2].update(delta);
-        sounds[3].update(delta);
-        sounds[4].update(delta);
+        for(SoundEffect sound : sounds)
+            sound.update(delta);
     }
 
     // fai il dispose di ogni singolo suono contenuto
@@ -71,10 +63,7 @@ public class SoundPlayer {
     {
         System.out.println("DISPOSING SOUND");
 
-        sounds[0].dispose();
-        sounds[1].dispose();
-        sounds[2].dispose();
-        sounds[3].dispose();
-        sounds[4].dispose();
+        for(SoundEffect sound : sounds)
+            sound.dispose();
     }
 }
