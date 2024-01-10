@@ -104,6 +104,6 @@ public class PlayerInventory implements HudComponent{
         labelAmmunition.setText(String.format("%03d", ammunitionValue));
 
         USB = objectManager.getItem().getUSB();
-        labelAmmunition.setText(String.format("%01d",USB));
+        labelUSB.setText(String.format("%01d",USB));
     }
 }
