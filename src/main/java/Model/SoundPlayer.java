@@ -29,6 +29,10 @@ public class SoundPlayer {
         sounds[4] = new SoundEffect(duration);
     }
 
+    public static float getVolumeFactor() {
+        return volumeFactor;
+    }
+
     // riproduci il suono con il volume dato
     public void play(float volume)
     {

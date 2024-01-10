@@ -30,17 +30,14 @@ public class OptionScreen extends ScreenAdapter {
     private OrthographicCamera camera;
     private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));;
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
-    private float soundMusic = 0f;
-    private float backmusic ;
+    private float soundMusic = MusicPlayer.getVolumeFactor();
+    private float backmusic = SoundPlayer.getVolumeFactor();
     private float currentVolume;
     public OptionScreen(OrthographicCamera camera){
         this.camera = camera;
         viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2, new OrthographicCamera());
         stage = new Stage(viewport, batch);
         Gdx.input.setInputProcessor(stage);
-
-        //inizializzazione del volume
-        backmusic = MusicPlayer.getVolumeFactor();
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -83,7 +80,6 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
-                currentVolume = 0;
                 MusicPlayer.setGeneralVolume(currentVolume);
                 SoundPlayer.setGlobalVolume(currentVolume);
             }
@@ -104,6 +100,7 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
+
                 backmusic += 0.1f;
                 if (backmusic > 1){
                     backmusic = 1;
@@ -117,6 +114,7 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
+
                 backmusic -= 0.1f;
                 if (backmusic < 0){
                     backmusic = 0;
@@ -130,10 +128,10 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
+
+                soundMusic += 0.1f;
                 if (soundMusic >= 1){
                     soundMusic = 1f;
-                }else {
-                    soundMusic += 0.1f;
                 }
                 SoundPlayer.setGlobalVolume(soundMusic);
             }
@@ -144,10 +142,10 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
+
+                soundMusic -= 0.1f;
                 if (soundMusic <= 0){
                     soundMusic = 0;
-                }else {
-                    soundMusic -= 0.1f;
                 }
                 SoundPlayer.setGlobalVolume(soundMusic);
             }

@@ -26,11 +26,13 @@ public class Door implements Interactable{
     private Texture interactTexture;
     private static final SoundPlayer openingSound = new SoundPlayer("sound_effects/door_opening.mp3");
     private static final SoundPlayer closingSound = new SoundPlayer("sound_effects/door_opening.mp3");
+    private static final SoundPlayer errorSound = new SoundPlayer("sound_effects/door_error.mp3");
     private ObjectManager objectManager;
 
     public static void updateSound(float delta){
         openingSound.update(delta);
         closingSound.update(delta);
+        errorSound.update(delta);
     }
 
     public Door( float x, float y, float width, float height, boolean isLocked){
@@ -148,7 +150,8 @@ public class Door implements Interactable{
                 }
             }
         }
-
+        else
+            errorSound.play(0.2f);
     }
 
     private void openDoor() {
