@@ -83,9 +83,9 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
-                currentVolume = backmusic;
-                backmusic = 0;
-                MusicPlayer.setGeneralVolume(backmusic);
+                currentVolume = 0;
+                MusicPlayer.setGeneralVolume(currentVolume);
+                SoundPlayer.setGlobalVolume(currentVolume);
             }
         });
 
@@ -94,8 +94,8 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
 
                 buttonClickSound.play(0.1f);
-                backmusic = currentVolume;
                 MusicPlayer.setGeneralVolume(backmusic);
+                SoundPlayer.setGlobalVolume(backmusic);
             }
         });
 
