@@ -132,14 +132,11 @@ public class Hud extends WidgetGroup implements NPCObserver {
     @Override
     public void onNPCTalk(String message) {
         this.npcReadyToTalk = true;
-        System.out.println(message + "dialogue box " + dialogueBox);
-        System.out.println("OnNPCTalk Called");
         dialogueBox.setMessage(message);
     }
 
     @Override
     public void onNPCFinishedTalk() {
-        System.out.println("NPC FInisched to talk");
         this.npcReadyToTalk = false;
     }
 

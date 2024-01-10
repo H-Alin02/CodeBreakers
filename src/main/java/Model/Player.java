@@ -38,7 +38,7 @@ public class Player {
     private float shootTimer = 0f;
     private static final float SHOOT_DURATION = 0.21f;
     private final int PLAYER_DAMAGE = 10;
-    private final int PLAYER_BULLET_DAMAGE = 10;
+    private final int PLAYER_BULLET_DAMAGE = 20;
     private float bulletSpeed = 10;
     private int playerLife = 100;
     private float sprintStat = 100;

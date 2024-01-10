@@ -2,6 +2,7 @@ package Model;
 
 import Model.NPC.NPC;
 import Model.NPC.NPCManager;
+import Model.Object.ObjectManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
@@ -165,6 +166,14 @@ public class MapModel {
     public void resetMapModel(){
         for(Interactable interactable : interactables){
             interactable.reset();
+        }
+    }
+
+    public void addObjectManager(ObjectManager objectManager){
+        for(Interactable npc : interactables){
+            if(npc instanceof NPC){
+                ((NPC) npc).addObjectManager(objectManager);
+            }
         }
     }
 }

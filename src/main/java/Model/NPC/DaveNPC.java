@@ -1,6 +1,7 @@
 package Model.NPC;
 
 import Model.Interactable;
+import Model.Object.ObjectManager;
 import Model.Player;
 import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
@@ -22,6 +23,7 @@ public class DaveNPC implements NPC , Interactable {
     private List<String> dialogues;
     private List<Vector2> positions;
     private int currentIndex;
+    private ObjectManager objectManager;
 
     public DaveNPC(Vector2 position){
         this.position = position;
@@ -48,11 +50,11 @@ public class DaveNPC implements NPC , Interactable {
                 "...",
                 "Appena hai finito di guardarti \nun pò attorno, unisciti a noi nella sala riunioni. \nAbbiamo una missione importante da discutere",
                 "",
-                "Ecco il tuo incarico: infíltrati nella base segreta dei fanatici.",
-                "Attenzione, ci sono guardie robot pronte a farti fuori. \nTrova il Dr. Garfild, recupera quella preziosa chiavetta. ",
-                "Senza di essa, l'IA potrebbe benissimo conquistare il mondo. \nMa niente di troppo serio, giusto?",
+                "Abbiamo ricevuto un messaggio proveniente dal nostro informatore \nall interno della base segreta numero 4.",
+                "Il messaggio non è molto chiaro ma siamo riusciti \na capire solo due parole : \"Aiuto\" e \"Fanatici\". ",
+                "Chiaramente il nostro informatore è in pericolo : il tuo incarico\n è di salvarlo e scoprire che cosa sta succedendo nella base.",
                 "Vai nella stanza in basso , le scale ti porteranno attraverso\nun tunnel creato da noi ,direttamente nel sotterraneo della base.",
-                "Spero di rivederti fuori da quella base , vai ora \nnon c'è altro tempo da perdere !"
+                "Spero di rivederti fuori da lì , vai ora \nnon c'è altro tempo da perdere !"
         );
         positions = List.of(
                 position, //Posizione iniziale
@@ -97,6 +99,11 @@ public class DaveNPC implements NPC , Interactable {
     @Override
     public void update(float delta) {
 
+    }
+
+    @Override
+    public void addObjectManager(ObjectManager objectManager) {
+        this.objectManager = objectManager;
     }
 
     private void notifyObservers(String message) {
@@ -149,6 +156,8 @@ public class DaveNPC implements NPC , Interactable {
             notifyObservers("Dave : " + dialogues.get(currentIndex));
         }
     }
+
+
 
 
 }

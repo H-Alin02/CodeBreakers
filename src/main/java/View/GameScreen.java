@@ -66,6 +66,7 @@ public class GameScreen extends ScreenAdapter {
         this.hud = new Hud(batch, objects, menuMediator);
 
         this.enemyManager.addObjectManager(objects);
+        this.mapModel.addObjectManager(objects);
 
     }
 

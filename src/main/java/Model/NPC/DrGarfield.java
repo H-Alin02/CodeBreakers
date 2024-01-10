@@ -1,7 +1,10 @@
 package Model.NPC;
 
 import Model.Interactable;
+import Model.Object.ObjectCreator;
+import Model.Object.ObjectManager;
 import Model.Player;
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -10,6 +13,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DrGarfield implements NPC , Interactable {
     private Vector2 position;
     private Animation<TextureRegion> animation1;
@@ -17,6 +23,10 @@ public class DrGarfield implements NPC , Interactable {
     private NPCObserver observer;
     private float stateTime ;
     private boolean hasTalked = false;
+    private List<String> dialogues;
+    private int currentIndex;
+    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
+    private ObjectManager objectManager;
 
     public DrGarfield(Vector2 position){
         this.position = position;
@@ -29,11 +39,33 @@ public class DrGarfield implements NPC , Interactable {
         animation1 = new Animation<>(0.2f, idleFrames, Animation.PlayMode.LOOP);
 
         interactTexture = new Texture(Gdx.files.internal("map/Interaction/Interaction.png"));
+
+        dialogues = Arrays.asList(
+               "Oh, FINALMENTE, pensavo di lasciarci le penne... \no meglio la pelle... però non mi dispiacerebbe avere un paio di ali...",
+                "Scusa, mi sono lasciato trasportare dai miei pensieri... \nGrazie mille per avermi salvato!",
+                "Un gruppo di fanatici ha messo a soqquadro la base con l obiettivo \ndi prendere il controllo della nuova IA in svilluppo qui nella base: AM",
+                "Devi ASSOLUTAMENTE fermarli! \nDevi IMPEDIRE che AM cada sotto il controllo di questi pazzi!",
+                "Io e alcuni miei colleghi abbiamo creato un apposito malware per \nDISTRUGGERE AM, da usare proprio in casi come questo, è nascosto in \nCINQUE chiavette diverse... questa è la mia!",
+                "Non mi chiedere dove l ho nascosta, meglio non saperlo...",
+                "IO comunque me ne sgattaiolo via, Buona Fortuna... ne avrai bisogno."
+        );
+        currentIndex = 0;
     }
 
     @Override
     public void interact(Player player) {
+        buttonClickSound.play(0.1f);
         talk();
+
+        currentIndex++;
+
+        if(currentIndex == 8){
+            player.setPlayerWon(true);
+        }
+
+        if(currentIndex == 5){
+            objectManager.addObject(new ObjectCreator().createObject("key",(int)position.x+128,(int)position.y));
+        }
     }
 
     @Override
@@ -52,7 +84,7 @@ public class DrGarfield implements NPC , Interactable {
 
         if (isPlayerInRange(player.getHitBox().x+ player.getHitBox().width/2,
                 player.getHitBox().y +player.getHitBox().height/2,
-                120)) {
+                150)) {
             float messageX = position.x + 10;
             float messageY = position.y + 32*2;
 
@@ -61,11 +93,12 @@ public class DrGarfield implements NPC , Interactable {
             observer.onNPCFinishedTalk();
             hasTalked = true; // Imposta la variabile a true dopo la chiamata
         }
+        System.out.println(currentIndex);
     }
 
     @Override
     public void reset() {
-
+        this.currentIndex = 0;
     }
 
     public boolean isPlayerInRange(float playerX, float playerY, float range) {
@@ -79,9 +112,10 @@ public class DrGarfield implements NPC , Interactable {
 
     @Override
     public void talk() {
-        hasTalked = false;
-        String message = "SONO FOTTUTAMENTE PAZZO ";
-        notifyObservers("SONO PAZZO " + message);
+        if(currentIndex < dialogues.size()){
+            hasTalked = false;
+            notifyObservers("Dr.Garfield : " + dialogues.get(currentIndex));
+        }
     }
 
     @Override
@@ -93,6 +127,11 @@ public class DrGarfield implements NPC , Interactable {
     @Override
     public void update(float delta) {
         stateTime += delta;
+    }
+
+    @Override
+    public void addObjectManager(ObjectManager objectManager) {
+        this.objectManager = objectManager;
     }
 
     private void notifyObservers(String message) {
