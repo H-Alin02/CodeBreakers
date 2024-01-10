@@ -162,12 +162,9 @@ public class GameScreen extends ScreenAdapter {
         if(menuMediator.isChangeToOptionsScreen()){
             menuMediator.changeToOptionsScreen();
             Boot.INSTANCE.setScreen(new OptionScreen(this.camera, true ));
-            //hud.setMenuVisibility();
-            //hud.setMenuVisibility();//va richiamato due volte per evitare glitch menù
 
         } else {
-            hud.setMenuVisibility();
-            hud.setMenuVisibility();//va richiamato due volte per evitare glitch menù
+            hud.setInputProcesserOn();
         }
 
 
