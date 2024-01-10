@@ -12,42 +12,38 @@ public class MenuMediator implements Mediator{
     }
 
     public boolean isChangeGameState() {
+
         return changeGameState;
     }
 
     public boolean isChangeToMainMenuScreen() {
+
         return changeToMainMenuScreen;
     }
 
     public boolean isChangeToOptionsScreen() {
+
         return changeToOptionsScreen;
     }
 
     @Override
     public void changeGameStatus() {
-        if(changeGameState){
-            this.changeGameState= false;
-        } else if (!changeGameState) {
-            this.changeGameState = true;
-        }
+
+        this.changeGameState = !this.changeGameState;
     }
 
 
     @Override
     public void changeToMenuScreen() {
-        if(changeToMainMenuScreen){
-            this.changeToMainMenuScreen = false;
-        } else if (!changeToMainMenuScreen) {
-            this.changeToMainMenuScreen = true;
-        }
+
+        this.changeToMainMenuScreen = !this.changeToMainMenuScreen;
+
     }
 
     @Override
     public void changeToOptionsScreen() {
-        if(changeToOptionsScreen){
-            this.changeToOptionsScreen = false;
-        } else if (!changeToOptionsScreen) {
-            this.changeToOptionsScreen = true;
-        }
+
+        this.changeToOptionsScreen = !this.changeToOptionsScreen;
+
     }
 }

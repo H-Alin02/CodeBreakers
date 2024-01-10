@@ -164,7 +164,7 @@ public class GameScreen extends ScreenAdapter {
             Boot.INSTANCE.setScreen(new OptionScreen(this.camera, true ));
 
         } else {
-            hud.setInputProcesserOn();
+            hud.setInputProcessorOn();
         }
 
 

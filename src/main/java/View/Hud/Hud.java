@@ -116,24 +116,6 @@ public class Hud extends WidgetGroup implements NPCObserver {
         }else dialogueBox.hide();
     }
 
-    public boolean isPause() {
-        return pause;
-    }
-
-    public void setPause(boolean pause) {
-        this.pause = pause;
-    }
-
-    public void setPauseVisibility(){
-        boolean visible = pauseContainer.isVisible();
-
-        pauseContainer.setVisible(pause = !visible);
-      
-        if(npcReadyToTalk){
-            dialogueBox.show(dialogueBox.getText());
-        }
-
-    }
 
     @Override
     public void onNPCTalk(String message) {
@@ -151,12 +133,13 @@ public class Hud extends WidgetGroup implements NPCObserver {
     }
 
     public void setMenuVisibility() {
+
         menu.visibilitySwitch();
 
 
     }
 
-    public void setInputProcesserOn(){
+    public void setInputProcessorOn(){
         Gdx.input.setInputProcessor(stage);
     }
 }
