@@ -19,11 +19,13 @@ public class PlayerInventory implements HudComponent{
     private Label labelCoin;
     private Label labelKey;
     private Label labelAmmunition;
+    private Label labelUSB;
 
     //objects counters
     private int coinValue;
     private int keyValue;
     private int ammunitionValue;
+    private int USB;
     public PlayerInventory(ObjectManager objectManager){
         //item = new Item();
         //stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
@@ -39,6 +41,7 @@ public class PlayerInventory implements HudComponent{
         coinValue = objectManager.getItem().getCoin();
         keyValue = objectManager.getItem().getKey();
         ammunitionValue = objectManager.getItem().getAmmunition();
+        USB = objectManager.getItem().getUSB();
 
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));
         Image icon1 = new Image(image1);
@@ -52,9 +55,14 @@ public class PlayerInventory implements HudComponent{
         Image icon6 = new Image(image6);
         icon6.setSize(image6.getWidth()*SCALE, image6.getHeight()*SCALE);
 
+        Texture image5 = new Texture(Gdx.files.internal("inventory/USB/usb.png"));
+        Image icon5 = new Image(image5);
+        icon5.setSize(image1.getWidth()*SCALE, image5.getHeight()*SCALE);
+
         labelCoin = new Label(String.format("%01d",coinValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelKey = new Label(String.format("%01d",keyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         labelAmmunition = new Label(String.format("%03d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        labelUSB = new Label(String.format("%01d",USB), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
 
 
         table.add(icon1).padRight(5);
@@ -63,6 +71,8 @@ public class PlayerInventory implements HudComponent{
         table.add(labelCoin).padRight(5);
         table.add(icon6).padRight(5);
         table.add(labelAmmunition).padRight(5);
+        table.add(icon5).padRight(5);
+        table.add(labelUSB);
 
         table.setVisible(true);
 
@@ -92,5 +102,8 @@ public class PlayerInventory implements HudComponent{
 
         ammunitionValue = player.getBulletCount();
         labelAmmunition.setText(String.format("%03d", ammunitionValue));
+
+        USB = objectManager.getItem().getUSB();
+        labelAmmunition.setText(String.format("%01d",USB));
     }
 }

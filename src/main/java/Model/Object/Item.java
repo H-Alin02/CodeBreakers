@@ -47,6 +47,7 @@ public class Item {
         }
     }
 
+    public int getUSB(){return  typeCount(KeyUSB.class);}
     public int getCoin() {
         return typeValue(Coin.class);
     }
