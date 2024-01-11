@@ -10,10 +10,19 @@ public class SoundPlayer {
     private boolean parallel = true;
     private FileHandle soundFile;
     private static float volumeFactor = 0.5f;
+    private static boolean isMute = false;
 
     // Imposta il fattore tra 0 e 1 per cui vengono moltiplicati i volumi di tutti i suoni
-    public static void setGlobalVolume(float volumeFactor)
-        {SoundPlayer.volumeFactor = volumeFactor;}
+    public static void setGeneralVolume(float volumeFactor)
+    {
+        if(volumeFactor < 0) volumeFactor = 0;
+        if(volumeFactor > 1) volumeFactor = 1;
+
+        SoundPlayer.volumeFactor = volumeFactor;
+    }
+    public static void sumGeneralVolume(float difference) {
+        setGeneralVolume(volumeFactor + difference);
+    }
 
     // La durata dei suoni è di un secondo se non specificata
     public SoundPlayer(String path)
@@ -37,6 +46,8 @@ public class SoundPlayer {
     // riproduci il suono con il volume dato
     public void play(float volume)
     {
+        if(isMute) return;
+
         // se l'effetto sonoro corrente è in esecuzione, passa al prossimo in modo ciclico
         if(sounds[count].isPlaying()) {
             count++;
@@ -44,16 +55,17 @@ public class SoundPlayer {
                 count = 0;
         }
 
-        System.out.println("current sound index:  " + count);
-
         // aumenta il volume in base al valore costante e riproduci il suono
         volume *= volumeFactor;
         sounds[count].play(volume, soundFile);
+        System.out.println("current sound index:  " + count);
     }
 
     // fai l'update di ogni singolo suono contenuto
     public void update(float delta)
     {
+        if(isMute) return;
+
         for(SoundEffect sound : sounds)
             sound.update(delta);
     }
@@ -66,4 +78,8 @@ public class SoundPlayer {
         for(SoundEffect sound : sounds)
             sound.dispose();
     }
+
+    public static boolean isMute() {return isMute;}
+    public static void switchMute() {isMute = ! isMute;}
+    public static void setMute(boolean value) {isMute = value;}
 }

@@ -4,7 +4,6 @@ import Model.MusicPlayer;
 import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,12 +27,32 @@ public class OptionScreen extends ScreenAdapter {
     private Viewport viewport;
     private Stage stage;
     private OrthographicCamera camera;
-    private static final Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/main_soundtrack.mp3"));
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
-    private float soundMusic = MusicPlayer.getVolumeFactor();
-    private float backmusic = SoundPlayer.getVolumeFactor();
-    private boolean returnToGame= false;
-    private float volume;
+    private boolean returnToGame = false;
+
+    //creare i label
+    Label musicVolume = new Label("Volume musica", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+    Label effectVolume = new Label("Volume effetti", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
+    Label musicPercent = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+    Label soundPercent = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
+    public void resetMusicLabel() {
+        musicPercent.setText((int)(100 * MusicPlayer.getVolumeFactor()) + " %");
+    }
+
+    public void resetSoundLabel() {
+        soundPercent.setText((int)(100 * SoundPlayer.getVolumeFactor()) + " %");
+    }
+
+    // Aggiungi pulsanti
+    TextButton mute = createTextButton("Disattiva volume");
+    TextButton musicP = createTextButton("[+]");
+    TextButton musicN = createTextButton("[-]");
+    TextButton effectP = createTextButton("[+]");
+    TextButton effectN = createTextButton("[-]");
+    TextButton ritorno;
+
     public OptionScreen(OrthographicCamera camera, boolean returnToGame){
         this.camera = camera;
         this.returnToGame = returnToGame;
@@ -45,7 +64,8 @@ public class OptionScreen extends ScreenAdapter {
     }
     private void create(){
 
-        setVolume(MusicPlayer.getVolumeFactor());
+        resetMusicLabel();
+        resetSoundLabel();
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -64,23 +84,10 @@ public class OptionScreen extends ScreenAdapter {
         stage.addActor(background);
         stage.addActor(logo);
 
-        //creare i label
-        Label musicVolume = new Label("Volume musica", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Label effectVolume = new Label("Volume effetti", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
-        // Aggiungi pulsanti
-
-        TextButton mute = createTextButton("Disattiva volume");
-        TextButton unMute = createTextButton("Attiva volume");
-        TextButton musicP = createTextButton("[+]");
-        TextButton musicN = createTextButton("[-]");
-        TextButton effectP = createTextButton("[+]");
-        TextButton effectN = createTextButton("[-]");
-        TextButton ritorno;
         if(returnToGame){
             ritorno = createTextButton("Ritorna al gioco");
         } else {
@@ -92,77 +99,49 @@ public class OptionScreen extends ScreenAdapter {
         mute.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                boolean isMute = MusicPlayer.isMute() && SoundPlayer.isMute();
 
+                MusicPlayer.setMute(!isMute);
+                SoundPlayer.setMute(!isMute);
+
+                mute.setText((isMute ? "Disattiva" : "Attiva") + " volume");
                 buttonClickSound.play(0.1f);
-                MusicPlayer.setGeneralVolume(0);
-                SoundPlayer.setGlobalVolume(0);
-            }
-        });
-
-        unMute.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-
-                buttonClickSound.play(0.1f);
-                MusicPlayer.setGeneralVolume(volume);
-                SoundPlayer.setGlobalVolume(volume);
             }
         });
 
         musicP.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                MusicPlayer.sumGeneralVolume(0.1f);
+                resetMusicLabel();
                 buttonClickSound.play(0.1f);
-
-                backmusic += 0.1f;
-                if (backmusic > 1){
-                    backmusic = 1;
-                }
-                MusicPlayer.setGeneralVolume(backmusic);
             }
         });
 
         musicN.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                MusicPlayer.sumGeneralVolume(-0.1f);
+                resetMusicLabel();
                 buttonClickSound.play(0.1f);
-
-                backmusic -= 0.1f;
-                if (backmusic < 0){
-                    backmusic = 0;
-                }
-                MusicPlayer.setGeneralVolume(backmusic);
-                volume = MusicPlayer.getVolumeFactor();
             }
         });
 
         effectP.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                SoundPlayer.sumGeneralVolume(0.1f);
+                resetSoundLabel();
                 buttonClickSound.play(0.1f);
-
-                soundMusic += 0.1f;
-                if (soundMusic >= 1){
-                    soundMusic = 1f;
-                }
-                SoundPlayer.setGlobalVolume(soundMusic);
             }
         });
 
         effectN.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                SoundPlayer.sumGeneralVolume(-0.1f);
+                resetSoundLabel();
                 buttonClickSound.play(0.1f);
-
-                soundMusic -= 0.1f;
-                if (soundMusic <= 0){
-                    soundMusic = 0;
-                }
-                SoundPlayer.setGlobalVolume(soundMusic);
             }
         });
 
@@ -181,14 +160,18 @@ public class OptionScreen extends ScreenAdapter {
             }
         });
 
-        table.add(mute).uniform().padLeft(20);
-        table.add(unMute).uniform().row();
-        table.add(musicVolume).padTop(30).padRight(30);
-        table.add(musicP).padTop(30).padRight(30);
-        table.add(musicN).padTop(30).row();
-        table.add(effectVolume).padRight(30).padTop(10);
-        table.add(effectP).padRight(30).padTop(10);
-        table.add(effectN).padTop(10).row();
+        table.add(mute).uniform().row();
+
+        table.add(musicVolume).padRight(30);
+        table.add(musicP).padRight(15);
+        table.add(musicPercent).padRight(15);
+        table.add(musicN).row();
+
+        table.add(effectVolume).padTop(10);
+        table.add(effectP).padRight(15);
+        table.add(soundPercent).padRight(15);
+        table.add(effectN).row();
+
         table.add(ritorno).padTop(50).colspan(2);
         //table.setDebug(true);
 
@@ -268,9 +251,5 @@ public class OptionScreen extends ScreenAdapter {
         //buttonClickSound.dispose();
         batch.dispose();
         stage.dispose();
-    }
-
-    public void setVolume(float volume) {
-        this.volume = volume;
     }
 }
