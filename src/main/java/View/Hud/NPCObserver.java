@@ -1,4 +1,4 @@
-package Model.NPC;
+package View.Hud;
 
 public interface NPCObserver {
     void onNPCTalk(String message);

@@ -5,6 +5,7 @@ import Model.Object.ObjectCreator;
 import Model.Object.ObjectManager;
 import Model.Player;
 import Model.SoundPlayer;
+import View.Hud.NPCObserver;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -43,10 +44,10 @@ public class DrGarfield implements NPC , Interactable {
         dialogues = Arrays.asList(
                "Oh, FINALMENTE, pensavo di lasciarci le penne... \no meglio la pelle... però non mi dispiacerebbe avere un paio di ali...",
                 "Scusa, mi sono lasciato trasportare dai miei pensieri... \nGrazie mille per avermi salvato!",
-                "Un gruppo di fanatici ha messo a soqquadro la base con l obiettivo \ndi prendere il controllo della nuova IA in svilluppo qui nella base: AM",
+                "Un gruppo di fanatici ha messo a soqquadro la base con l'obiettivo \ndi prendere il controllo della nuova IA in svilluppo qui nella base: AM",
                 "Devi ASSOLUTAMENTE fermarli! \nDevi IMPEDIRE che AM cada sotto il controllo di questi pazzi!",
                 "Io e alcuni miei colleghi abbiamo creato un apposito malware per \nDISTRUGGERE AM, da usare proprio in casi come questo, è nascosto in \nCINQUE chiavette diverse... questa è la mia!",
-                "Non mi chiedere dove l ho nascosta, meglio non saperlo...",
+                "Non mi chiedere dove l'ho nascosta, meglio non saperlo...",
                 "IO comunque me ne sgattaiolo via, Buona Fortuna... ne avrai bisogno."
         );
         currentIndex = 0;

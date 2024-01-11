@@ -5,6 +5,7 @@ import Model.Object.ObjectCreator;
 import Model.Object.ObjectManager;
 import Model.Player;
 import Model.SoundPlayer;
+import View.Hud.NPCObserver;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -35,23 +36,23 @@ public class DaveNPC implements NPC , Interactable {
                 "",
                 "Benvenuto nella palestra delle arti marziali! \nPuoi allenarti per diventare un supereroe o solo per sfogarti. \nE, oh, sopra ci sono i bagni. \nNon so perché, ma sembra un'informazione importante.",
                 "",
-                "Premi \"K\" e sfoga la tua rabbia sul povero manichino. \nPoi vieni a trovarmi nella zona relax, perché dopo una lotta, \ntutti abbiamo bisogno di un po' di relax... o forse anche prima.",
+                "Premi [K] oppure [tasto sinistro del mouse] e sfoga la tua rabbia \nsul povero manichino. Poi vieni a trovarmi nella zona relax, perché dopo una lotta, \ntutti abbiamo bisogno di un po' di relax... o forse anche prima.",
                 "",
                 "Eccoti nella zona relax. Rilassati, respira profondamente, \ne rifletti sul fatto che salvare il mondo è un lavoro duro.",
                 "",
                 "Ora segui la strada , mi troverai davanti al poligono ",
                 "",
-                "Ah dimenticavo , premi \"SHIFT\" per correre",
+                "Ah dimenticavo , premi [SHIFT] per correre",
                 "",
                 "Ora, a sinistra troverai munizioni. \nRaccoglile, e poi unisciti a me nella stanza a destra. \nMa attenzione, non ti perdonerò se perdi quelle munizioni!",
                 "",
-                "Questo è il Poligono! \nPremi \"SPAZIO\" e fai fuoco sui bersagli.",
+                "Questo è il Poligono! \nPremi [SPAZIO] o [tasto destro del mouse] e fai fuoco sui bersagli.",
                 "",
                 "Benvenuto nella nostra tana, dove mettiamo a punto missioni segrete, \nintrecci intriganti e piani che potrebbero essere definiti \"interessanti\", \nse non addirittura geniali.",
                 "...",
                 "Appena hai finito di guardarti \nun pò attorno, unisciti a noi nella sala riunioni. \nAbbiamo una missione importante da discutere",
                 "",
-                "Abbiamo ricevuto un messaggio proveniente dal nostro informatore \nall interno della base segreta numero 4.",
+                "Abbiamo ricevuto un messaggio proveniente dal nostro informatore \nall'interno della base segreta numero 4.",
                 "Il messaggio non è molto chiaro ma siamo riusciti \na capire solo due parole : \"Aiuto\" e \"Fanatici\". ",
                 "Chiaramente il nostro informatore è in pericolo : il tuo incarico\n è di salvarlo e scoprire che cosa sta succedendo nella base.",
                 "Vai nella stanza in basso , le scale ti porteranno attraverso\nun tunnel creato da noi ,direttamente nel sotterraneo della base.",

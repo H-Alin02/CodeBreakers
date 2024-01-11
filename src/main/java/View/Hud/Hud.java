@@ -1,7 +1,6 @@
 package View.Hud;
 
 import Controller.MenuMediator;
-import Model.NPC.NPCObserver;
 import Model.Object.ObjectManager;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
