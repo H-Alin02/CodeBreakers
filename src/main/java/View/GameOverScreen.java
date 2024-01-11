@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,15 +23,18 @@ public class GameOverScreen extends ScreenAdapter {
 
     public GameOverScreen(OrthographicCamera camera, boolean gameEndingWon) {
         this.camera = camera;
-        viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2, new OrthographicCamera());
+        viewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/1.5f,Boot.INSTANCE.getScreenHeight()/1.5f, new OrthographicCamera());
         stage = new Stage(viewport, batch);
+        this.font.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Table table = new Table();
         table.center();
         table.setFillParent(true);
 
         if(gameEndingWon){
             Label gameWonLabel = new Label("DEMO COMPLETATA", font);
-            Label congratulationsLabel = new Label("Complimenti! hai completato la demo", font);
+            Label congratulationsLabel = new Label("            Complimenti! hai completato la demo\n" +
+                    "Il team 11 ti ringrazia per aver giocato la DEMO di \n" +
+                    "             Codebreakers : The revenge", font);
             Label returnToMenuLabel = new Label("Clicca per ritornare al menù", font);
             table.add(gameWonLabel).expandX();
             table.row();

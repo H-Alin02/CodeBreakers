@@ -22,16 +22,16 @@ public class PlayerInputManager {
         // If no movement keys are pressed, set the player to standing
         player.setSprinting(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
       
-        Boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
-        Boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
-        Boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
-        Boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
+        Boolean up = Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
+        Boolean down = Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        Boolean left = Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        Boolean right = Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         if(player.currentState!= PlayerState.DEAD) {
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
                 player.shoot();
             }
             // Check attack key separately
-            if (Gdx.input.isKeyPressed(Input.Keys.K)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.K) || Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                 player.checkMeleeAttack();
             } else {
                 // If no attack key is pressed, check movement keys

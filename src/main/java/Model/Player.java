@@ -152,7 +152,7 @@ public class Player {
     }
 
     public void checkMeleeAttack() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.K) && !isAttacking) {
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.K) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) && !isAttacking) {
             // Handle melee attacks in the direction the player is facing
             switch (getDirection()) {
                 case 'w':
@@ -293,7 +293,7 @@ public class Player {
 
     public void shoot() {
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !isShooting && bulletCount > 0) {
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT))&& !isShooting && bulletCount > 0) {
             shotSound.play(0.1f);
 
             bulletCount--;
