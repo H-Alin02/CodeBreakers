@@ -5,15 +5,11 @@ import Model.NPC.NPCObserver;
 import Model.Object.ObjectManager;
 import Model.Player;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -23,21 +19,14 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
     private Stage stage;
     private ScreenViewport stageViewport;
-
     private PlayerStats playerStats;
-
-    private MapName mapName;
-
     private PlayerInventory inventory;
     private DialogueBox dialogueBox;
+    private Menu menu;
+
     private boolean npcReadyToTalk = false;
 
-    private boolean pause = false;
 
-    Label pauseLabel = new Label("PAUSE", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-    Container pauseContainer = new Container(pauseLabel);
-
-    Menu menu;
 
     public Hud(SpriteBatch spriteBatch, ObjectManager objectManager, MenuMediator menuMediator) {
         stageViewport = new ScreenViewport();
@@ -51,23 +40,16 @@ public class Hud extends WidgetGroup implements NPCObserver {
         bgPixmap.fill();
         TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
 
-
-
-
-
         Table filler = new Table();
         Table topFiller = new Table();
         topFiller.setBackground(textureBackground);
         bgPixmap.dispose();
 
         playerStats = new PlayerStats();
-        mapName = new MapName();
         inventory = new PlayerInventory(objectManager);
         dialogueBox = new DialogueBox("");
 
         menu = new Menu(menuMediator);
-
-        pauseContainer.setVisible(false);
 
         Table rootTable = new Table();
         rootTable.setFillParent(true);
@@ -106,7 +88,6 @@ public class Hud extends WidgetGroup implements NPCObserver {
     public void update(Player player, float delta) {
 
         this.playerStats.update(player);
-        this.mapName.update(player);
         this.inventory.update(player);
         this.menu.update(player);
 
