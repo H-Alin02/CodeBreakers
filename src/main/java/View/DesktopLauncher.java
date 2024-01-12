@@ -8,7 +8,7 @@ public class DesktopLauncher {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setIdleFPS(60);
         config.useVsync(true);
-        config.setTitle("Tutorial");
+        config.setTitle("CodeBreakers : the revenge");
         config.setWindowedMode(1152 , 864);
         config.setResizable(false);
         //config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());

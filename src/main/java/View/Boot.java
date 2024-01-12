@@ -9,6 +9,7 @@ public class Boot extends Game {
     public static Boot INSTANCE;
     private int screenWidth, screenHeight;
     private OrthographicCamera orthographicCamera;
+    private GameScreen gameScreen;
 
     public Boot(){
         INSTANCE = this;
@@ -16,6 +17,7 @@ public class Boot extends Game {
 
     @Override
     public void create() {
+
         this.screenWidth = Gdx.graphics.getWidth();
         this.screenHeight = Gdx.graphics.getHeight();
         this.orthographicCamera = new OrthographicCamera();
@@ -30,5 +32,13 @@ public class Boot extends Game {
 
     public int getScreenHeight() {
         return screenHeight;
+    }
+
+    public GameScreen getGameScreen() {
+        return gameScreen;
+    }
+
+    public void setGameScreen(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
     }
 }

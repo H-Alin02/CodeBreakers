@@ -15,17 +15,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PlayerStats implements HudComponent{
 
-    private Label lifeLabel = new Label("Life", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+    private Label lifeLabel = new Label("Vita", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     private Label staminaLabel = new Label("Stamina", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-    private Skin skin = new Skin();
+    //private Skin skin = new Skin();
     private ProgressBar lifeBar;
     private ProgressBar staminaBar;
-    private Table tableStats = new Table();
+    Skin skin = new Skin();
+    private Table tableStats = new Table(skin);
     private float playerLife = 1f;
     private float playerStamina = 1f;
     public PlayerStats(){
+
+
         //skin e pixmap sono relativi a ProgressBar
-        Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(1, 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -36,7 +39,7 @@ public class PlayerStats implements HudComponent{
         lifeBar = new ProgressBar(0, 100, 0.5f, false, lifeBarStyle);
         lifeBar.setValue(playerLife);
         lifeBarStyle.knobBefore = lifeBarStyle.knob;
-        lifeBar.setSize(50, 10);
+        //lifeBar.setSize(50, 10);
 
         //stamina bar
         TextureRegionDrawable textureStaminaBar = new TextureRegionDrawable(new TextureRegion(new Texture("hudAssets/barBlue_horizontalMid.png")));
@@ -46,20 +49,30 @@ public class PlayerStats implements HudComponent{
         staminaBarStyle.knobBefore = staminaBarStyle.knob;
         staminaBarStyle.disabledKnob = staminaBarStyle.knob;
 
-        lifeBar.setSize(50, 10);
+        //staminaBar.setSize(50, 10);
+
+        //tableStats.setBackground(skin.getDrawable("WindowStyle"));
+        pixmap.dispose();
+
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0,0,0,0.5f);
+        bgPixmap.fill();
+        TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+
+        tableStats.setBackground(textureBackground);
+
+        bgPixmap.dispose();
+
 
         //tables
+        //tableStats.setDebug(true);
 
-        tableStats.left();
-        tableStats.top();
-        tableStats.setFillParent(true);
-
-        tableStats.add(lifeLabel);
-        tableStats.add(lifeBar).spaceRight(10);
+        tableStats.add(lifeLabel).padRight(10).padLeft(10);
+        tableStats.add(lifeBar).padRight(10);
 
         tableStats.row();
-        tableStats.add(staminaLabel);
-        tableStats.add(staminaBar).spaceRight(10);
+        tableStats.add(staminaLabel).padRight(10).padLeft(10);
+        tableStats.add(staminaBar).padRight(10);
 
     }
 

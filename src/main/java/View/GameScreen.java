@@ -1,13 +1,12 @@
 package View;
 
+import Controller.MenuMediator;
 import Controller.PlayerInputManager;
-import Model.Bullet;
+import Model.*;
 import Model.Enemies.Enemy;
 import Model.Enemies.EnemyManager;
 import Model.Enemies.MetalRobot.MetalRobot;
-import Model.MapModel;
 import Model.Object.ObjectManager;
-import Model.Player;
 import View.Hud.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -43,9 +42,12 @@ public class GameScreen extends ScreenAdapter {
     private float shakeDuration = 0f;
     private float shakeIntensity = 5f;
 
+    private boolean isPaused = false;
+
+    private MenuMediator menuMediator;
+
     public GameScreen(OrthographicCamera camera) {
         this.batch = new SpriteBatch();
-
         this.camera = camera;
         this.camera.position.set(new Vector3(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2,0 ));
         this.playerViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2, Boot.INSTANCE.getScreenHeight()/2, camera);
@@ -60,32 +62,42 @@ public class GameScreen extends ScreenAdapter {
         this.shapeRenderer = new ShapeRenderer();
         this.objects = new ObjectManager();
         this.objects.initializeObject();
-        this.hud = new Hud(batch, objects);
+        this.menuMediator = new MenuMediator();
+        this.hud = new Hud(batch, objects, menuMediator);
+
+        this.enemyManager.addObjectManager(objects);
+        this.mapModel.addObjectManager(objects);
+
     }
 
     @Override
     public void show(){
-
+        mapModel.getNpcManager().addObserversToNPC(this.hud);
     }
     public void update(float delta){
         world.step(1/60f, 6, 2);
         batch.setProjectionMatrix(camera.combined);
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-            Gdx.app.exit();
-        }
+        mapModel.update(delta);
         player.update(delta);
         playerInputManager.update(delta);
         enemyManager.update(delta);
         objects.update(delta);
+
+        Door.updateSound(delta);
     }
 
     @Override
     public void render(float delta){
-        update(delta);
+
+
+        if(!isPaused){
+            update(delta);
+        }
+
 
         camera.position.set(player.getPlayerX() + player.getPLAYER_WIDTH() / 2 , player.getPlayerY() + player.getPLAYER_HEIGHT() / 2 , 0);
         if (shakeDuration > 0) {
-            float shakeX = (MathUtils.random() - 0.5f) * 2* shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
+            float shakeX = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerX() + player.getPLAYER_WIDTH() / 2;
             float shakeY = (MathUtils.random() - 0.5f) * 2 * shakeIntensity + player.getPlayerY() + player.getPLAYER_HEIGHT() / 2;
 
             camera.position.set(shakeX, shakeY, 0);
@@ -123,9 +135,58 @@ public class GameScreen extends ScreenAdapter {
         hud.getStage().draw(); //draw the Hud
 
         //DEBUG
-        renderDebug();
-        renderPlayerCollisionDebug();
-        renderEnemyDebug();
+        //renderDebug();
+        //renderPlayerCollisionDebug();
+        //renderEnemyDebug();
+
+        //Gestione della Pausa
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
+
+            isPaused = !isPaused;
+
+            hud.setMenuVisibility();
+
+
+        }
+        //se continua nel menu è stato premuto
+        if(menuMediator.isChangeGameState()){
+            menuMediator.changeGameStatus();
+            hud.setMenuVisibility();
+            isPaused = false;
+
+
+        }
+
+        if(menuMediator.isChangeToOptionsScreen()){
+            menuMediator.changeToOptionsScreen();
+            Boot.INSTANCE.setScreen(new OptionScreen(this.camera, true ));
+
+        } else {
+            hud.setInputProcessorOn();
+        }
+
+
+        //fine gestione pausa
+
+        //se exit nel menu è stato premuto
+        if(menuMediator.isChangeToMainMenuScreen()){
+            menuMediator.changeToMenuScreen();
+            hud.setMenuVisibility();
+            returnToMainMenuScreen();
+
+
+        }
+
+        //se il giocatore ha finito il gioco vincendo o morendo
+        if(player.hasPlayerWon()){
+            endGame(true);
+        } else if (player.isPlayerDead()){
+            endGame(false);
+        }
+
+
     }
 
     public void shakeCamera(float duration , float intensity){
@@ -151,6 +212,8 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.end();
 
     }
+
+
     private void renderDebug() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -162,6 +225,13 @@ public class GameScreen extends ScreenAdapter {
                 shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
             }
             // Add additional checks for other object types if needed
+        }
+
+        for(Interactable door : mapModel.getInteractables()){
+            if(door instanceof Door){
+                Rectangle rect = ((Door) door).getBoundingBox();
+                shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            }
         }
         shapeRenderer.end();
     }
@@ -188,6 +258,24 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         shapeRenderer.end();
+    }
+    public boolean gameOver(){
+
+        return player.isPlayerDead();
+    }
+
+    public void endGame(boolean gameEnding ){
+        player.resetPlayer();
+        mapModel.resetMapModel();
+        Boot.INSTANCE.setScreen(new GameOverScreen(GameScreen.this.camera, gameEnding));
+        dispose();
+    }
+
+    private void returnToMainMenuScreen(){
+        player.resetPlayer();
+        mapModel.resetMapModel();
+        Boot.INSTANCE.setScreen(new MainMenuScreen(GameScreen.this.camera));
+        dispose();
     }
 
     @Override

@@ -4,79 +4,110 @@ import Model.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Objects;
-
 
 public class ObjectManager {
-    private Array<ObjectGame> objects ;
+    private Array<GameObject> objects;
     private ObjectGameCreator objectCreator;
-
     private Player player;
     private Item item;
-
+    private int medicalLife;
+    private int energy;
 
     public ObjectManager(){
         this.objects = new Array<>();
         item = new Item();
         player = Player.getInstance();
         this.objectCreator = new ObjectCreator();
-
+        medicalLife = 100;
+        energy = 25;
     }
 
     public void initializeObject(){
-        objects.add(objectCreator.createObject("chest",1650,1300));
-        objects.add(objectCreator.createObject("coin",1600,300));
-        objects.add(objectCreator.createObject("diamond",850,850));
-        objects.add(objectCreator.createObject("diamond",200,850));
-        objects.add(objectCreator.createObject("key",300,1000));
-        objects.add(objectCreator.createObject("key",850,200));
+        //mappa tutorial
+
+        objects.add(objectCreator.createObject("coin",3600,1800));
+        objects.add(objectCreator.createObject("coin",3500,1800));
+        objects.add(objectCreator.createObject("coin",3400,1800));
+
+
+        objects.add(objectCreator.createObject("meat",3100,2800));
         objects.add(objectCreator.createObject("meat",1600,1000));
-        objects.add(objectCreator.createObject("money",100,300));
+        objects.add(objectCreator.createObject("ammunition",2944,2816));
+        objects.add(objectCreator.createObject("medikit",850,1300));
+
+        //Mappa di gioco
+        objects.add(objectCreator.createObject("ammunition",6336,2048));
+        objects.add(objectCreator.createObject("ammunition",6080,2048));
+        objects.add(objectCreator.createObject("medikit",8320,3520));
+        objects.add(objectCreator.createObject("key",8192,3968));
+        objects.add(objectCreator.createObject("key",7616,4288));
+
     }
 
     public void draw(SpriteBatch batch){
-        for(ObjectGame obj : objects){
+        for(GameObject obj : objects){
             obj.draw(batch);
         }
 
     }
 
     public void checkCollision(){
-        for(ObjectGame obj : objects) {
+        for(GameObject obj : objects) {
             if (obj.collide(player)) {
-                obj.setRemove(true);
 
-                if (Objects.equals(obj.getName(), "coin") && obj.isRemove()) {
-                    item.addCoin(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "key") && obj.isRemove()) {
-                    item.addKey(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "diamond") && obj.isRemove()) {
-                    item.addDiamond(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "meat") && obj.isRemove()) {
-                    item.addMeat(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
-                } else if (Objects.equals(obj.getName(), "money") && obj.isRemove()) {
-                    item.addMoney(obj);
-                    objects.removeIndex(objects.indexOf(obj,false));
+                boolean removeItem = true;
+
+                if (obj instanceof  Medikit){
+                    if (player.getPlayerLife()>= 100){
+                        player.setPlayerLife(0);
+                        removeItem = false;
+                    }else {
+                        player.setPlayerLife(medicalLife);
+                    }
+
                 }
 
+                if (obj instanceof  Meat) {
+                    if (player.getPlayerLife() >= 100){
+                        player.setPlayerLife(0);
+                        removeItem = false;
+                    }else{
+                        player.setPlayerLife(energy);
+                    }
+                }
+
+                if (obj instanceof Ammunition) {
+                    player.setBulletCount(player.getBulletCount()+50);
+                }
+
+                if(removeItem) {
+                    obj.getPickSound().play(0.2f);
+                    objects.removeIndex(objects.indexOf(obj, false));
+                    obj.setRemove(true);
+                    item.add(obj);
+                }
             }
         }
     }
 
     public void update(float delta) {
         for (int i = 0; i < objects.size; i++){
-            ObjectGame obj = objects.get(i);
+            GameObject obj = objects.get(i);
             obj.update(delta);
             checkCollision();
         }
 
+        GameObject.pickSound.update(delta);
+        Ammunition.updateSound(delta);
+        Coin.updateSound(delta);
+        Meat.updateSound(delta);
     }
 
     public Item getItem(){
         return this.item;
+    }
+
+    public void addObject(GameObject object){
+        this.objects.add(object);
     }
 }

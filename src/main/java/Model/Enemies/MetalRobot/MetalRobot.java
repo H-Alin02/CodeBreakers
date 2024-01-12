@@ -1,8 +1,7 @@
 package Model.Enemies.MetalRobot;
 
+import Model.*;
 import Model.Enemies.Enemy;
-import Model.MapModel;
-import Model.Player;
 import View.Boot;
 import View.GameScreen;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -22,7 +21,7 @@ public class MetalRobot implements Enemy {
     private final int enemyHeight = 32; // Altezza dell'immagine del nemico
     MetalRobotState currentState;  // Stato del nemico con enum ( per animazioni )
     private RobotState currentRobotState; // Stato del nemico con Pattern STATE
-    private Player player = Player.getInstance(); // Istanza di Player
+    private final Player player = Player.getInstance(); // Istanza di Player
 
     //Hit box
     private int hitBoxX; // Posizione x della HitBox del nemico
@@ -53,6 +52,19 @@ public class MetalRobot implements Enemy {
     private boolean hasAttacked = false;
 
     private GameScreen gameScreen;
+
+    private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/robot_punch.wav");
+    public static final SoundPlayer alertSound = new SoundPlayer("sound_effects/robot_alert.wav");
+    public static final SoundPlayer deathSound = new SoundPlayer(1.3f, 5, "sound_effects/robot_death_sound.wav");
+    public static final SoundPlayer damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
+
+    public static void updateSound(float delta)
+    {
+        punchSound.update(delta);
+        damageSound.update(delta);
+        alertSound.update(delta);
+        deathSound.update(delta);
+    }
 
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
@@ -120,6 +132,14 @@ public class MetalRobot implements Enemy {
             }
         }
 
+        for(Interactable interactable : mapModel.getInteractables()){
+            if(interactable instanceof Door){
+                if(Intersector.intersectSegmentRectangle(startX, startY, playerX, playerY, ((Door) interactable).getBoundingBox())){
+                    return false;
+                }
+            }
+        }
+
         // Verifica anche eventuali collisioni con gli oggetti della mappa
         for (MapObject object : mapModel.getScaledCollisionObjects()) {
             if (object instanceof RectangleMapObject) {
@@ -173,6 +193,8 @@ public class MetalRobot implements Enemy {
     public void attackPlayer(){
         if (!enemyAttackStates.contains(currentState, true))
             if(!hasAttacked){
+                punchSound.play(0.05f);
+
                 if(flip == 'a') {
                     currentState = MetalRobotState.ATTACK1;
                     animationManager.resetDamage();
@@ -334,6 +356,7 @@ public class MetalRobot implements Enemy {
             if (health <= 0) {
                 // Implement logic for enemy death or removal from the game
                 // For example, set the enemy state to a death state and stop animations
+                deathSound.play(0.1f);
                 deadAnimationComplete = false;
                 currentState = (flip == 'a') ? MetalRobotState.DEAD1 : MetalRobotState.DEAD2;
                 animationManager.resetDamage();
@@ -345,7 +368,9 @@ public class MetalRobot implements Enemy {
                 animationManager.resetDamage();
                 damageAnimationComplete = false;
                 gameScreen.shakeCamera(0.3f, 4);
-                //isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
+                damageSound.play(0.1f);
+                //TODO aggiungere knowback
+
             }
         }
     }

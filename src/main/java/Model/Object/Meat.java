@@ -1,6 +1,6 @@
 package Model.Object;
 
-import Model.Player;
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Meat implements ObjectGame{
+public class Meat implements GameObject{
     private int meatX, meatY;
     private TextureRegion texture;
     private final int OBJECT_HEIGHT = 32;
@@ -16,6 +16,9 @@ public class Meat implements ObjectGame{
     private boolean remove;
     private final float SCALE = 1.2f;
     private String name ;
+    private int meatValue;
+    private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_food.mp3");
+    public static void updateSound(float delta) {pickSound.update(delta);}
 
     public Meat(int meatX, int meatY){
         this.meatX = meatX;
@@ -25,22 +28,12 @@ public class Meat implements ObjectGame{
         name = "meat";
         remove = false;
     }
+
+    //public SoundPlayer getPickSound() {return  null;}
+
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(texture,meatX,meatY,OBJECT_HEIGHT * SCALE,OBJECT_WIDTH * SCALE);
-    }
-
-    @Override
-    public void update(float delta) {
-
-    }
-
-    @Override
-    public boolean collide(Player player) {
-        Rectangle rect = getArea();
-        Rectangle rect2 = player.getArea();
-
-        return rect2.overlaps(rect);
     }
 
     @Override
@@ -59,4 +52,17 @@ public class Meat implements ObjectGame{
     }
     @Override
     public String getName(){return name;}
+
+    @Override
+    public int getValue() {
+        return meatValue;
+    }
+
+    @Override
+    public void setValue(int value) {
+        meatValue = value;
+    }
+
+    @Override
+    public SoundPlayer getPickSound() {return pickSound;}
 }

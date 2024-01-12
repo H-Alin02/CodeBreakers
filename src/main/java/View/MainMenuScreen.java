@@ -1,5 +1,7 @@
 package View;
 
+import Model.MusicPlayer;
+import Model.SoundPlayer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -18,13 +20,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen extends ScreenAdapter {
-    private Stage stage;
+    private static Stage stage;
     private OrthographicCamera camera;
+    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
 
     public MainMenuScreen(OrthographicCamera camera) {
         this.camera = camera;
         stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(),Boot.INSTANCE.getScreenHeight() ,camera));
         Gdx.input.setInputProcessor(stage);
+
+        // Carica la musica dal tuo progetto (assumi che il file sia nella cartella "assets")
+        // Imposta la ripetizione della musica in modo che continui a suonare
+
+        // Avvia la musica
+        MusicPlayer.play("main menu");
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -48,15 +57,20 @@ public class MainMenuScreen extends ScreenAdapter {
         stage.addActor(table);
 
         // Aggiungi pulsanti
-        TextButton startButton = createTextButton("Start Game");
-        TextButton loadButton = createTextButton("Load Game");
-        TextButton optionsButton = createTextButton("Options");
+        TextButton startButton = createTextButton("Nuova Partita");
+        TextButton loadButton = createTextButton("Carica Partita");
+        TextButton optionsButton = createTextButton("Opzioni");
+        TextButton exitGameButton = createTextButton("Esci dal gioco");
 
         // Aggiungi azione per la transizione alla schermata di gioco quando il pulsante viene premuto
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
+                buttonClickSound.play(0.1f);
+                MusicPlayer.currentMusic.dispose();
+                //Boot.INSTANCE.setScreen(new GameScreen(MainMenuScreen.this.camera));
+                Boot.INSTANCE.setScreen(new CutsceneScreen(MainMenuScreen.this.camera));
+                MainMenuScreen.this.dispose();
             }
         });
 
@@ -64,6 +78,7 @@ public class MainMenuScreen extends ScreenAdapter {
         loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                buttonClickSound.play(0.1f);
                 // Aggiungi qui la logica per il pulsante "Load Game"
                 System.out.println("Load Game clicked");
             }
@@ -73,13 +88,29 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Aggiungi qui la logica per il pulsante "Options"
+                buttonClickSound.play(0.1f);
                 System.out.println("Options clicked");
+                OptionScreen optionScreen = new OptionScreen(MainMenuScreen.this.camera, false );
+                Boot.INSTANCE.setScreen(optionScreen);
+                MainMenuScreen.this.dispose();
+            }
+        });
+
+        exitGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Aggiungi qui la logica per il pulsante "Options"
+                buttonClickSound.play(0.1f);
+                System.out.println("Exit Game clicked");
+                Gdx.app.exit();
+
             }
         });
 
         table.add(startButton).padBottom(20).row();
         table.add(loadButton).padBottom(20).row();
         table.add(optionsButton).padBottom(20).row();
+        table.add(exitGameButton).padBottom(20).row();
     }
 
     private TextButton createTextButton(String text) {
@@ -153,6 +184,8 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
+        // Libera le risorse quando la schermata viene chiusa
+        //backgroundMusic.dispose();
         stage.dispose();
     }
 }

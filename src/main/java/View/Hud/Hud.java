@@ -1,50 +1,82 @@
 package View.Hud;
 
+import Controller.MenuMediator;
 import Model.Object.ObjectManager;
 import Model.Player;
-import View.Boot;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class Hud extends WidgetGroup {
+public class Hud extends WidgetGroup implements NPCObserver {
 
     private Stage stage;
-    private FitViewport stageViewport;
-
+    private ScreenViewport stageViewport;
     private PlayerStats playerStats;
-
-    private MapName mapName;
-
     private PlayerInventory inventory;
+    private DialogueBox dialogueBox;
+    private Menu menu;
 
-    public Hud(SpriteBatch spriteBatch, ObjectManager objectManager) {
-        stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
+    private boolean npcReadyToTalk = false;
+
+
+
+    public Hud(SpriteBatch spriteBatch, ObjectManager objectManager, MenuMediator menuMediator) {
+        stageViewport = new ScreenViewport();
+        stageViewport.setUnitsPerPixel(0.6f);
+
+
         stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
 
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0,0,0,0.5f);
+        bgPixmap.fill();
+        TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+
+        Table filler = new Table();
+        Table topFiller = new Table();
+        topFiller.setBackground(textureBackground);
+        bgPixmap.dispose();
+
         playerStats = new PlayerStats();
-        mapName = new MapName();
         inventory = new PlayerInventory(objectManager);
+        dialogueBox = new DialogueBox("");
+
+        menu = new Menu(menuMediator);
+
+        Table rootTable = new Table();
+        rootTable.setFillParent(true);
 
 
-        /*/-------------------test inventario--------------------------
-        Label inventoryLabel = new Label("INVENTORY", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        //rootTable.setDebug(true);
+
+        stage.addActor(rootTable);
+        //popolazione stage e posizionamento degli elementi
+
+        //prima riga
+        rootTable.add(playerStats.getTableStats()).left().uniform().padLeft(10).fill().padTop(15);
+        rootTable.add(filler).fill().uniform().padTop(15);
+        rootTable.add(inventory.getTable()).center().uniform().padRight(10).fill().padTop(15);
+
+        rootTable.row();
+        //seconda riga
+        rootTable.add(filler).fill();
+        rootTable.add(menu.getTable()).fill().expand().center().padLeft(30).padRight(30).padTop(50).padBottom(50);
+        rootTable.add(filler).fill();
+
+        rootTable.row();
+        //terza riga
+        rootTable.add(dialogueBox.getTable()).colspan(3).height(100).padBottom(25);
+
+        Gdx.input.setInputProcessor(stage);
 
 
-        inventory= new Container(inventoryLabel);
-        inventory.center();
-        inventory.setFillParent(true);
-
-        inventory.setVisible(false);
-
-        stage.addActor(inventory);
-        //--------------------------------------------------------------/*/
-        stage.addActor(playerStats.getTableStats());
-        stage.addActor(mapName.getSceneName());
-        stage.addActor(inventory.getTable());
 
     }
 
@@ -53,27 +85,41 @@ public class Hud extends WidgetGroup {
     }
 
     public void update(Player player, float delta) {
+
         this.playerStats.update(player);
-        this.mapName.update(player);
-        this.inventory.update();
-        if(Gdx.input.isKeyJustPressed(Input.Keys.I)){
-            this.inventory.visibilitySwitch();
-        }
-        /*/----------------test inventario---------------------
-        if(Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+        this.inventory.update(player);
+        this.menu.update(player);
 
-            boolean visible = inventory.isVisible();
-            if (visible) {
-                inventory.setVisible(false);
-            } else if (!(visible)) {
-                inventory.setVisible(true);
-            }
-        }
-        //----------------------------------------------------/*/
-        }
+        //System.out.println(npcReadyToTalk);
+        if(npcReadyToTalk){
+            dialogueBox.show(dialogueBox.getText());
+        }else dialogueBox.hide();
+    }
 
+
+    @Override
+    public void onNPCTalk(String message) {
+        this.npcReadyToTalk = true;
+        dialogueBox.setMessage(message);
+    }
+
+    @Override
+    public void onNPCFinishedTalk() {
+        this.npcReadyToTalk = false;
+    }
 
     public void dispose(){
         stage.dispose();
+    }
+
+    public void setMenuVisibility() {
+
+        menu.visibilitySwitch();
+
+
+    }
+
+    public void setInputProcessorOn(){
+        Gdx.input.setInputProcessor(stage);
     }
 }
