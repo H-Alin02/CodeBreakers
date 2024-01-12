@@ -18,7 +18,7 @@ public class Coin implements GameObject{
     private final float SCALE = 1.2f;
     private String name ;
     private int coinValue;
-    private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_coin.wav");
+    private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/Item/pick_coin.wav");
     public static void updateSound(float delta) {pickSound.update(delta);}
 
     public Coin(int coinX, int coinY) {

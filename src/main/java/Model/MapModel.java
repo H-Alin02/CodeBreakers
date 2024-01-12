@@ -1,5 +1,8 @@
 package Model;
 
+import Model.Entities.Object.Door;
+import Model.Entities.Interactable;
+import Model.Entities.Player.Player;
 import Model.NPC.NPC;
 import Model.NPC.NPCManager;
 import Model.Object.ObjectManager;

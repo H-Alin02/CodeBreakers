@@ -1,7 +1,7 @@
 package View.Hud;
 
 import Controller.MenuMediator;
-import Model.Player;
+import Model.Entities.Player.Player;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;

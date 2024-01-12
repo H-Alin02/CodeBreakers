@@ -1,6 +1,6 @@
 package View.Hud;
 
-import Model.Player;
+import Model.Entities.Player.Player;
 
 public interface HudComponent {
     void update(Player player);

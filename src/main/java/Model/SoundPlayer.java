@@ -11,6 +11,11 @@ public class SoundPlayer {
     private FileHandle soundFile;
     private static float volumeFactor = 0.5f;
     private static boolean isMute = false;
+    private static SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
+
+    public static void playClickSound() {
+        buttonClickSound.play(0.1f);
+    }
 
     // Imposta il fattore tra 0 e 1 per cui vengono moltiplicati i volumi di tutti i suoni
     public static void setGeneralVolume(float volumeFactor)
@@ -80,6 +85,5 @@ public class SoundPlayer {
     }
 
     public static boolean isMute() {return isMute;}
-    public static void switchMute() {isMute = ! isMute;}
     public static void setMute(boolean value) {isMute = value;}
 }

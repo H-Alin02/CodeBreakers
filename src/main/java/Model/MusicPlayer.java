@@ -3,6 +3,8 @@ package Model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
+import java.util.Objects;
+
 public class MusicPlayer {
     private final Music music;
     private final float volume;
@@ -20,23 +22,25 @@ public class MusicPlayer {
     public Music getData() {return music;}
 
     // moltiplica il volume corrente per un valore
-    public void multiplyVolume(float value) {
-        music.setVolume(music.getVolume() * value);
+    public static void multiplyVolume(float value) {
+        currentMusic.music.setVolume(currentMusic.music.getVolume() * value);
     }
 
     // imposta il volume generale per l'istanza specifica
     public void resetVolumeFactor(float volumeFactor) {
         music.setVolume(volume * volumeFactor);
-        System.out.println("AAAA " + volume + ", " + volumeFactor);
     }
 
 
     private  static boolean isMute = false;
 
     // Tutte le musiche utilizzate nel gioco
-    private static final MusicPlayer tutorialMusic = new MusicPlayer(0.2f, "Music/tutorial_music.mp3");
-    private static final MusicPlayer levelMusic = new MusicPlayer(0.1f, "Music/level_music.mp3");
-    private static final MusicPlayer mainMenuMusic = new MusicPlayer(0.3f, "Music/main_soundtrack.mp3");
+    private static final MusicPlayer tutorialMusic =
+            new MusicPlayer(0.2f, "Music/tutorial_music.mp3");
+    private static final MusicPlayer levelMusic =
+            new MusicPlayer(0.1f, "Music/level_music.mp3");
+    private static final MusicPlayer mainMenuMusic =
+            new MusicPlayer(0.3f, "Music/main_soundtrack.mp3");
 
     // Puntatore alla musica da riprodurre nel momento specifico
     public static MusicPlayer currentMusic = mainMenuMusic;
@@ -44,19 +48,24 @@ public class MusicPlayer {
     // imposta la musica attuale in base al nome dato
     public static void play(String musicName)
     {
-        currentMusic.music.dispose();
+        boolean isCurrent = Objects.equals(musicName, "current");
 
-        currentMusic = switch(musicName)
-        {
-            case "main menu" -> mainMenuMusic;
-            case "tutorial" -> tutorialMusic;
-            case "level" -> levelMusic;
-            case "current" -> currentMusic;
+        if(!isCurrent) {
+            currentMusic.music.dispose();
 
-            default -> throw new IllegalStateException("This music does not exist: " + musicName);
-        };
+            currentMusic = switch(musicName)
+            {
+                case "main menu" -> mainMenuMusic;
+                case "tutorial" -> tutorialMusic;
+                case "level" -> levelMusic;
 
-        currentMusic.music.play();
+                default -> throw new IllegalStateException(
+                        "This music does not exist: " + musicName);
+            };
+        }
+
+        if(!isMute && (!isCurrent || !isPlaying()))
+            currentMusic.music.play();
     }
 
     // Termina la musica attuale
@@ -81,25 +90,17 @@ public class MusicPlayer {
     public static boolean isPlaying() {
         return currentMusic.music.isPlaying();
     }
-
-    public static void switchMute()
+    public static boolean isMute() {return isMute;}
+    public static void setMute(boolean isMute)
     {
-        isMute = !isMute;
+        MusicPlayer.isMute = isMute;
 
         if(isMute)
-            currentMusic.multiplyVolume(0);
-        else
+            currentMusic.music.setVolume(0);
+        else {
             currentMusic.resetVolumeFactor(volumeFactor);
-    }
-    public static boolean isMute() {return isMute;}
-    public static void setMute(boolean value)
-    {
-        isMute = value;
-
-        if(value)
-            currentMusic.multiplyVolume(0);
-        else
-            currentMusic.resetVolumeFactor(volumeFactor);
+            play("current");
+        }
     }
 
     public static float getVolumeFactor() {

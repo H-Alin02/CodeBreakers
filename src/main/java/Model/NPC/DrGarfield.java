@@ -1,9 +1,9 @@
 package Model.NPC;
 
-import Model.Interactable;
+import Model.Entities.Interactable;
 import Model.Object.ObjectCreator;
 import Model.Object.ObjectManager;
-import Model.Player;
+import Model.Entities.Player.Player;
 import Model.SoundPlayer;
 import View.Hud.NPCObserver;
 import com.badlogic.gdx.Gdx;
@@ -26,7 +26,6 @@ public class DrGarfield implements NPC , Interactable {
     private boolean hasTalked = false;
     private List<String> dialogues;
     private int currentIndex;
-    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
     private ObjectManager objectManager;
 
     public DrGarfield(Vector2 position){
@@ -55,7 +54,7 @@ public class DrGarfield implements NPC , Interactable {
 
     @Override
     public void interact(Player player) {
-        buttonClickSound.play(0.1f);
+        SoundPlayer.playClickSound();
         talk();
 
         currentIndex++;

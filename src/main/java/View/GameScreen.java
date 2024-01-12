@@ -3,9 +3,13 @@ package View;
 import Controller.MenuMediator;
 import Controller.PlayerInputManager;
 import Model.*;
-import Model.Enemies.Enemy;
-import Model.Enemies.EnemyManager;
-import Model.Enemies.MetalRobot.MetalRobot;
+import Model.Entities.Enemy;
+import Model.Entities.EnemyManager;
+import Model.Entities.MetalRobot.MetalRobot;
+import Model.Entities.Object.Bullet;
+import Model.Entities.Object.Door;
+import Model.Entities.Interactable;
+import Model.Entities.Player.Player;
 import Model.Object.ObjectManager;
 import View.Hud.Hud;
 import com.badlogic.gdx.Gdx;
@@ -143,23 +147,23 @@ public class GameScreen extends ScreenAdapter {
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
-
             isPaused = !isPaused;
-
             hud.setMenuVisibility();
 
+            MusicPlayer.multiplyVolume(isPaused ? 0.2f : 5);
 
         }
         //se continua nel menu è stato premuto
         if(menuMediator.isChangeGameState()){
+            SoundPlayer.playClickSound();
             menuMediator.changeGameStatus();
             hud.setMenuVisibility();
             isPaused = false;
-
-
         }
 
         if(menuMediator.isChangeToOptionsScreen()){
+            SoundPlayer.playClickSound();
+            MusicPlayer.multiplyVolume(5);
             menuMediator.changeToOptionsScreen();
             Boot.INSTANCE.setScreen(new OptionScreen(this.camera, true ));
 
@@ -172,11 +176,10 @@ public class GameScreen extends ScreenAdapter {
 
         //se exit nel menu è stato premuto
         if(menuMediator.isChangeToMainMenuScreen()){
+            SoundPlayer.playClickSound();
             menuMediator.changeToMenuScreen();
             hud.setMenuVisibility();
             returnToMainMenuScreen();
-
-
         }
 
         //se il giocatore ha finito il gioco vincendo o morendo
@@ -287,5 +290,9 @@ public class GameScreen extends ScreenAdapter {
 
     public Hud getHud() {
         return hud;
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
     }
 }

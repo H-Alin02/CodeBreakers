@@ -1,6 +1,6 @@
 package Model.Object;
 
-import Model.Player;
+import Model.Entities.Player.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 

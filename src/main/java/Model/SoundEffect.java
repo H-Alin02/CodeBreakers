@@ -23,13 +23,11 @@ public class SoundEffect {
     // viene dato il volume e il file sonoro per poi essere riprodotto
     public void play(float volume, FileHandle soundFile)
     {
-        System.out.println("PLAYING SOUND");
-
         if(isPlaying)
             dispose();
 
-        // sound deve essere dichiarato ogni volta che si vuole riprodurre il suono di nuovo,
-        // perché "dispose" blocca il suono permanentemente
+        // sound deve essere dichiarato ogni volta che si vuole riprodurre il suono
+        // di nuovo, perché "dispose" blocca il suono permanentemente
         sound = Gdx.audio.newSound(soundFile);
         sound.play(volume);
         isPlaying = true;

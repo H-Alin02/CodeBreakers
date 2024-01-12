@@ -27,7 +27,6 @@ public class OptionScreen extends ScreenAdapter {
     private Viewport viewport;
     private Stage stage;
     private OrthographicCamera camera;
-    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
     private boolean returnToGame = false;
 
     //creare i label
@@ -37,21 +36,25 @@ public class OptionScreen extends ScreenAdapter {
     Label musicPercent = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     Label soundPercent = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-    public void resetMusicLabel() {
-        musicPercent.setText((int)(100 * MusicPlayer.getVolumeFactor()) + " %");
-    }
-
-    public void resetSoundLabel() {
-        soundPercent.setText((int)(100 * SoundPlayer.getVolumeFactor()) + " %");
-    }
-
     // Aggiungi pulsanti
-    TextButton mute = createTextButton("Disattiva volume");
+    TextButton mute = createTextButton("");
     TextButton musicP = createTextButton("[+]");
     TextButton musicN = createTextButton("[-]");
     TextButton effectP = createTextButton("[+]");
     TextButton effectN = createTextButton("[-]");
     TextButton ritorno;
+
+    public void resetMusicLabel() {
+        musicPercent.setText(Math.round(100 * MusicPlayer.getVolumeFactor()) + " %");
+    }
+
+    public void resetSoundLabel() {
+        soundPercent.setText(Math.round(100 * SoundPlayer.getVolumeFactor()) + " %");
+    }
+
+    public void resetMuteLabel(boolean isMute) {
+        mute.setText((isMute ? "Attiva" : "Disattiva") + " volume");
+    }
 
     public OptionScreen(OrthographicCamera camera, boolean returnToGame){
         this.camera = camera;
@@ -66,6 +69,7 @@ public class OptionScreen extends ScreenAdapter {
 
         resetMusicLabel();
         resetSoundLabel();
+        resetMuteLabel(MusicPlayer.isMute() && SoundPlayer.isMute());
 
         // Carica l'immagine PNG dal tuo progetto
         Texture backgroundImage = new Texture(Gdx.files.internal("MainMenu/Background.png"));
@@ -94,8 +98,6 @@ public class OptionScreen extends ScreenAdapter {
             ritorno = createTextButton("Ritorna al menù");
         }
 
-
-
         mute.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -104,8 +106,8 @@ public class OptionScreen extends ScreenAdapter {
                 MusicPlayer.setMute(!isMute);
                 SoundPlayer.setMute(!isMute);
 
-                mute.setText((isMute ? "Disattiva" : "Attiva") + " volume");
-                buttonClickSound.play(0.1f);
+                resetMuteLabel(!isMute);
+                SoundPlayer.playClickSound();
             }
         });
 
@@ -114,7 +116,7 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 MusicPlayer.sumGeneralVolume(0.1f);
                 resetMusicLabel();
-                buttonClickSound.play(0.1f);
+                SoundPlayer.playClickSound();
             }
         });
 
@@ -123,7 +125,7 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 MusicPlayer.sumGeneralVolume(-0.1f);
                 resetMusicLabel();
-                buttonClickSound.play(0.1f);
+                SoundPlayer.playClickSound();
             }
         });
 
@@ -132,7 +134,7 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 SoundPlayer.sumGeneralVolume(0.1f);
                 resetSoundLabel();
-                buttonClickSound.play(0.1f);
+                SoundPlayer.playClickSound();
             }
         });
 
@@ -141,7 +143,7 @@ public class OptionScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 SoundPlayer.sumGeneralVolume(-0.1f);
                 resetSoundLabel();
-                buttonClickSound.play(0.1f);
+                SoundPlayer.playClickSound();
             }
         });
 
@@ -149,25 +151,26 @@ public class OptionScreen extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
-                buttonClickSound.play(0.1f);
+                SoundPlayer.playClickSound();
+                OptionScreen.this.dispose();
+
                 if(!returnToGame){
                     Boot.INSTANCE.setScreen(new MainMenuScreen(camera));
-                    OptionScreen.this.dispose();
                 } else {
+                    MusicPlayer.multiplyVolume(0.2f);
                     Boot.INSTANCE.setScreen(Boot.INSTANCE.getGameScreen());
-                    OptionScreen.this.dispose();
                 }
             }
         });
 
-        table.add(mute).uniform().row();
+        table.add(mute).center().row();
 
         table.add(musicVolume).padRight(30);
         table.add(musicP).padRight(15);
         table.add(musicPercent).padRight(15);
         table.add(musicN).row();
 
-        table.add(effectVolume).padTop(10);
+        table.add(effectVolume).padRight(30);
         table.add(effectP).padRight(15);
         table.add(soundPercent).padRight(15);
         table.add(effectN).row();

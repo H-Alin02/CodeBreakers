@@ -1,9 +1,9 @@
 
 package Controller;
 
-import Model.Interactable;
-import Model.Player;
-import Model.PlayerState;
+import Model.Entities.Interactable;
+import Model.Entities.Player.Player;
+import Model.Entities.Player.PlayerState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;

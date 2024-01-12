@@ -1,9 +1,9 @@
 package Model.NPC;
 
-import Model.Interactable;
+import Model.Entities.Interactable;
 import Model.Object.ObjectCreator;
 import Model.Object.ObjectManager;
-import Model.Player;
+import Model.Entities.Player.Player;
 import Model.SoundPlayer;
 import View.Hud.NPCObserver;
 import com.badlogic.gdx.Gdx;
@@ -19,7 +19,6 @@ public class DaveNPC implements NPC , Interactable {
     private Vector2 position;
     private TextureRegion texture;
     private Texture interactTexture;
-    private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
     private NPCObserver observer;
     private boolean hasTalked = false;
     private List<String> dialogues;
@@ -84,7 +83,7 @@ public class DaveNPC implements NPC , Interactable {
     }
     @Override
     public void interact(Player player) {
-        buttonClickSound.play(0.1f);
+        SoundPlayer.playClickSound();
         if(currentIndex < positions.size())
             this.position = positions.get(currentIndex);
         talk();

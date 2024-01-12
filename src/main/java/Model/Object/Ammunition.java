@@ -16,7 +16,7 @@ public class Ammunition implements GameObject {
     private final float SCALE = 1.2f;
     private String name ;
     private int ammunitionValue;
-    private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/pick_ammo.mp3");
+    private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/Item/pick_ammo.mp3");
     public static void updateSound(float delta) {pickSound.update(delta);}
 
     public Ammunition(int ammunitionX, int ammunitionY){
