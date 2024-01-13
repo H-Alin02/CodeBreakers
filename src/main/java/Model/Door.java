@@ -11,6 +11,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * La classe rappresenta un'entità di porta nel gioco, che può essere interagita
+ * con il giocatore per aprirla o chiuderla.
+ * @author Alin Marian Habasescu
+ * @author Gabriele Zimmerhofer
+ */
 public class Door implements Interactable {
     private float x,y;
     private float doorWidth;

@@ -16,6 +16,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+/**
+ * La classe rappresenta il modello della mappa nel gioco, gestendo il caricamento,
+ * il rendering e l'aggiornamento degli oggetti sulla mappa.
+ * @author Alin Marian Habasescu
+ * @author Gabriele Zimmerhofer
+ */
 public class MapModel {
     private static MapModel INSTANCE;
     private TiledMap map;
@@ -27,6 +33,11 @@ public class MapModel {
     private Array<Interactable> interactables;
     private static Rectangle stairHitbox = new Rectangle(2470,970,64,64);
 
+    /**
+     * Ottiene un'istanza singleton della classe MapModel.
+     *
+     * @return Un'istanza di MapModel.
+     */
     public static MapModel getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new MapModel();
@@ -61,6 +72,11 @@ public class MapModel {
 
     }
 
+    /**
+     * Aggiorna lo stato della mappa.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(float delta){
         this.player = Player.getInstance();
         if(player.getHitBox().overlaps(stairHitbox)){
@@ -94,7 +110,15 @@ public class MapModel {
         return scaledObjects;
     }
 
-
+    /**
+     * Verifica se c'è una collisione con gli oggetti ridimensionati.
+     *
+     * @param x      La coordinata x dell'oggetto.
+     * @param y      La coordinata y dell'oggetto.
+     * @param width  La larghezza dell'oggetto.
+     * @param height L'altezza dell'oggetto.
+     * @return True se c'è una collisione, altrimenti false.
+     */
     public boolean isCollisionWithScaledObjects(float x, float y, float width, float height){
         //Iterate through the objects in the object layer
         for(MapObject object : scaledCollisionObjects){
@@ -136,8 +160,12 @@ public class MapModel {
         }
     }
 
-
-
+    /**
+     * Esegue il rendering della mappa e degli oggetti interattivi.
+     *
+     * @param spriteBatch Lo SpriteBatch utilizzato per il rendering.
+     * @param camera      La telecamera ortografica utilizzata per la visualizzazione.
+     */
     public void render(SpriteBatch spriteBatch, OrthographicCamera camera){
         mapRenderer.setView(camera);
         mapRenderer.render();
@@ -147,29 +175,53 @@ public class MapModel {
         }
     }
 
+    /**
+     * Ottiene gli oggetti di collisione ridimensionati.
+     *
+     * @return Gli oggetti di collisione ridimensionati come MapObjects.
+     */
     public MapObjects getScaledCollisionObjects() {
         return scaledCollisionObjects;
     }
 
+    /**
+     * Ottiene la lista di oggetti interattivi sulla mappa.
+     *
+     * @return Un array di oggetti interattivi.
+     */
     public Array<Interactable> getInteractables(){
         return this.interactables;
     }
 
+    /**
+     * Ottiene il gestore degli NPC associato alla mappa.
+     *
+     * @return Il gestore degli NPC.
+     */
     public NPCManager getNpcManager() {
         return npcManager;
     }
+
 
     private void teleportPlayer(int x, int y){
         this.player.setPlayerX(x);
         this.player.setPlayerY(y);
     }
 
+    /**
+     * Reimposta lo stato di tutti gli oggetti interattivi sulla mappa.
+     */
     public void resetMapModel(){
         for(Interactable interactable : interactables){
             interactable.reset();
         }
     }
 
+    /**
+     * Imposta l'ObjectManager per tutti gli oggetti interattivi sulla mappa.
+     *
+     * @param objectManager L'istanza di ObjectManager.
+     */
     public void addObjectManager(ObjectManager objectManager){
         for(Interactable interactable : interactables){
             interactable.addObjectManager(objectManager);

@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  * @author Francesco Gambone
  * @author Alin Marian Habasescu
  */
+
+//TODO Aggiungere Javadoc specificando l'implementazione del pattern Obserber.
 public class Hud extends WidgetGroup implements NPCObserver {
 
     private Stage stage;
@@ -113,12 +115,14 @@ public class Hud extends WidgetGroup implements NPCObserver {
         }
     }
 
+    //TODO Aggiungere Javadcc
     @Override
     public void onNPCTalk(String message) {
         this.npcReadyToTalk = true;
         dialogueBox.setMessage(message);
     }
 
+    //TODO Aggiungere javadoc
     @Override
     public void onNPCFinishedTalk() {
         this.npcReadyToTalk = false;
