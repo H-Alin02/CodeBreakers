@@ -15,6 +15,12 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Questa classe rappresenta il personaggio non giocante (NPC) "Dave" nel contesto del gioco.
+ * Dave è un istruttore all'interno della base segreta, che fornisce al giocatore indicazioni
+ * e missioni durante il corso del gioco.
+ * @author Alin Marian Habasescu
+ */
 public class DaveNPC implements NPC , Interactable {
     private Vector2 position;
     private TextureRegion texture;
@@ -27,6 +33,11 @@ public class DaveNPC implements NPC , Interactable {
     private int currentIndex;
     private ObjectManager objectManager;
 
+    /**
+     * Costruttore che inizializza la posizione e le risorse grafiche di Dave NPC.
+     *
+     * @param position La posizione iniziale di Dave NPC nel mondo di gioco.
+     */
     public DaveNPC(Vector2 position){
         this.position = position;
         this.texture = new TextureRegion(new Texture(Gdx.files.internal("NPC/Dave/Dave.png")));
@@ -82,6 +93,13 @@ public class DaveNPC implements NPC , Interactable {
         );
         currentIndex = 0;
     }
+
+    /**
+     * Gestisce l'interazione tra il giocatore e Dave NPC. Aggiorna la posizione di Dave
+     * e avvia il dialogo corrispondente.
+     *
+     * @param player Il giocatore che sta interagendo con Dave NPC.
+     */
     @Override
     public void interact(Player player) {
         buttonClickSound.play(0.1f);
@@ -95,26 +113,47 @@ public class DaveNPC implements NPC , Interactable {
         }
     }
 
+    /**
+     * Aggiunge un osservatore (observer) a Dave NPC.
+     *
+     * @param observer L'osservatore da aggiungere.
+     */
     @Override
     public void addObserver(NPCObserver observer) {
         this.observer = observer;
         System.out.println("Added observer for Dave : " + observer);
     }
 
+
     @Override
     public void update(float delta) {
 
     }
 
+    /**
+     * Imposta l'oggetto ObjectManager associato a Dave NPC.
+     *
+     * @param objectManager L'ObjectManager da associare a Dave NPC.
+     */
     @Override
     public void addObjectManager(ObjectManager objectManager) {
         this.objectManager = objectManager;
     }
 
+    /**
+     * Notifica l'osservatore con un messaggio specificato.
+     *
+     * @param message Il messaggio da inviare agli osservatori.
+     */
     private void notifyObservers(String message) {
         observer.onNPCTalk(message);
     }
 
+    /**
+     * Restituisce la posizione corrente di Dave NPC nel mondo di gioco.
+     *
+     * @return La posizione di Dave NPC come oggetto Vector2.
+     */
     @Override
     public Vector2 getPosition() {
         return new Vector2(position.x+ texture.getRegionHeight()/2,position.y+texture.getRegionHeight()/2);
@@ -125,6 +164,12 @@ public class DaveNPC implements NPC , Interactable {
         return false;
     }
 
+    /**
+     * Disegna la texture di Dave NPC e l'indicatore di interazione se il giocatore è nel raggio di interazione.
+     *
+     * @param batch  Il batch per disegnare gli elementi grafici.
+     * @param player Il giocatore nel mondo di gioco.
+     */
     @Override
     public void draw(SpriteBatch batch, Player player) {
         batch.draw(texture,position.x,position.y,texture.getRegionWidth()*3,texture.getRegionHeight()*3);
@@ -142,17 +187,23 @@ public class DaveNPC implements NPC , Interactable {
         }
     }
 
+    /**
+     * Reimposta l'indice di dialogo corrente a zero e riporta la posizione di Dave NPC alla posizione iniziale.
+     */
     @Override
     public void reset() {
         this.currentIndex = 0;
         this.position = positions.get(currentIndex);
     }
 
-    public boolean isPlayerInRange(float playerX, float playerY, float range) {
+    private boolean isPlayerInRange(float playerX, float playerY, float range) {
         float distance = new Vector2(playerX, playerY).dst(position.x + texture.getRegionHeight()/2, position.y + texture.getRegionHeight()/2);
         return distance <= range;
     }
 
+    /**
+     * Avvia il dialogo corrente di Dave NPC se ci sono ancora dialoghi disponibili.
+     */
     @Override
     public void talk() {
         if (currentIndex < dialogues.size()) {
@@ -160,8 +211,4 @@ public class DaveNPC implements NPC , Interactable {
             notifyObservers("Dave : " + dialogues.get(currentIndex));
         }
     }
-
-
-
-
 }

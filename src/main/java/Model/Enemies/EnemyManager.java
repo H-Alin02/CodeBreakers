@@ -10,6 +10,13 @@ import Model.Object.ObjectManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * La classe {@code EnemyManager} gestisce la creazione, l'aggiornamento e la rimozione degli
+ * oggetti di tipo {@code Enemy} nel gioco. Include inoltre la gestione di creatori specifici per
+ * i tipi di nemici (Dummy e MetalRobot) e la possibilità di aggiungere un {@code ObjectManager}.
+ * @author Alin Marian Habasescu
+ * @author Gabriele Zimmerhofer
+ */
 public class EnemyManager {
     private final List<Enemy> enemies;
     private DummyEnemyCreator dummyEnemyCreator;
@@ -17,6 +24,10 @@ public class EnemyManager {
     private ObjectManager objectManager;
     private ObjectCreator objectCreator;
 
+    /**
+     * Crea una nuova istanza di {@code EnemyManager} inizializzando la lista di nemici e
+     * i creatori specifici per i tipi di nemici.
+     */
     public EnemyManager(){
         this.enemies = new ArrayList<>();
         this.dummyEnemyCreator = new DummyEnemyCreator();
@@ -24,6 +35,9 @@ public class EnemyManager {
         this.objectCreator = new ObjectCreator();
     }
 
+    /**
+     * Inizializza la lista di nemici aggiungendo nemici specifici alle posizioni desiderate.
+     */
     public void initializeEnemies(){
         // Add enemies to the EnemyManager
         // Offset from tile x = -20 , y = -10
@@ -50,6 +64,11 @@ public class EnemyManager {
 
     }
 
+    /**
+     * Aggiorna lo stato dei nemici, rimuovendo quelli morti e aggiungendo oggetti al {@code ObjectManager}.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update( float delta){
         //enemies.removeIf(enemy -> enemy.isDead() && enemy.isDamageAnimationComplete());
         for(Enemy enemy : enemies){
@@ -68,10 +87,20 @@ public class EnemyManager {
         Dummy.updateSound(delta);
     }
 
+    /**
+     * Restituisce la lista di nemici gestiti da questo {@code EnemyManager}.
+     *
+     * @return La lista di nemici.
+     */
     public List<Enemy> getEnemies() {
         return enemies;
     }
 
+    /**
+     * Aggiunge un {@code ObjectManager} a questo {@code EnemyManager}.
+     *
+     * @param objectManager Il {@code ObjectManager} da aggiungere.
+     */
     public void addObjectManager(ObjectManager objectManager){
         this.objectManager = objectManager;
     }

@@ -17,6 +17,10 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Rappresenta l'NPC "DrGarfield" nel gioco, con funzionalità di interazione.
+ * @author Alin Marian Habasescu
+ */
 public class DrGarfield implements NPC , Interactable {
     private Vector2 position;
     private Animation<TextureRegion> animation1;
@@ -29,6 +33,11 @@ public class DrGarfield implements NPC , Interactable {
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
     private ObjectManager objectManager;
 
+    /**
+     * Crea un nuovo oggetto DrGarfield con la posizione specificata, inizializzando le sue animazioni e i suoi dialoghi.
+     *
+     * @param position La posizione iniziale di DrGarfield nel mondo di gioco.
+     */
     public DrGarfield(Vector2 position){
         this.position = position;
 
@@ -53,6 +62,12 @@ public class DrGarfield implements NPC , Interactable {
         currentIndex = 0;
     }
 
+    /**
+     * Metodo chiamato quando il giocatore interagisce con DrGarfield.
+     * Incrementa l'indice del dialogo corrente e gestisce l'interazione in base a questo.
+     *
+     * @param player Il giocatore che interagisce con DrGarfield.
+     */
     @Override
     public void interact(Player player) {
         buttonClickSound.play(0.1f);
@@ -69,16 +84,36 @@ public class DrGarfield implements NPC , Interactable {
         }
     }
 
+    /**
+     * Restituisce la posizione di DrGarfield come un nuovo oggetto Vector2.
+     *
+     * @return La posizione di DrGarfield come Vector2.
+     */
     @Override
     public Vector2 getPosition() {
         return new Vector2(position.x+ 32/2,position.y+32/2);
     }
 
+    /**
+     * Verifica se c'è una collisione tra l'oggetto e un rettangolo specificato.
+     *
+     * @param x      La coordinata x del rettangolo.
+     * @param y      La coordinata y del rettangolo.
+     * @param width  La larghezza del rettangolo.
+     * @param height L'altezza del rettangolo.
+     * @return True se c'è una collisione, altrimenti False.
+     */
     @Override
     public boolean isCollision(float x, float y, float width, float height) {
         return false;
     }
 
+    /**
+     * Disegna l'animazione di DrGarfield e l'indicatore di interazione se il giocatore è nel raggio di interazione.
+     *
+     * @param batch  Il batch per disegnare.
+     * @param player Il giocatore nel gioco.
+     */
     @Override
     public void draw(SpriteBatch batch, Player player) {
         batch.draw(getKeyFrame(),position.x,position.y,32*3,32*3);
@@ -96,20 +131,28 @@ public class DrGarfield implements NPC , Interactable {
         }
     }
 
+    /**
+     * Reimposta l'indice di dialogo corrente a zero.
+     */
     @Override
     public void reset() {
         this.currentIndex = 0;
     }
 
-    public boolean isPlayerInRange(float playerX, float playerY, float range) {
+
+    private boolean isPlayerInRange(float playerX, float playerY, float range) {
         float distance = new Vector2(playerX, playerY).dst(position.x + 32/2, position.y + 32/2);
         return distance <= range;
     }
 
-    public TextureRegion getKeyFrame() {
+    private TextureRegion getKeyFrame() {
         return animation1.getKeyFrame(stateTime, true);
     }
 
+    /**
+     * Avvia il dialogo corrente di DrGarfield se ci sono ancora dialoghi disponibili.
+     * Notifica l'osservatore che l'NPC sta parlando.
+     */
     @Override
     public void talk() {
         if(currentIndex < dialogues.size()){
@@ -118,22 +161,42 @@ public class DrGarfield implements NPC , Interactable {
         }
     }
 
+    /**
+     * Aggiunge un osservatore alla lista degli osservatori di DrGarfield.
+     *
+     * @param observer L'osservatore da aggiungere.
+     */
     @Override
     public void addObserver(NPCObserver observer) {
         this.observer = observer;
         System.out.println("Added observer for DrGarfield : " + observer);
     }
 
+    /**
+     * Aggiorna lo stato di DrGarfield.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     @Override
     public void update(float delta) {
         stateTime += delta;
     }
 
+    /**
+     * Imposta l'oggetto ObjectManager associato a DrGarfield.
+     *
+     * @param objectManager L'ObjectManager da associare.
+     */
     @Override
     public void addObjectManager(ObjectManager objectManager) {
         this.objectManager = objectManager;
     }
 
+    /**
+     * Notifica l'osservatore con un messaggio specificato.
+     *
+     * @param message Il messaggio da inviare agli osservatori.
+     */
     private void notifyObservers(String message) {
         observer.onNPCTalk(message);
     }

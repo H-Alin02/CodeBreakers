@@ -12,6 +12,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * La classe rappresenta un nemico di tipo MetalRobot nel gioco.
+ * Implementa l'interfaccia Enemy e gestisce il comportamento, lo stato e le animazioni del nemico.
+ * @author Alin Marian Habasescu
+ * @author Gabriele Zimmerhofer
+ */
 public class MetalRobot implements Enemy {
     private int health; // Vita del nemico
     private int damage; // Danno inflitto dal nemico
@@ -58,6 +64,11 @@ public class MetalRobot implements Enemy {
     public static final SoundPlayer deathSound = new SoundPlayer(1.3f, 5, "sound_effects/robot_death_sound.wav");
     public static final SoundPlayer damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
 
+    /**
+     * Aggiorna lo stato dei suoni.
+     *
+     * @param delta Tempo trascorso dal frame precedente.
+     */
     public static void updateSound(float delta)
     {
         punchSound.update(delta);
@@ -66,6 +77,14 @@ public class MetalRobot implements Enemy {
         deathSound.update(delta);
     }
 
+    /**
+     * Costruttore della classe MetalRobot.
+     *
+     * @param initialHealth Vita iniziale del nemico.
+     * @param damage        Danno inflitto dal nemico.
+     * @param startX        Posizione iniziale x del nemico sulla mappa.
+     * @param startY        Posizione iniziale y del nemico sulla mappa.
+     */
     public MetalRobot(int initialHealth, int damage , int startX, int startY){
         this.health = initialHealth;
         this.damage = damage;
@@ -74,6 +93,12 @@ public class MetalRobot implements Enemy {
         this.currentRobotState = new IdleState();
         this.animationManager = new MetalRobotAnimationManager();
     }
+
+    /**
+     * Aggiorna il nemico in base al tempo trascorso dal frame precedente.
+     *
+     * @param delta Tempo trascorso dal frame precedente.
+     */
     @Override
     public void update(float delta) {
         if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
@@ -104,6 +129,11 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    /**
+     * Gestisce lo stato corrente del nemico attraverso la macchina a stati creata con Pattern State
+     *
+     * @param delta Tempo trascorso dall'ultimo aggiornamento.
+     */
     public void runStateMachine(float delta){
         RobotState nextState = currentRobotState.runCurrentState(this, delta);
         if(nextState != null){
@@ -111,10 +141,20 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    /**
+     * Cambia lo stato corrente del nemico , utilizzando uno stato tra quelli creati con Pattern State
+     *
+     * @param nextState Il prossimo stato del nemico.
+     */
     private void switchToNextState( RobotState nextState){
         currentRobotState = nextState;
     }
 
+    /**
+     * Verifica se il nemico ha una linea visiva con il giocatore.
+     *
+     * @return True se c'è una linea visiva, altrimenti False.
+     */
     private boolean hasLineOfSight() {
         float playerX = player.getHitBox().x + player.getHitBox().width/2;
         float playerY = player.getHitBox().y + player.getHitBox().height/2;
@@ -155,6 +195,9 @@ public class MetalRobot implements Enemy {
         return true;
     }
 
+    /**
+     * Muove il nemico verso il giocatore.
+     */
     public void moveTowardsPlayer() {
         float playerX = player.getHitBox().x + player.getHitBox().width/2;;
         float playerY = player.getHitBox().y + player.getHitBox().height/2;
@@ -190,6 +233,9 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    /**
+     * Attacca il giocatore.
+     */
     public void attackPlayer(){
         if (!enemyAttackStates.contains(currentState, true))
             if(!hasAttacked){
@@ -216,6 +262,17 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    /**
+     * Muove il nemico in base alla direzione specificata.
+     * La direzione è indicata da un carattere che rappresenta la direzione
+     * del movimento, come specificato nel parametro 'currentDirection'.
+     * Le direzioni possibili sono: 'w' per su, 's' per giù, 'a' per sinistra,
+     * 'd' per destra, 'q' per su e sinistra, 'e' per su e destra, 'x' per giù e destra,
+     * 'z' per giù e sinistra. 'f' rappresenta uno stato di inattività (idle).
+     * Il carattere che indica la direzione viene cambiato randomicamente nella logica dello Stato Idle
+     * @param currentDirection La direzione del movimento del nemico.
+     * @see IdleState
+     */
     public void moveEnemy(char currentDirection) {
         switch (currentDirection) {
             // Move Up
@@ -329,6 +386,12 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    /**
+     * Gestisce la collisione del MetalRobot con i muri della mappa, altri nemici e il Player
+     *
+     * @param x posizione x del nemico MetalRobot
+     * @param y posizione y del nemico MetalRobot
+     */
     public boolean isCollision(float x, float y) {
         hitBox = new Rectangle(x+(8*3), y+(6*3), HitBoxWidht, HitBoxHeight);
         //check for collision with map object, other enemies or player
@@ -348,6 +411,11 @@ public class MetalRobot implements Enemy {
 
     }
 
+    /**
+     * Gestisce il danneggiamento subito dal nemico.
+     *
+     * @param damage Quantità di danni inflitti al nemico.
+     */
     @Override
     public void takeDamage(int damage) {
         if(!enemyDeadStates.contains(currentState, true)) {
@@ -375,28 +443,52 @@ public class MetalRobot implements Enemy {
         }
     }
 
+    /**
+     * Restituisce la hitBox del nemico, rappresentata come un oggetto Rectangle.
+     *
+     * @return La hitBox del nemico.
+     */
     public Rectangle getHitBox(){
         return hitBox;
     }
 
+    /**
+     * Verifica se il nemico è morto.
+     *
+     * @return True se il nemico è morto, altrimenti False.
+     */
     @Override
     public boolean isDead() {
         return currentState == MetalRobotState.DEAD1 || currentState == MetalRobotState.DEAD2;
     }
 
+    /**
+     * Restituisce il flag isChasing che verifica se il nemico insegue il Player
+     *
+     * @return True se il nemico sta inseguendo, altrimenti False.
+     */
     public boolean isChasing(){
         return isChasing;
     }
 
+    /**
+     * Verifica se l'animazione di danneggiamento del nemico è completa.
+     *
+     * @return True se l'animazione è completa, altrimenti False.
+     */
     @Override
     public boolean isDamageAnimationComplete() {
         return deadAnimationComplete;
     }
 
+    /**
+     * Restituisce il frame corrente dell'animazione del nemico.
+     *
+     * @return Il frame corrente dell'animazione.
+     */
     public TextureRegion getCurrentFrame(){
         return animationManager.getKeyFrame(currentState);
     }
-
 
     public float getEnemyX() {
         return this.enemyX;
@@ -414,14 +506,29 @@ public class MetalRobot implements Enemy {
         return enemyHeight * 3;
     }
 
+    /**
+     * Restituisce l'area di inseguimento del nemico.
+     *
+     * @return L'area di inseguimento del nemico.
+     */
     public float getChasingArea(){
         return chasingArea;
     }
 
+    /**
+     * Imposta lo stato di attacco del nemico.
+     *
+     * @param hasAttacked True se il nemico ha attaccato, altrimenti False.
+     */
     public void setHasAttacked(boolean hasAttacked) {
         this.hasAttacked = hasAttacked;
     }
 
+    /**
+     * Restituisce lo stato corrente del nemico, cioè uno degli stati creati con Pattern State.
+     *
+     * @return Lo stato corrente del nemico.
+     */
     public MetalRobotState getCurrentState() {
         return this.currentState;
     }

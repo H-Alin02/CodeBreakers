@@ -4,7 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-
+/**
+ * La classe DummyAnimationManager gestisce le animazioni per il nemico Dummy.
+ * Ogni animazione è rappresentata da un oggetto Animation<TextureRegion>.
+ * @author Alin Marian Habasescu
+ */
 public class DummyAnimationManager {
     private final Animation<TextureRegion> idleAnimation;
     //private final Animation<TextureRegion> walkAnimation;
@@ -14,6 +18,10 @@ public class DummyAnimationManager {
     private final Animation<TextureRegion> damageAnimation3;
     private float stateTime;
 
+    /**
+     * Costruttore della classe DummyAnimationManager.
+     * Inizializza le animazioni del nemico Dummy.
+     */
     public DummyAnimationManager(){
         //initialize enemy animations here
 
@@ -49,10 +57,21 @@ public class DummyAnimationManager {
 
     }
 
+    /**
+     * Aggiorna il tempo di stato per le animazioni.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(float delta){
         stateTime += delta;
     }
 
+    /**
+     * Restituisce il frame chiave dell'animazione in base allo stato del Dummy.
+     *
+     * @param state Lo stato attuale del Dummy.
+     * @return Il frame attuale dell'animazione.
+     */
     public TextureRegion getKeyFrame( DummyState state){
         // Implement logic to return the appropriate animation frame based on the enemy state
         return switch (state) {
@@ -69,6 +88,12 @@ public class DummyAnimationManager {
         return idleAnimation.getKeyFrame(0);
     }
 
+    /**
+     * Verifica se l'animazione di danneggiamento è completata per uno stato specifico del Dummy.
+     *
+     * @param dummyState Lo stato del Dummy.
+     * @return True se l'animazione di danneggiamento è completata, altrimenti False.
+     */
     public boolean isDamageAnimationFinished(DummyState dummyState){
         return switch (dummyState) {
             case IDLE -> false;
@@ -80,6 +105,10 @@ public class DummyAnimationManager {
             case DEAD -> false;
         };
     }
+
+    /**
+     * Resettare il tempo di stato per l'animazione.
+     */
     public void resetDamage(){
         this.stateTime = 0;
     }

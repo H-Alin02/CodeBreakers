@@ -6,6 +6,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * La classe Dummy rappresenta un nemico del tipo "Dummy" nel gioco.
+ * Implementa l'interfaccia Enemy e gestisce la logica del nemico.
+ * @author Alin Marian Habasescu
+ * @author Gabriele Zimmerhofer
+ */
 public class Dummy implements Enemy {
     private int health;
     private int enemyX;
@@ -27,10 +33,22 @@ public class Dummy implements Enemy {
 
 
     private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_punch.mp3");
+    /**
+     * Aggiorna il suono del danneggiamento del Dummy.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public static void updateSound(float delta){
         damageSound.update(delta);
     }
 
+    /**
+     * Costruttore della classe Dummy.
+     *
+     * @param initialHealth La salute iniziale del Dummy.
+     * @param startX        La coordinata x iniziale del Dummy.
+     * @param startY        La coordinata y iniziale del Dummy.
+     */
     public Dummy(int initialHealth , int startX, int startY){
         this.health = initialHealth;
         this.enemyX = startX;
@@ -42,6 +60,11 @@ public class Dummy implements Enemy {
         this.hitBox = new Rectangle(HitBoxX, HitBoxY, HitBoxWidht, HitBoxHeight);
     }
 
+    /**
+     * Aggiorna lo stato e le animazioni del Dummy.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     @Override
     public void update(float delta){
         animationManager.update(delta);
@@ -58,6 +81,12 @@ public class Dummy implements Enemy {
         }
     }
 
+    /**
+     * Infligge danni al Dummy.
+     *
+     * @param damage I danni inflitti al Dummy.
+     *
+     */
     @Override
     public void takeDamage(int damage) {
         health -= damage;
@@ -77,37 +106,76 @@ public class Dummy implements Enemy {
         }
     }
 
+    /**
+     * Restituisce il frame corrente dell'animazione del Dummy.
+     *
+     * @return Il frame corrente dell'animazione del Dummy.
+     */
     public TextureRegion getCurrentFrame(){
         return animationManager.getKeyFrame(currentState);
     }
 
-
+    /**
+     * Restituisce la coordinata x del Dummy.
+     *
+     * @return La coordinata x del Dummy.
+     */
     public float getEnemyX() {
         return this.enemyX;
     }
 
+    /**
+     * Restituisce la coordinata y del Dummy.
+     *
+     * @return La coordinata y del Dummy.
+     */
     public float getEnemyY() {
         return this.enemyY;
     }
 
+    /**
+     * Restituisce la larghezza del Dummy.
+     *
+     * @return La larghezza del Dummy.
+     */
     public float getEnemyWidth() {
         return enemyWidth * 3;
     }
 
+    /**
+     * Restituisce l'altezza del Dummy.
+     *
+     * @return L'altezza del Dummy.
+     */
     public float getEnemyHeight() {
         return enemyHeight * 3;
     }
 
+    /**
+     * Restituisce la hitbox del Dummy.
+     *
+     * @return La hitbox del Dummy.
+     */
     @Override
     public Rectangle getHitBox() {
         return hitBox;
     }
 
+    /**
+     * Verifica se il Dummy è morto.
+     *
+     * @return True se il Dummy è morto, altrimenti False.
+     */
     @Override
     public boolean isDead() {
-        return currentState == DummyState.DEAD ;
+        return currentState == DummyState.DEAD;
     }
 
+    /**
+     * Verifica se l'animazione di danneggiamento del Dummy è completa.
+     *
+     * @return True se l'animazione di danneggiamento è completa, altrimenti False.
+     */
     @Override
     public boolean isDamageAnimationComplete() {
         return damageAnimationComplete;

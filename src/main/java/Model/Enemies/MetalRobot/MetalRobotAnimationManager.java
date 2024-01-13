@@ -5,6 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * La classe {@code MetalRobotAnimationManager} gestisce le animazioni del nemico di tipo MetalRobot.
+ * Contiene diverse animazioni per gli stati come l'immobilità, il movimento, il colpo ricevuto,
+ * l'attacco e la morte del nemico.
+ * @author Alin Marian Habasescu
+ */
 public class MetalRobotAnimationManager {
     private final Animation<TextureRegion> idleAnimation1;
     private final Animation<TextureRegion> idleAnimation2;
@@ -18,6 +24,9 @@ public class MetalRobotAnimationManager {
     private final Animation<TextureRegion> attackAnimation2;
     private float stateTime;
 
+    /**
+     * Costruisce un nuovo oggetto {@code MetalRobotAnimationManager} inizializzando tutte le animazioni.
+     */
     public MetalRobotAnimationManager(){
         //initialize enemy animations here
         stateTime = 0;
@@ -94,10 +103,21 @@ public class MetalRobotAnimationManager {
         attackAnimation2 = new Animation<>(0.07f, attackFrames2, Animation.PlayMode.NORMAL);
     }
 
+    /**
+     * Aggiorna il tempo di stato per tutte le animazioni.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(float delta){
         stateTime += delta;
     }
 
+    /**
+     * Restituisce il frame chiave corrispondente allo stato specificato del nemico.
+     *
+     * @param state Lo stato corrente del nemico.
+     * @return Il frame chiave dell'animazione corrispondente allo stato specificato.
+     */
     public TextureRegion getKeyFrame( MetalRobotState state){
         // Implement logic to return the appropriate animation frame based on the enemy state
         return switch (state) {
@@ -114,6 +134,13 @@ public class MetalRobotAnimationManager {
         };
     }
 
+    /**
+     * Verifica se l'animazione per lo stato specificato è terminata.
+     *
+     * @param state Lo stato corrente del nemico.
+     * @return {@code true} se l'animazione è terminata, altrimenti {@code false}.
+     */
+
     public boolean isAnimationFinished(MetalRobotState state){
         return switch (state) {
             case IDLE1, IDLE2, WALK1, WALK2 -> false;
@@ -126,7 +153,9 @@ public class MetalRobotAnimationManager {
         };
     }
 
-
+    /**
+     * Reimposta il tempo di stato dell'animazione per tutti gli stati di colpo.
+     */
     public void resetDamage(){
         this.stateTime = 0;
     }
