@@ -69,16 +69,13 @@ public class MusicPlayer {
     public static MusicPlayer currentMusic = mainMenuMusic;
 
     /**
-     * Imposta la musica attuale in base al nome dato.
+     * Prende la musica con il nome dato
      *
      * @param musicName Il nome della traccia musicale da riprodurre.
      */
-    public static void play(String musicName)
+    public static MusicPlayer getMusic(String musicName)
     {
-        currentMusic.music.dispose();
-
-        currentMusic = switch(musicName)
-        {
+        return switch (musicName) {
             case "main menu" -> mainMenuMusic;
             case "tutorial" -> tutorialMusic;
             case "level" -> levelMusic;
@@ -86,8 +83,27 @@ public class MusicPlayer {
 
             default -> throw new IllegalStateException("This music does not exist: " + musicName);
         };
+    }
 
-        currentMusic.music.play();
+    /**
+     * Imposta la musica attuale in base al nome dato.
+     *
+     * @param musicName Il nome della traccia musicale da riprodurre.
+     */
+    public static void play(String musicName)
+    {
+        MusicPlayer newMusic = getMusic(musicName);
+
+        boolean isCurrent = (newMusic == currentMusic);
+        boolean play = isCurrent ? !isPlaying() : !isMute;
+
+        if(!isCurrent) {
+            currentMusic.music.pause();
+            currentMusic = newMusic;
+        }
+
+        if(play)
+            currentMusic.music.play();
     }
 
     /**
@@ -148,8 +164,10 @@ public class MusicPlayer {
 
         if(value)
             currentMusic.multiplyVolume(0);
-        else
+        else {
             currentMusic.resetVolumeFactor(volumeFactor);
+            play("current");
+        }
     }
 
     /**
