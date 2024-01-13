@@ -3,16 +3,22 @@ package Model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * Questa classe gestisce la riproduzione di suoni in un gioco.
+ */
 public class SoundPlayer {
-    private SoundEffect[] sounds;
+    private final SoundEffect[] sounds;
     private int count = 0;
     private int maxCount;
-    private boolean parallel = true;
     private FileHandle soundFile;
     private static float volumeFactor = 0.5f;
     private static boolean isMute = false;
 
-    // Imposta il fattore tra 0 e 1 per cui vengono moltiplicati i volumi di tutti i suoni
+    /**
+     * Imposta il fattore tra 0 e 1 per cui vengono moltiplicati i volumi di tutti i suoni.
+     *
+     * @param volumeFactor Il fattore di volume generale.
+     */
     public static void setGeneralVolume(float volumeFactor)
     {
         if(volumeFactor < 0) volumeFactor = 0;
@@ -20,15 +26,31 @@ public class SoundPlayer {
 
         SoundPlayer.volumeFactor = volumeFactor;
     }
+
+    /**
+     * Aggiunge un valore al fattore di volume generale.
+     *
+     * @param difference La quantità da aggiungere al fattore di volume.
+     */
     public static void sumGeneralVolume(float difference) {
         setGeneralVolume(volumeFactor + difference);
     }
 
-    // La durata dei suoni è di un secondo se non specificata
+    /**
+     * Crea un oggetto SoundPlayer con durata predefinita di 1 secondo e numero massimo di ripetizioni di 5.
+     *
+     * @param path Il percorso del file sonoro.
+     */
     public SoundPlayer(String path)
         {this(1, 5, path);}
 
-    // Costruttore che imposta la durata di un suono e il path del file sonoro
+    /**
+     * Crea un oggetto SoundPlayer con la durata specificata, il numero massimo di ripetizioni e il percorso del file sonoro.
+     *
+     * @param duration  La durata di un suono.
+     * @param maxCount  Il numero massimo di ripetizioni.
+     * @param path      Il percorso del file sonoro.
+     */
     public SoundPlayer(float duration, int maxCount, String path)
     {
         this.maxCount = maxCount;
@@ -39,11 +61,20 @@ public class SoundPlayer {
             sounds[i] = new SoundEffect(duration);
     }
 
+    /**
+     * Ottieni il fattore di volume generale.
+     *
+     * @return Il fattore di volume generale.
+     */
     public static float getVolumeFactor() {
         return volumeFactor;
     }
 
-    // riproduci il suono con il volume dato
+    /**
+     * Riproduci il suono con il volume specificato.
+     *
+     * @param volume Il volume del suono.
+     */
     public void play(float volume)
     {
         if(isMute) return;
@@ -61,7 +92,11 @@ public class SoundPlayer {
         System.out.println("current sound index:  " + count);
     }
 
-    // fai l'update di ogni singolo suono contenuto
+    /**
+     * Aggiorna ogni singolo suono contenuto.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(float delta)
     {
         if(isMute) return;
@@ -70,7 +105,9 @@ public class SoundPlayer {
             sound.update(delta);
     }
 
-    // fai il dispose di ogni singolo suono contenuto
+    /**
+     * Effettua il dispose di ogni singolo suono contenuto.
+     */
     public void dispose()
     {
         System.out.println("DISPOSING SOUND");
@@ -79,7 +116,22 @@ public class SoundPlayer {
             sound.dispose();
     }
 
+    /**
+     * Verifica se l'audio è disattivato.
+     *
+     * @return True se l'audio è disattivato, altrimenti False.
+     */
     public static boolean isMute() {return isMute;}
+
+    /**
+     * Cambia lo stato di mute dell'audio.
+     */
     public static void switchMute() {isMute = ! isMute;}
+
+    /**
+     * Imposta lo stato di mute dell'audio.
+     *
+     * @param value True per disattivare l'audio, False per attivarlo.
+     */
     public static void setMute(boolean value) {isMute = value;}
 }

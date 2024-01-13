@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * La classe SoundEffect gestisce la riproduzione di effetti sonori in un'applicazione LibGDX.
+ */
 public class SoundEffect {
 
     private Sound sound;
@@ -11,16 +14,30 @@ public class SoundEffect {
     private float passedTime = 0;
     private float duration;
 
-    // costruttore che prende il path del file audio e la sua durata
+    /**
+     * Costruttore della classe SoundEffect.
+     *
+     * @param duration La durata del suono in secondi.
+     */
     public SoundEffect(float duration)
     {
         this.duration = duration;
     }
 
+    /**
+     * Verifica se il suono è attualmente in riproduzione.
+     *
+     * @return true se il suono è in riproduzione, false altrimenti.
+     */
     public boolean isPlaying()
         {return  isPlaying;}
 
-    // viene dato il volume e il file sonoro per poi essere riprodotto
+    /**
+     * Riproduce il suono con il volume specificato.
+     *
+     * @param volume     Il volume del suono (compreso tra 0 e 1).
+     * @param soundFile  Il gestore del file sonoro da riprodurre.
+     */
     public void play(float volume, FileHandle soundFile)
     {
         System.out.println("PLAYING SOUND");
@@ -35,8 +52,11 @@ public class SoundEffect {
         isPlaying = true;
     }
 
-    //si deve sempre un update per ogni frame per ciascun suono,
-    // altrimenti vengono sprecate risorse senza motivo
+    /**
+     * Aggiorna lo stato del suono in base al tempo trascorso.
+     *
+     * @param delta Il tempo trascorso dall'ultimo frame.
+     */
     public void update(float delta)
     {
         if(passedTime > duration)
@@ -46,7 +66,9 @@ public class SoundEffect {
             passedTime += delta;
     }
 
-    //funzione per annullare manualmente la riproduzione del suono
+    /**
+     * Annulla manualmente la riproduzione del suono, liberando le risorse associate.
+     */
     public void dispose()
     {
         System.out.println("DISPOSING SOUND");

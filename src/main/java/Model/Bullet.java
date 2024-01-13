@@ -1,26 +1,87 @@
 package Model;
 
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * La classe `Bullet` rappresenta un proiettile sparato dal giocatore nel gioco.
+ */
 public class Bullet {
-    private float x,y; //Posizione del Proiettile
-    private float speed; //velocità del proiettile
-    private char direction; // Direzione del proiettile
-    private boolean active; //Flag per indicare se il proiettile è attivo
+
+    /**
+     * Posizione del proiettile lungo l'asse x.
+     */
+    private float x;
+
+    /**
+     * Posizione del proiettile lungo l'asse y.
+     */
+    private float y;
+
+    /**
+     * Velocità del proiettile.
+     */
+    private float speed;
+
+    /**
+     * Direzione del proiettile ('w', 's', 'a', 'd' per su, giù, sinistra, destra).
+     */
+    private char direction;
+
+    /**
+     * Flag che indica se il proiettile è attivo.
+     */
+    private boolean active;
+
+    /**
+     * Animazione del proiettile quando si spara in basso.
+     */
     private final Animation<TextureRegion> shootDownAnimation;
+
+    /**
+     * Animazione del proiettile quando si spara in alto.
+     */
     private final Animation<TextureRegion> shootUpAnimation;
+
+    /**
+     * Animazione del proiettile quando si spara a destra.
+     */
     private final Animation<TextureRegion> shootRightAnimation;
+
+    /**
+     * Animazione del proiettile quando si spara a sinistra.
+     */
     private final Animation<TextureRegion> shootLeftAnimation;
+
+    /**
+     * Animazione del proiettile quando colpisce un bersaglio.
+     */
     private final Animation<TextureRegion> hitAnimation;
+    /**
+     * Stato corrente del proiettile.
+     */
     private BulletState bulletState;
+
+    /**
+     * Tempo trascorso dall'attivazione del proiettile.
+     */
     private float stateTime;
+
+    /**
+     * Oggetto del giocatore che ha sparato il proiettile.
+     */
     Player player = Player.getInstance();
 
-
+    /**
+     * Costruttore della classe `Bullet`.
+     *
+     * @param startX    Posizione iniziale lungo l'asse x.
+     * @param startY    Posizione iniziale lungo l'asse y.
+     * @param speed     Velocità del proiettile.
+     * @param direction Direzione del proiettile ('w', 's', 'a', 'd' per su, giù, sinistra, destra).
+     */
     public Bullet(float startX, float startY, float speed, char direction){
         this.x = startX;
         this.y = startY;
@@ -66,6 +127,11 @@ public class Bullet {
         hitAnimation = new Animation<>(0.07f, hitFrames, Animation.PlayMode.NORMAL);
     }
 
+    /**
+     * Aggiorna la posizione del proiettile in base alla direzione e alla velocità.
+     *
+     * @param delta Tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(float delta) {
         stateTime += delta;
         // Aggiorna la posizione del proiettile in base alla direzione e alla velocità
@@ -90,6 +156,12 @@ public class Bullet {
         }
     }
 
+    /**
+     * Restituisce il frame chiave dell'animazione corrispondente allo stato del proiettile.
+     *
+     * @param state Stato del proiettile.
+     * @return Frame chiave dell'animazione.
+     */
     public TextureRegion getKeyFrame(BulletState state) {
         return switch (state) {
             case SHOOT_DOWN -> shootDownAnimation.getKeyFrame(stateTime, true);
@@ -107,30 +179,63 @@ public class Bullet {
         return shootDownAnimation.getKeyFrame(0);
     }
 
+    /**
+     * Restituisce il frame corrente del proiettile.
+     *
+     * @return Frame corrente del proiettile.
+     */
     public TextureRegion getCurrentFrame() {
         return this.getKeyFrame(bulletState);
     }
 
+    /**
+     * Verifica se il proiettile è attivo.
+     *
+     * @return True se il proiettile è attivo, altrimenti false.
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Disattiva il proiettile.
+     */
     public void deactivate() {
         active = false;
     }
 
+    /**
+     * Restituisce la posizione lungo l'asse y del proiettile.
+     *
+     * @return Posizione lungo l'asse y.
+     */
     public float getY() {
         return y;
     }
 
+    /**
+     * Restituisce la posizione lungo l'asse x del proiettile.
+     *
+     * @return Posizione lungo l'asse x.
+     */
     public float getX() {
         return x;
     }
 
+    /**
+     * Restituisce lo stato corrente del proiettile.
+     *
+     * @return Stato corrente del proiettile.
+     */
     public BulletState getBulletState() {
         return bulletState;
     }
 
+    /**
+     * Imposta lo stato del proiettile.
+     *
+     * @param bulletState Nuovo stato del proiettile.
+     */
     public void setBulletState(BulletState bulletState) {
         this.bulletState = bulletState;
     }

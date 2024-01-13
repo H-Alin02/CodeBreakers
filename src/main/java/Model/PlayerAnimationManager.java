@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * The PlayerAnimationManager class handles animations for the player character.
+ * It includes animations for idle, walking, melee attacks, and shooting in various directions.
+ */
 public class PlayerAnimationManager {
     // Idle Animation
     private final Animation<TextureRegion> idleAnimation;
@@ -31,6 +35,9 @@ public class PlayerAnimationManager {
     private float animSpeed = 0.1f;
     private float stateTime;
 
+    /**
+     * Constructs a new PlayerAnimationManager and initializes animations.
+     */
     public PlayerAnimationManager() {
         // Initialize your animations here
         stateTime = 0;
@@ -127,6 +134,12 @@ public class PlayerAnimationManager {
         shootLeftAnimation = new Animation<>(0.07f, shootLeftFrames, Animation.PlayMode.NORMAL);
     }
 
+    /**
+     * Gets the key frame for the given player state.
+     *
+     * @param state The player state.
+     * @return The key frame for the specified state.
+     */
     public TextureRegion getKeyFrame(PlayerState state) {
         return switch (state) {
             case STANDING -> idleAnimation.getKeyFrame(stateTime, true);
@@ -152,10 +165,20 @@ public class PlayerAnimationManager {
         return idleAnimation.getKeyFrame(0);
     }
 
+    /**
+     * Updates the animation state based on the elapsed time.
+     *
+     * @param delta The time elapsed since the last update.
+     */
     public void update(float delta) {
         stateTime += delta;
     }
 
+    /**
+     * Updates the animation speed for all animations.
+     *
+     * @param newSpeed The new animation speed.
+     */
     public void updateAnimSpeed(float newSpeed) {
         // Update the animation speed for all animations
         walkUpAnimation.setFrameDuration(newSpeed);
@@ -166,6 +189,12 @@ public class PlayerAnimationManager {
         // Update the stored animSpeed value
         animSpeed = newSpeed;
     }
+
+    /**
+     * Gets the current animation speed.
+     *
+     * @return The current animation speed.
+     */
     public float getAnimSpeed() {
         return animSpeed;
     }
@@ -173,15 +202,25 @@ public class PlayerAnimationManager {
         this.animSpeed = animSpeed;
     }
 
+    /**
+     * Gets the current animation time.
+     *
+     * @return The current animation time.
+     */
     public float getAnimTime() {
         return stateTime;
     }
 
-
+    /**
+     * Resets the state time for attack animations.
+     */
     public void resetAttack(){
         this.stateTime = 0;
     }
 
+    /**
+     * Resets the state time for shoot animations.
+     */
     public void resetShoot(){ this.stateTime = 0;}
 }
 
