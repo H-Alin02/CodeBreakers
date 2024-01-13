@@ -14,6 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * La classe `Hud` rappresenta l'interfaccia utente (HUD) del gioco, contenente informazioni
+ * sul giocatore, l'inventario, la casella di dialogo e il menu.
+ * @author Francesco Gambone
+ * @author Alin Marian Habasescu
+ */
 public class Hud extends WidgetGroup implements NPCObserver {
 
     private Stage stage;
@@ -25,17 +31,22 @@ public class Hud extends WidgetGroup implements NPCObserver {
 
     private boolean npcReadyToTalk = false;
 
-
-
+    /**
+     * Costruisce un nuovo oggetto `Hud` con i componenti necessari per visualizzare
+     * informazioni sul giocatore, l'inventario, la casella di dialogo e il menu.
+     *
+     * @param spriteBatch      Il batch per il disegno degli elementi di scena.
+     * @param objectManager    Il gestore degli oggetti del gioco.
+     * @param menuMediator     Il mediatore per la gestione del menu.
+     */
     public Hud(SpriteBatch spriteBatch, ObjectManager objectManager, MenuMediator menuMediator) {
         stageViewport = new ScreenViewport();
         stageViewport.setUnitsPerPixel(0.6f);
 
+        stage = new Stage(stageViewport, spriteBatch);
 
-        stage = new Stage(stageViewport, spriteBatch); //create stage with the stageViewport and the SpriteBatch given in Constructor
-
-        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(0,0,0,0.5f);
+        Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0, 0, 0, 0.5f);
         bgPixmap.fill();
         TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
 
@@ -53,49 +64,54 @@ public class Hud extends WidgetGroup implements NPCObserver {
         Table rootTable = new Table();
         rootTable.setFillParent(true);
 
-
-        //rootTable.setDebug(true);
-
         stage.addActor(rootTable);
-        //popolazione stage e posizionamento degli elementi
 
-        //prima riga
+        // Popolazione dello stage e posizionamento degli elementi
+
+        // Prima riga
         rootTable.add(playerStats.getTableStats()).left().uniform().padLeft(10).fill().padTop(15);
         rootTable.add(filler).fill().uniform().padTop(15);
         rootTable.add(inventory.getTable()).center().uniform().padRight(10).fill().padTop(15);
 
         rootTable.row();
-        //seconda riga
+        // Seconda riga
         rootTable.add(filler).fill();
         rootTable.add(menu.getTable()).fill().expand().center().padLeft(30).padRight(30).padTop(50).padBottom(50);
         rootTable.add(filler).fill();
 
         rootTable.row();
-        //terza riga
+        // Terza riga
         rootTable.add(dialogueBox.getTable()).colspan(3).height(100).padBottom(25);
 
         Gdx.input.setInputProcessor(stage);
-
-
-
     }
 
+    /**
+     * Restituisce lo stage associato all'HUD.
+     *
+     * @return Lo stage dell'HUD.
+     */
     public Stage getStage() {
         return stage;
     }
 
+    /**
+     * Aggiorna l'HUD con le informazioni più recenti del giocatore.
+     *
+     * @param player Il giocatore.
+     * @param delta  L'intervallo di tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(Player player, float delta) {
-
         this.playerStats.update(player);
         this.inventory.update(player);
         this.menu.update(player);
 
-        //System.out.println(npcReadyToTalk);
-        if(npcReadyToTalk){
+        if (npcReadyToTalk) {
             dialogueBox.show(dialogueBox.getText());
-        }else dialogueBox.hide();
+        } else {
+            dialogueBox.hide();
+        }
     }
-
 
     @Override
     public void onNPCTalk(String message) {
@@ -108,18 +124,24 @@ public class Hud extends WidgetGroup implements NPCObserver {
         this.npcReadyToTalk = false;
     }
 
-    public void dispose(){
+    /**
+     * Rilascia le risorse associate all'HUD.
+     */
+    public void dispose() {
         stage.dispose();
     }
 
+    /**
+     * Imposta la visibilità del menu.
+     */
     public void setMenuVisibility() {
-
         menu.visibilitySwitch();
-
-
     }
 
-    public void setInputProcessorOn(){
+    /**
+     * Abilita l'input processor per lo stage.
+     */
+    public void setInputProcessorOn() {
         Gdx.input.setInputProcessor(stage);
     }
 }

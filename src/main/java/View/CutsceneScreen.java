@@ -17,6 +17,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * La classe `CutsceneScreen` rappresenta una schermata di cutscene all'interno del gioco.
+ * Mostra immagini e testo in sequenza per narrare la storia prima dell'inizio del gioco.
+ * @author Alin Marian Habasescu
+ * @author Francesco Gambone
+ */
 public class CutsceneScreen extends ScreenAdapter {
     private Stage stage;
     private OrthographicCamera camera;
@@ -30,7 +36,11 @@ public class CutsceneScreen extends ScreenAdapter {
     private int currentIndex;
     private static final SoundPlayer buttonClickSound = new SoundPlayer("sound_effects/abs-confirm-1.mp3");
 
-
+    /**
+     * Costruisce una nuova istanza di `CutsceneScreen`.
+     *
+     * @param camera La telecamera ortografica utilizzata nella schermata.
+     */
     public CutsceneScreen(OrthographicCamera camera) {
         this.camera = camera;
         stage = new Stage(new FitViewport(Boot.INSTANCE.getScreenWidth(), Boot.INSTANCE.getScreenHeight(), camera));
@@ -112,6 +122,11 @@ public class CutsceneScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Renderizza la schermata della cutscene.
+     *
+     * @param delta Il tempo trascorso tra i frame.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -129,6 +144,9 @@ public class CutsceneScreen extends ScreenAdapter {
         }
     }
 
+    /**
+     * Rilascia le risorse utilizzate dalla schermata di cutscene.
+     */
     @Override
     public void dispose() {
         buttonClickSound.dispose();

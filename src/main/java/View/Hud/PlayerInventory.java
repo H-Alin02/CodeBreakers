@@ -13,9 +13,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class PlayerInventory implements HudComponent{
+/**
+ * La classe `PlayerInventory` rappresenta un componente dell'HUD che mostra
+ * l'inventario del giocatore, inclusi i conteggi di monete, chiavi, munizioni e USB.
+ * @author Manda Hery Ny Aina
+ * @author Francesco Gambone
+ */
+public class PlayerInventory implements HudComponent {
 
-    private ObjectManager objectManager ;
+    private ObjectManager objectManager;
     private final float SCALE = 0.2f;
 
     private Table table;
@@ -24,57 +30,58 @@ public class PlayerInventory implements HudComponent{
     private Label labelAmmunition;
     private Label labelUSB;
 
-    //objects counters
+    // Contatori degli oggetti
     private int coinValue;
     private int keyValue;
     private int ammunitionValue;
     private int USB;
-    public PlayerInventory(ObjectManager objectManager){
-        //item = new Item();
-        //stageViewport = new FitViewport(Boot.INSTANCE.getScreenWidth()/2,Boot.INSTANCE.getScreenHeight()/2);
-        //stage = new Stage(stageViewport,batch);
 
+    /**
+     * Costruisce un nuovo oggetto `PlayerInventory` con i conteggi iniziali degli oggetti.
+     *
+     * @param objectManager Il gestore degli oggetti del gioco.
+     */
+    public PlayerInventory(ObjectManager objectManager) {
         this.objectManager = objectManager;
         table = new Table();
-
-        //table.setDebug(true);
 
         coinValue = objectManager.getItem().getCoin();
         keyValue = objectManager.getItem().getKey();
         ammunitionValue = objectManager.getItem().getAmmunition();
         USB = objectManager.getItem().getUSB();
 
+        // Creazione delle immagini degli oggetti
         Texture image1 = new Texture(Gdx.files.internal("inventory/key/key_A_gold.png"));
         Image icon1 = new Image(image1);
-        icon1.setSize(image1.getWidth()*SCALE, image1.getHeight()*SCALE);
+        icon1.setSize(image1.getWidth() * SCALE, image1.getHeight() * SCALE);
 
         Texture image2 = new Texture(Gdx.files.internal("inventory/coin/coin.png"));
         Image icon2 = new Image(image2);
-        icon2.setSize(image2.getWidth()*SCALE, image2.getHeight()*SCALE);
+        icon2.setSize(image2.getWidth() * SCALE, image2.getHeight() * SCALE);
 
         Texture image6 = new Texture(Gdx.files.internal("inventory/ammunition/ammunition.png"));
         Image icon6 = new Image(image6);
-        icon6.setSize(image6.getWidth()*SCALE, image6.getHeight()*SCALE);
+        icon6.setSize(image6.getWidth() * SCALE, image6.getHeight() * SCALE);
 
         Texture image5 = new Texture(Gdx.files.internal("inventory/USB/usb.png"));
         Image icon5 = new Image(image5);
-        icon5.setSize(image1.getWidth()*SCALE, image5.getHeight()*SCALE);
+        icon5.setSize(image1.getWidth() * SCALE, image5.getHeight() * SCALE);
 
-        labelCoin = new Label(String.format("%01d",coinValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        labelKey = new Label(String.format("%01d",keyValue),new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        labelAmmunition = new Label(String.format("%03d",ammunitionValue), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-        labelUSB = new Label(String.format("%01d",USB), new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+        // Creazione delle etichette per i conteggi
+        labelCoin = new Label(String.format("%01d", coinValue), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelKey = new Label(String.format("%01d", keyValue), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelAmmunition = new Label(String.format("%03d", ammunitionValue), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        labelUSB = new Label(String.format("%01d", USB), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(0,0,0,0.5f);
+        // Impostazione dello sfondo della tabella
+        Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0, 0, 0, 0.5f);
         bgPixmap.fill();
         TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
-
         table.setBackground(textureBackground);
-
         bgPixmap.dispose();
 
-
+        // Aggiunta di oggetti e conteggi alla tabella
         table.add(icon1).padRight(5);
         table.add(labelKey).padRight(5);
         table.add(icon2).padRight(5);
@@ -85,25 +92,32 @@ public class PlayerInventory implements HudComponent{
         table.add(labelUSB);
 
         table.setVisible(true);
-
     }
 
+    /**
+     * Restituisce la tabella contenente l'inventario del giocatore.
+     *
+     * @return La tabella dell'inventario del giocatore.
+     */
     public Table getTable() {
         return table;
     }
 
-    public void visibilitySwitch(){
+    /**
+     * Alterna la visibilità della tabella dell'inventario.
+     */
+    public void visibilitySwitch() {
         boolean visible = this.table.isVisible();
         if (visible) {
             this.table.setVisible(false);
-        } else if (!(visible)) {
+        } else if (!visible) {
             this.table.setVisible(true);
         }
     }
 
     @Override
     public void update(Player player) {
-
+        // Aggiorna i conteggi degli oggetti in base allo stato attuale nel gioco
         coinValue = objectManager.getItem().getCoin();
         labelCoin.setText(String.format("%4d", coinValue));
 
@@ -114,6 +128,6 @@ public class PlayerInventory implements HudComponent{
         labelAmmunition.setText(String.format("%3d", ammunitionValue));
 
         USB = objectManager.getItem().getUSB();
-        labelUSB.setText(String.format("%01d",USB));
+        labelUSB.setText(String.format("%01d", USB));
     }
 }

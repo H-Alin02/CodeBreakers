@@ -1,10 +1,11 @@
+package Controller;
 /**
  * L'interfaccia Mediator definisce metodi per gestire la comunicazione
  * e la coordinazione tra componenti del sistema.
  * Questa interfaccia fornisce metodi per cambiare lo stato del gioco
  * e navigare tra diverse schermate.
+ * @author Francesco Gambone
  */
-package Controller;
 
 public interface Mediator {
 

@@ -15,36 +15,42 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class Menu implements HudComponent{
+/**
+ * La classe `Menu` rappresenta un componente dell'HUD che gestisce i pulsanti
+ * del menu di gioco, come Continua, Opzioni e Torna al menù.
+ * @author Francesco Gambone
+ */
+public class Menu implements HudComponent {
     private Table menuTable;
     private MenuMediator menuMediator;
-    public Menu(MenuMediator menuMediator){
+
+    /**
+     * Costruisce un nuovo oggetto `Menu` con i pulsanti necessari e collegati al mediatore del menu.
+     *
+     * @param menuMediator Il mediatore per la gestione del menu.
+     */
+    public Menu(MenuMediator menuMediator) {
         this.menuMediator = menuMediator;
 
-        //creazione pulsanti
+        // Creazione dei pulsanti
         TextButton continueButton = createTextButton("Continua");
         TextButton optionsButton = createTextButton("Opzioni");
         TextButton mainMenuButton = createTextButton("Torna al menù");
 
         menuTable = new Table();
-        //menuTable.setDebug(true);
 
-        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(0,0,0,0.5f);
+        Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(0, 0, 0, 0.5f);
         bgPixmap.fill();
         TextureRegionDrawable textureBackground = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
 
         menuTable.setBackground(textureBackground);
 
-
-
-        //aggiunta listener ai pulsanti
+        // Aggiunta di listener ai pulsanti
         continueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 menuMediator.changeGameStatus();
-
-
             }
         });
 
@@ -52,8 +58,6 @@ public class Menu implements HudComponent{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 menuMediator.changeToOptionsScreen();
-
-
             }
         });
 
@@ -61,14 +65,10 @@ public class Menu implements HudComponent{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 menuMediator.changeToMenuScreen();
-
-
             }
         });
 
-
-
-        //aggiunta pulsanti a table
+        // Aggiunta dei pulsanti alla tabella
         menuTable.add(continueButton).center();
         menuTable.row();
         menuTable.add(optionsButton).center().padTop(20f);
@@ -78,37 +78,42 @@ public class Menu implements HudComponent{
         menuTable.setVisible(false);
 
         bgPixmap.dispose();
-
-
-
     }
-    public void visibilitySwitch(){
-        boolean visible = this.menuTable.isVisible();
 
+    /**
+     * Alterna la visibilità del menu di gioco.
+     */
+    public void visibilitySwitch() {
+        boolean visible = this.menuTable.isVisible();
         this.menuTable.setVisible(!visible);
     }
 
+    /**
+     * Restituisce la Table contenente i pulsanti del menu.
+     *
+     * @return La Table dei pulsanti del menu.
+     */
     public Table getTable() {
         return menuTable;
     }
 
+    // Metodo privato per la creazione di un pulsante di testo
     private TextButton createTextButton(String text) {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
 
         // Stile del testo normale
         buttonStyle.font = new BitmapFont();
         buttonStyle.font.getData().setScale(1.5f);
-        // Migliora la risoluzione della scritta dopo lo Scale
         buttonStyle.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         // Colore del testo normale
         buttonStyle.fontColor = Color.WHITE;
 
         // Colore del testo quando il pulsante è focused
-        buttonStyle.overFontColor = Color.YELLOW; // Puoi cambiare il colore del testo focused secondo le tue preferenze
+        buttonStyle.overFontColor = Color.YELLOW;
 
         // Colore del testo quando il pulsante è attivo (premuto)
-        buttonStyle.downFontColor = Color.RED; // Puoi cambiare il colore del testo quando il pulsante è attivo secondo le tue preferenze
+        buttonStyle.downFontColor = Color.RED;
 
         // Crea un TextButton direttamente impostando il colore del testo
         TextButton button = new TextButton(text, buttonStyle);
@@ -133,7 +138,6 @@ public class Menu implements HudComponent{
 
     @Override
     public void update(Player player) {
-
-
+        // Metodo di update vuoto, poiché la classe gestisce solo l'aspetto grafico
     }
 }
