@@ -21,7 +21,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
+/**
+ * La classe `OptionScreen` rappresenta la schermata delle opzioni del gioco.
+ * Questa schermata consente all'utente di regolare il volume della musica e degli effetti sonori,
+ * nonché di attivare/disattivare completamente l'audio. L'utente può anche tornare al menu principale o
+ * al gioco, a seconda del contesto.
+ * @author Manda Hery Ny Aina
+ * @author Gabriele Zimmerhofer
+ * @author Francesco Gambone
+ */
 public class OptionScreen extends ScreenAdapter {
     private SpriteBatch batch = new SpriteBatch();
     private Viewport viewport;
@@ -36,11 +44,15 @@ public class OptionScreen extends ScreenAdapter {
 
     Label musicPercent = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
     Label soundPercent = new Label("", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-
+    /**
+     * Aggiorna il label del volume della musica.
+     */
     public void resetMusicLabel() {
         musicPercent.setText((int)(100 * MusicPlayer.getVolumeFactor()) + " %");
     }
-
+    /**
+     * Aggiorna il label del volume degli effetti sonori.
+     */
     public void resetSoundLabel() {
         soundPercent.setText((int)(100 * SoundPlayer.getVolumeFactor()) + " %");
     }
@@ -53,6 +65,12 @@ public class OptionScreen extends ScreenAdapter {
     TextButton effectN = createTextButton("[-]");
     TextButton ritorno;
 
+    /**
+     * Costruttore della classe.
+     *
+     * @param camera       La camera utilizzata per la visualizzazione.
+     * @param returnToGame Indica se è necessario tornare al gioco dopo la schermata delle opzioni.
+     */
     public OptionScreen(OrthographicCamera camera, boolean returnToGame){
         this.camera = camera;
         this.returnToGame = returnToGame;
@@ -62,6 +80,9 @@ public class OptionScreen extends ScreenAdapter {
         create();
 
     }
+    /**
+     * Inizializza gli elementi della schermata delle opzioni.
+     */
     private void create(){
 
         resetMusicLabel();
@@ -176,6 +197,13 @@ public class OptionScreen extends ScreenAdapter {
         //table.setDebug(true);
 
     }
+
+    /**
+     * Metodo per la creazione di un pulsante contenente il testo immesso con uno stile personalizzato.
+     *
+     * @param text Testo del pulsante.
+     * @return TextButton creato.
+     */
     private TextButton createTextButton(String text) {
         TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
 
@@ -218,7 +246,11 @@ public class OptionScreen extends ScreenAdapter {
     @Override
     public void show() {
     }
-
+    /**
+     * Renderizza la schermata delle opzioni.
+     *
+     * @param delta Il tempo trascorso tra i frame.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -244,7 +276,9 @@ public class OptionScreen extends ScreenAdapter {
     @Override
     public void hide() {
     }
-
+    /**
+     * Rilascia le risorse utilizzate dalla schermata delle opzioni.
+     */
     @Override
     public void dispose() {
         // Libera le risorse quando la schermata viene chiusa
