@@ -8,13 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Ammunition implements GameObject {
-    private int ammunitionX, ammunitionY;
-    private TextureRegion texture;
+    private final int ammunitionX, ammunitionY;
+    private final TextureRegion texture;
     private final int OBJECT_HEIGHT = 32;
     private final int OBJECT_WIDTH = 32;
     private boolean remove;
-    private final float SCALE = 1.2f;
-    private String name ;
+    private final String name;
     private int ammunitionValue;
     private static final SoundPlayer pickSound = new SoundPlayer("sound_effects/Item/pick_ammo.mp3");
     public static void updateSound(float delta) {pickSound.update(delta);}
@@ -36,6 +35,7 @@ public class Ammunition implements GameObject {
 
     @Override
     public void draw(SpriteBatch batch) {
+        float SCALE = 1.2f;
         batch.draw(texture,ammunitionX,ammunitionY,OBJECT_HEIGHT * SCALE,OBJECT_WIDTH * SCALE);
     }
 

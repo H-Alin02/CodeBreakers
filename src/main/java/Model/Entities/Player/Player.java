@@ -18,7 +18,9 @@ import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * La classe rappresenta l'entità del giocatore nel gioco.
+ */
 public class Player {
     private static Player INSTANCE;
     private final int PLAYER_WIDTH = 32;
@@ -65,6 +67,9 @@ public class Player {
     private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/Object/bullet_hit.mp3");
     private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player/player_death.wav");
 
+    /**
+     * Costruttore privato per implementare il pattern Singleton.
+     */
     private Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
@@ -75,6 +80,11 @@ public class Player {
         MusicPlayer.play("tutorial");
     }
 
+    /**
+     * Aggiorna lo stato dei suoni del giocatore.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public static void updateSound(float delta)
     {
         damageSound.update(delta);
@@ -84,6 +94,11 @@ public class Player {
         deathSound.update(delta);
     }
 
+    /**
+     * Restituisce l'istanza singleton del giocatore.
+     *
+     * @return L'istanza singleton del giocatore.
+     */
     public static Player getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Player();
@@ -91,10 +106,20 @@ public class Player {
         return INSTANCE;
     }
 
+    /**
+     * Imposta la lista degli nemici nel gioco.
+     *
+     * @param enemies Lista degli nemici nel gioco.
+     */
     public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;
     }
 
+    /**
+     * Aggiorna lo stato del giocatore.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     public void update(float delta) {
         if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
         inputManager.handleInput();
@@ -129,14 +154,12 @@ public class Player {
         }
     }
 
-    public void interactWithNearestObject(Array<Interactable> interactables) {
-        Interactable nearestInteractable = findNearestInteractable(interactables);
-
-        if (nearestInteractable != null) {
-            nearestInteractable.interact(this);
-        }
-    }
-
+    /**
+     * Restituisce l'oggetto di interazione più vicino al giocatore.
+     *
+     * @param interactables Array di oggetti interattivi nel gioco.
+     * @return L'oggetto interattivo più vicino al giocatore.
+     */
     private Interactable findNearestInteractable(Array<Interactable> interactables) {
         float minDistance = 150f;
         Interactable nearestInteractable = null;
@@ -154,6 +177,23 @@ public class Player {
         return nearestInteractable;
     }
 
+    /**
+     * Interagisce con l'oggetto più vicino tra quelli specificati nella lista.
+     *
+     * @param interactables Lista di oggetti interattivi nel gioco.
+     */
+    public void interactWithNearestObject(Array<Interactable> interactables) {
+        Interactable nearestInteractable = findNearestInteractable(interactables);
+
+        if (nearestInteractable != null) {
+            nearestInteractable.interact(this);
+        }
+    }
+
+    /**
+     * Controlla l'attacco ravvicinato del giocatore.
+     * Gestisce gli attacchi corpo a corpo nella direzione in cui il giocatore è rivolto.
+     */
     public void checkMeleeAttack() {
         if ((Gdx.input.isKeyJustPressed(Input.Keys.K) || Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) && !isAttacking) {
             // Handle melee attacks in the direction the player is facing
@@ -174,6 +214,11 @@ public class Player {
         }
     }
 
+    /**
+     * Aggiorna il timer dell'attacco corpo a corpo.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     private void updateAttackTimer(float delta) {
         if (isAttacking) {
             attackTimer += delta;
@@ -187,6 +232,11 @@ public class Player {
         }
     }
 
+    /**
+     * Aggiorna il timer dello sparo.
+     *
+     * @param delta Il tempo trascorso dall'ultimo aggiornamento.
+     */
     private void updateShootTimer(float delta) {
         if (isShooting) {
             shootTimer += delta;
@@ -222,6 +272,11 @@ public class Player {
         }
     }
 
+    /**
+     * Infligge danni agli nemici colpiti dai proiettili.
+     *
+     * @param bullet Il proiettile che ha colpito un nemico.
+     */
     public void inflictShootDamageToEnemies(Bullet bullet){
         for(Enemy enemy : enemies){
             if(isCollisionWithAttackArea(bullet.getX(),bullet.getY(), 32, 32, enemy)) {
@@ -231,6 +286,9 @@ public class Player {
         }
     }
 
+    /**
+     * Infligge danni agli nemici colpiti dall'attacco corpo a corpo.
+     */
     private void inflictDamageToEnemies() {
         // Get the attack direction and calculate the attack area
         float attackX = playerX;
@@ -266,6 +324,16 @@ public class Player {
         }
     }
 
+    /**
+     * Verifica la collisione con l'area di attacco rispetto a un nemico.
+     *
+     * @param x      La coordinata x dell'area di attacco.
+     * @param y      La coordinata y dell'area di attacco.
+     * @param width  La larghezza dell'area di attacco.
+     * @param height L'altezza dell'area di attacco.
+     * @param enemy  Il nemico con cui verificare la collisione.
+     * @return True se c'è una collisione, altrimenti false.
+     */
     public boolean isCollisionWithAttackArea(float x, float y, float width, float height, Enemy enemy) {
         float enemyX = enemy.getEnemyX();
         float enemyY = enemy.getEnemyY();
@@ -279,7 +347,13 @@ public class Player {
     }
 
 
-
+    /**
+     * Verifica se c'è una collisione del giocatore con oggetti nel gioco o con nemici.
+     *
+     * @param x La coordinata x del giocatore.
+     * @param y La coordinata y del giocatore.
+     * @return True se c'è una collisione, altrimenti false.
+     */
     public boolean isCollision(float x, float y) {
         boolean enemyCollision = false;
         hitBox = new Rectangle(x , y , HitBoxWidht, HitBoxHeight);
@@ -294,6 +368,9 @@ public class Player {
 
     }
 
+    /**
+     * Gestisce l'azione di sparare del giocatore.
+     */
     public void shoot() {
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
         if ((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT))&& !isShooting && bulletCount > 0) {
@@ -319,11 +396,20 @@ public class Player {
             }
         }
     }
+
+    /**
+     * Reimposta lo stato del giocatore quando muore.
+     */
     public void resetPlayer(){
         Player.INSTANCE = null;
         MusicPlayer.dispose();
     };
 
+    /**
+     * Gestisce il danneggiamento subito dal giocatore.
+     *
+     * @param damage La quantità di danni inflitti al giocatore.
+     */
     public void takeDamage(int damage){
         this.playerLife -= damage;
 
@@ -430,6 +516,12 @@ public class Player {
         return isCollision(HitBoxX + getSPEED(), HitBoxY);
     }
 
+    /**
+     * Restituisce la regione dell'immagine corrente per il giocatore
+     * in base allo stato di animazione.
+     *
+     * @return La regione dell'immagine corrente.
+     */
     public TextureRegion getCurrentFrame() {
         return animationManager.getKeyFrame(currentState);
     }
@@ -522,26 +614,57 @@ public class Player {
         return new Rectangle(getPlayerX(), getPlayerY(),getPLAYER_WIDTH(),getPLAYER_HEIGHT());
     }
 
+    /**
+     * Restituisce la hitbox del giocatore.
+     *
+     * @return La hitbox del giocatore.
+     */
     public Rectangle getHitBox(){
         return new Rectangle(HitBoxX, HitBoxY, HitBoxWidht , HitBoxHeight);
     }
 
+    /**
+     * Restituisce la lista di proiettili attualmente presenti nel gioco.
+     *
+     * @return Lista di proiettili.
+     */
     public List<Bullet> getBullets() {
         return bullets;
     }
 
+    /**
+     * Verifica se il giocatore è morto.
+     *
+     * @return True se il giocatore è morto, altrimenti False.
+     */
     public boolean isPlayerDead() {
         return playerDead;
     }
 
+    /**
+     * Verifica se il giocatore ha vinto.
+     *
+     * @return True se il giocatore ha vinto, altrimenti False.
+     */
     public boolean hasPlayerWon() {
         return playerWon;
     }
 
+    /**
+     * Imposta lo stato di vittoria del giocatore.
+     *
+     * @param playerWon True se il giocatore ha vinto, altrimenti False.
+     */
     public void setPlayerWon(boolean playerWon) {
         this.playerWon = playerWon;
     }
 
+    /**
+     * Aggiorna la vita del giocatore aggiungendo il valore specificato.
+     * Se il valore aggiunto porta la vita del giocatore oltre 100, la vita viene limitata a 100.
+     *
+     * @param life Valore da aggiungere alla vita del giocatore.
+     */
     public void setPlayerLife(int life){
         this.playerLife += life;
         if (playerLife >= 100){
@@ -550,22 +673,40 @@ public class Player {
         System.out.println("PLAYER LIFE "+ playerLife);
     }
 
+    /**
+     * Imposta il numero di proiettili disponibili per il giocatore.
+     *
+     * @param shoot Numero di proiettili disponibili.
+     */
     public void setBulletCount(int shoot) {
         this.bulletCount = shoot;
     }
+
+    /**
+     * Restituisce il numero di proiettili disponibili per il giocatore.
+     *
+     * @return Numero di proiettili disponibili.
+     */
     public int getBulletCount(){
         return this.bulletCount;
     }
 
-
+    /**
+     * Imposta la coordinata X della posizione del giocatore.
+     *
+     * @param x Coordinata X della posizione del giocatore.
+     */
     public void setPlayerX(int x) {
         this.playerX = x;
     }
 
+    /**
+     * Imposta la coordinata Y della posizione del giocatore.
+     *
+     * @param y Coordinata Y della posizione del giocatore.
+     */
     public void setPlayerY(int y) {
         this.playerY = y;
     }
-
-
 }
 
