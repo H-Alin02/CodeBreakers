@@ -1,8 +1,6 @@
 package Model.Enemies;
 
-import Model.Enemies.Dummy.Dummy;
 import Model.Enemies.Dummy.DummyEnemyCreator;
-import Model.Enemies.MetalRobot.MetalRobot;
 import Model.Enemies.MetalRobot.MetalRobotCreator;
 import Model.Object.ObjectCreator;
 import Model.Object.ObjectManager;
@@ -82,9 +80,6 @@ public class EnemyManager {
         for (Enemy enemy : enemies){
             enemy.update(delta);
         }
-
-        MetalRobot.updateSound(delta);
-        Dummy.updateSound(delta);
     }
 
     /**

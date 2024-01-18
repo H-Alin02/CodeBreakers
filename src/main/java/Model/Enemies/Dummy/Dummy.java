@@ -2,6 +2,7 @@ package Model.Enemies.Dummy;
 
 import Model.Enemies.Enemy;
 import Model.SoundPlayer;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -27,19 +28,20 @@ public class Dummy implements Enemy {
     private final Rectangle hitBox;
 
     private DummyState currentState;
-    private final DummyAnimationManager animationManager;
+    private DummyAnimationManager animationManager = null;
     private boolean damageAnimationComplete = true;
     private final Array<DummyState> enemyStates = Array.with(DummyState.DAMAGE_1, DummyState.DAMAGE_2, DummyState.DAMAGE_3);
+    private SoundPlayer damageSound ;
 
-
-    private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_punch.mp3");
+    boolean isTestRunning;
     /**
      * Aggiorna il suono del danneggiamento del Dummy.
      *
      * @param delta Il tempo trascorso dall'ultimo aggiornamento.
      */
-    public static void updateSound(float delta){
-        damageSound.update(delta);
+    public void updateSound(float delta){
+        if(!isTestRunning)
+            damageSound.update(delta);
     }
 
     /**
@@ -50,14 +52,18 @@ public class Dummy implements Enemy {
      * @param startY        La coordinata y iniziale del Dummy.
      */
     public Dummy(int initialHealth , int startX, int startY){
+        this.isTestRunning = Gdx.files == null;
         this.health = initialHealth;
         this.enemyX = startX;
         this.enemyY = startY;
         this.HitBoxX = enemyX + (9 * 3);
         this.HitBoxY = enemyY + (6 * 3);
         this.currentState = DummyState.IDLE;
-        this.animationManager = new DummyAnimationManager();
         this.hitBox = new Rectangle(HitBoxX, HitBoxY, HitBoxWidht, HitBoxHeight);
+        if(!isTestRunning){
+            this.animationManager = new DummyAnimationManager();
+            this.damageSound = new SoundPlayer("sound_effects/player_punch.mp3");
+        }
     }
 
     /**
@@ -67,16 +73,20 @@ public class Dummy implements Enemy {
      */
     @Override
     public void update(float delta){
-        animationManager.update(delta);
-        // Check for damage state and animation completion
-        if (enemyStates.contains(currentState,true) && !damageAnimationComplete) {
-            // Print information for debugging
-            System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
+        updateSound(delta);
 
-            if (animationManager.isDamageAnimationFinished(currentState)) {
-                // Transition back to idle state
-                currentState = DummyState.IDLE;
-                damageAnimationComplete = true; // Reset the flag
+        if(!isTestRunning) {
+            animationManager.update(delta);
+            // Check for damage state and animation completion
+            if (enemyStates.contains(currentState, true) && !damageAnimationComplete) {
+                // Print information for debugging
+                System.out.println("Enemy Info: State - " + currentState + ", Position - (" + enemyX + ", " + enemyY + "), Health - " + health);
+
+                if (animationManager.isDamageAnimationFinished(currentState)) {
+                    // Transition back to idle state
+                    currentState = DummyState.IDLE;
+                    damageAnimationComplete = true; // Reset the flag
+                }
             }
         }
     }
@@ -89,20 +99,27 @@ public class Dummy implements Enemy {
      */
     @Override
     public void takeDamage(int damage) {
-        health -= damage;
-        damageSound.play(0.2f);
+        if(damage < 0){
+            throw new IllegalArgumentException("Can't do nagative damage!");
+        }else {
+            health -= damage;
+            if (!isTestRunning)
+                damageSound.play(0.2f);
 
-        // Check if the enemy is still alive
-        if (health <= 0) {
-            // Implement logic for enemy death or removal from the game
-            // For example, set the enemy state to a death state and stop animations
-            currentState = DummyState.DEAD;
-            animationManager.resetDamage();
-        } else {
-            // If the enemy is still alive, play the damage animation
-            currentState = enemyStates.random();
-            animationManager.resetDamage();
-            damageAnimationComplete = false;
+            // Check if the enemy is still alive
+            if (health <= 0) {
+                // Implement logic for enemy death or removal from the game
+                // For example, set the enemy state to a death state and stop animations
+                currentState = DummyState.DEAD;
+                if (!isTestRunning)
+                    animationManager.resetDamage();
+            } else {
+                // If the enemy is still alive, play the damage animation
+                currentState = enemyStates.random();
+                if (!isTestRunning)
+                    animationManager.resetDamage();
+                damageAnimationComplete = false;
+            }
         }
     }
 
@@ -179,5 +196,21 @@ public class Dummy implements Enemy {
     @Override
     public boolean isDamageAnimationComplete() {
         return damageAnimationComplete;
+    }
+
+    /**
+     * Restituisce la vita del nemico Dummy
+     * @return la vita del dummy
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * Imposta la vita del Dummy a quella messa al parametro
+     * @param health la vita del Dummy
+     */
+    public void setHealth(int health){
+        this.health = health;
     }
 }

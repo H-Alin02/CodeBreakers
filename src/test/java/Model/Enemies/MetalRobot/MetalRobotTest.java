@@ -86,7 +86,7 @@ class MetalRobotTest {
         metalRobot.setEnemyHealth(health);
 
         metalRobot.takeDamage(0);
-        Assertions.assertEquals(health - 0 , metalRobot.getEnemyHealth());
+        Assertions.assertEquals(health, metalRobot.getEnemyHealth());
         metalRobot.setEnemyHealth(health);
 
     }

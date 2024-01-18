@@ -25,8 +25,8 @@ public class Player {
     private int SPEED = 5;
     public PlayerState currentState;
     private final PlayerInputManager inputManager;
-    private final PlayerAnimationManager animationManager;
-    private final MapModel mapModel;
+    private PlayerAnimationManager animationManager ;
+    private MapModel mapModel;
     private GameScreen gameScreen;
     private int playerX = 1984;
     private int playerY = 3436;
@@ -51,17 +51,20 @@ public class Player {
     private final int  HitBoxWidht = 54;
     private final int  HitBoxHeight = 51;
     private Rectangle hitBox;
-    private List<Enemy> enemies;
+    private List<Enemy> enemies = new ArrayList<>();
     private List<Bullet> bullets;
     private boolean canRegenerateSprint = true;
     private boolean playerDead = false;
     private boolean playerWon = false;
 
-    private static final SoundPlayer damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
-    private static final SoundPlayer shotSound = new SoundPlayer("sound_effects/shot.mp3");
-    private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/missed_punch.wav");
-    private static final SoundPlayer bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
-    private static final SoundPlayer deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
+    private SoundPlayer damageSound;
+    private SoundPlayer shotSound;
+    private SoundPlayer punchSound ;
+    private SoundPlayer bulletHitSound;
+    private SoundPlayer deathSound ;
+
+    private boolean isTestRunning;
+
 
     /**
      * Costruttore privato per implementare il pattern Singleton.
@@ -69,11 +72,19 @@ public class Player {
     private Player() {
         currentState = PlayerState.STANDING;
         inputManager = new PlayerInputManager(this);
-        animationManager = new PlayerAnimationManager();
-        mapModel = MapModel.getInstance();
         bullets = new ArrayList<>();
+        this.isTestRunning = Gdx.files == null;
 
-        MusicPlayer.play("tutorial");
+        if(!isTestRunning) {
+            animationManager = new PlayerAnimationManager();
+            mapModel = MapModel.getInstance();
+            this.damageSound = new SoundPlayer("sound_effects/player_damaged.mp3");
+            this.shotSound = new SoundPlayer("sound_effects/shot.mp3");
+            this.punchSound = new SoundPlayer("sound_effects/missed_punch.wav");
+            this.bulletHitSound = new SoundPlayer("sound_effects/bullet_hit.mp3");
+            this.deathSound = new SoundPlayer("sound_effects/player_death_sound.wav");
+            MusicPlayer.play("tutorial");
+        }
     }
 
     /**
@@ -81,13 +92,15 @@ public class Player {
      *
      * @param delta Il tempo trascorso dall'ultimo aggiornamento.
      */
-    public static void updateSound(float delta)
+    public void updateSound(float delta)
     {
-        damageSound.update(delta);
-        shotSound.update(delta);
-        punchSound.update(delta);
-        bulletHitSound.update(delta);
-        deathSound.update(delta);
+        if(!isTestRunning) {
+            damageSound.update(delta);
+            shotSound.update(delta);
+            punchSound.update(delta);
+            bulletHitSound.update(delta);
+            deathSound.update(delta);
+        }
     }
 
     /**
@@ -119,9 +132,14 @@ public class Player {
     public void update(float delta) {
         if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
         inputManager.handleInput();
-        inputManager.handleInteractInput(mapModel.getInteractables());
-        animationManager.update(delta);
-        // Check for melee attack and collisions with enemies
+        if(!isTestRunning)
+            inputManager.handleInteractInput(mapModel.getInteractables());
+
+        if(!isTestRunning){
+            animationManager.update(delta);
+        }
+
+
         updateAttackTimer(delta);
         updateShootTimer(delta);
         updateSound(delta);
@@ -135,7 +153,8 @@ public class Player {
         for (Bullet bullet : bullets) {
             if (mapModel.isCollisionWithScaledObjects(bullet.getX(), bullet.getY(), 32, 32)) {
                 bullet.setBulletState(BulletState.HIT);
-                bulletHitSound.play(0.2f);
+                if(!isTestRunning)
+                    bulletHitSound.play(0.2f);
                 bullet.deactivate();
             }
         }
@@ -223,7 +242,8 @@ public class Player {
                 isAttacking = false;
                 attackTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
-                animationManager.resetAttack();
+                if(!isTestRunning)
+                    animationManager.resetAttack();
             }
         }
     }
@@ -263,7 +283,8 @@ public class Player {
                 isShooting = false;
                 shootTimer = 0f;
                 currentState = PlayerState.STANDING;  // Ritorna allo stato di standing dopo l'attacco
-                animationManager.resetShoot();
+                if(!isTestRunning)
+                    animationManager.resetShoot();
             }
         }
     }
@@ -351,17 +372,18 @@ public class Player {
      * @return True se c'è una collisione, altrimenti false.
      */
     public boolean isCollision(float x, float y) {
-        boolean enemyCollision = false;
         hitBox = new Rectangle(x , y , HitBoxWidht, HitBoxHeight);
         for(Enemy enemy : enemies){
             Rectangle enemyHitBox = enemy.getHitBox();
             if(enemyHitBox != null && hitBox.overlaps(enemyHitBox)){
-                enemyCollision = true;
+                return true;
             }
         }
         //check for collision with map object
-        return mapModel.isCollisionWithScaledObjects(x, y, HitBoxWidht, HitBoxHeight) || enemyCollision;
+        if(!isTestRunning)
+            return mapModel.isCollisionWithScaledObjects(x, y, HitBoxWidht, HitBoxHeight) ;
 
+        return false;
     }
 
     /**
@@ -370,11 +392,13 @@ public class Player {
     public void shoot() {
         // Aggiungi un nuovo proiettile in base alla direzione corrente del giocatore
         if ((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT))&& !isShooting && bulletCount > 0) {
-            shotSound.play(0.1f);
 
             bulletCount--;
             isShooting = true;
-            animationManager.resetShoot();
+            if(!isTestRunning){
+                shotSound.play(0.1f);
+                animationManager.resetShoot();
+            }
 
             switch (getDirection()) {
                 case 'w':
@@ -398,7 +422,8 @@ public class Player {
      */
     public void resetPlayer(){
         Player.INSTANCE = null;
-        MusicPlayer.dispose();
+        if(!isTestRunning)
+            MusicPlayer.dispose();
     };
 
     /**
@@ -412,20 +437,17 @@ public class Player {
         if (playerLife <= 0) {
             // Implement logic for enemy death or removal from the game
             // For example, set the enemy state to a death state and stop animations
-
-            System.out.println("PLAYER IS DEAD - GAME OVER");
-
-
             playerDead = true;
             currentState = PlayerState.DEAD;
             resetPlayer();
-            deathSound.play(0.2f);
-
+            if(!isTestRunning)
+                deathSound.play(0.2f);
 
         } else {
-            gameScreen.shakeCamera(0.3f, 4);
-            System.out.println("PLAYER HIT , OUCH!! , LIFE = " + playerLife);
-            damageSound.play(0.2f);
+            if(!isTestRunning){
+                gameScreen.shakeCamera(0.3f, 4);
+                damageSound.play(0.2f);
+            }
         }
     }
 
@@ -469,31 +491,39 @@ public class Player {
     }
 
     public void attackUp() {
-        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_UP;
         isAttacking = true;
-        animationManager.resetAttack();
+        if(!isTestRunning){
+            punchSound.play(0.1f);
+            animationManager.resetAttack();
+        }
     }
 
     public void attackDown() {
-        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_DOWN;
         isAttacking = true;
-        animationManager.resetAttack();
+        if(!isTestRunning){
+            punchSound.play(0.1f);
+            animationManager.resetAttack();
+        }
     }
 
     public void attackRight() {
-        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_RIGHT;
         isAttacking = true;
-        animationManager.resetAttack();
+        if(!isTestRunning){
+            punchSound.play(0.1f);
+            animationManager.resetAttack();
+        }
     }
 
     public void attackLeft() {
-        punchSound.play(0.1f);
         currentState = PlayerState.ATTACK_LEFT;
         isAttacking = true;
-        animationManager.resetAttack();
+        if(!isTestRunning){
+            punchSound.play(0.1f);
+            animationManager.resetAttack();
+        }
     }
 
     public boolean upColliding() {
@@ -543,19 +573,17 @@ public class Player {
     }
 
     public void setSPEED(int SPEED) {
-
-        //if(!walkingSound.isPlaying())
-        //    walkingSound.play(0.2f);
-
         if (isSprinting) {
             SPEED *= 2;
-            animationManager.updateAnimSpeed(0.07f);
+            if(!isTestRunning)
+                animationManager.updateAnimSpeed(0.07f);
             sprintStat -= 0.5f;
             if(sprintStat <= 0){
                 this.isSprinting = false;
             }
         } else {
-            animationManager.updateAnimSpeed(0.1f);
+            if(!isTestRunning)
+                animationManager.updateAnimSpeed(0.1f);
         }
 
         this.SPEED = SPEED;
@@ -598,8 +626,7 @@ public class Player {
 
     public void setSprinting(boolean isSprinting) {
         this.isSprinting = isSprinting && sprintStat > 0;
-        if(!isSprinting) this.canRegenerateSprint = true;
-        else this.canRegenerateSprint = false;
+        this.canRegenerateSprint = !isSprinting;
     }
 
     public PlayerAnimationManager getAnimationManager() {

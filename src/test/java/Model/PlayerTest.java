@@ -48,5 +48,6 @@ public class PlayerTest {
         int playerLife = player.getPlayerLife();
         player.takeDamage(10);
         Assertions.assertEquals(playerLife - 10 , player.getPlayerLife());
+        //TODO Aggingere altri edge cases
     }
 }

@@ -4,6 +4,7 @@ import Model.*;
 import Model.Enemies.Enemy;
 import View.Boot;
 import View.GameScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -36,7 +37,7 @@ public class MetalRobot implements Enemy {
     private final int  HitBoxHeight = 51; // Altezza della HitBox
     private Rectangle hitBox; // Oggetto rettangolare rappresentante la hitBox
 
-    private final MetalRobotAnimationManager animationManager; // Menager delle animazioni del nemico
+    //private final MetalRobotAnimationManager animationManager; // Menager delle animazioni del nemico
     // Flag per determinare la fine della animazioni di attacco , danno ricevuto e morte del nemico
     private boolean damageAnimationComplete = true;
     private boolean deadAnimationComplete = true;
@@ -45,7 +46,8 @@ public class MetalRobot implements Enemy {
     final Array<MetalRobotState> enemyHitStates = Array.with(MetalRobotState.HIT1, MetalRobotState.HIT2);
     final Array<MetalRobotState> enemyDeadStates = Array.with(MetalRobotState.DEAD1, MetalRobotState.DEAD2);
     private final Array<MetalRobotState> enemyAttackStates = Array.with(MetalRobotState.ATTACK1, MetalRobotState.ATTACK2);
-    private final MapModel mapModel = MapModel.getInstance();
+    private MapModel mapModel = null;
+    private MetalRobotAnimationManager animationManager = null;
 
     //variabili per il movimento del nemico
     private final int movementSpeed = 3;
@@ -58,23 +60,26 @@ public class MetalRobot implements Enemy {
     private boolean hasAttacked = false;
 
     private GameScreen gameScreen;
+    private boolean isTestRunning;
 
-    private static final SoundPlayer punchSound = new SoundPlayer("sound_effects/robot_punch.wav");
-    public static final SoundPlayer alertSound = new SoundPlayer("sound_effects/robot_alert.wav");
-    public static final SoundPlayer deathSound = new SoundPlayer(1.3f, 5, "sound_effects/robot_death_sound.wav");
-    public static final SoundPlayer damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
+    private SoundPlayer punchSound;
+    private SoundPlayer alertSound;
+    private SoundPlayer deathSound;
+    private SoundPlayer damageSound;
 
     /**
      * Aggiorna lo stato dei suoni.
      *
      * @param delta Tempo trascorso dal frame precedente.
      */
-    public static void updateSound(float delta)
+    public void updateSound(float delta)
     {
-        punchSound.update(delta);
-        damageSound.update(delta);
-        alertSound.update(delta);
-        deathSound.update(delta);
+        if(!isTestRunning){
+            punchSound.update(delta);
+            damageSound.update(delta);
+            alertSound.update(delta);
+            deathSound.update(delta);
+        }
     }
 
     /**
@@ -91,7 +96,16 @@ public class MetalRobot implements Enemy {
         this.enemyX = startX;
         this.enemyY = startY;
         this.currentRobotState = new IdleState();
-        this.animationManager = new MetalRobotAnimationManager();
+        this.isTestRunning = Gdx.files == null;
+
+        if (!isTestRunning){
+            punchSound = new SoundPlayer("sound_effects/robot_punch.wav");
+            alertSound = new SoundPlayer("sound_effects/robot_alert.wav");
+            deathSound = new SoundPlayer(1.3f, 5, "sound_effects/robot_death_sound.wav");
+            damageSound = new SoundPlayer("sound_effects/robot_damaged.wav");
+            mapModel = MapModel.getInstance();
+            this.animationManager = new MetalRobotAnimationManager();
+        }
     }
 
     /**
@@ -101,19 +115,24 @@ public class MetalRobot implements Enemy {
      */
     @Override
     public void update(float delta) {
-        if(Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
-        animationManager.update(delta);
+        if (Boot.INSTANCE.getScreen() instanceof GameScreen) gameScreen = (GameScreen) Boot.INSTANCE.getScreen();
 
-        hitBoxX = enemyX + (8*3);
-        hitBoxY = enemyY + (6*3);
+        if (!isTestRunning) {
+            animationManager.update(delta);
+            updateSound(delta);
+        }
+
+        hitBoxX = enemyX + (8 * 3);
+        hitBoxY = enemyY + (6 * 3);
 
         runStateMachine(delta);
 
-        distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width/2 , player.getHitBox().y + player.getHitBox().height/2);
+        distanceToPlayer = calculateDistance(player.getHitBox().x + player.getHitBox().width / 2, player.getHitBox().y + player.getHitBox().height / 2);
         isChasing = distanceToPlayer < chasingArea && hasLineOfSight();
 
         // Check for damage state and animation completion
-        if (enemyHitStates.contains(currentState,true) && !damageAnimationComplete ) {
+
+        if (enemyHitStates.contains(currentState, true) && !damageAnimationComplete) {
             if (animationManager.isAnimationFinished(currentState)) {
                 // Transition back to idle state
                 currentState = (flip == 'a') ? MetalRobotState.IDLE1 : MetalRobotState.IDLE2;
@@ -121,12 +140,14 @@ public class MetalRobot implements Enemy {
             }
         }
 
+
         if (enemyDeadStates.contains(currentState,true) && !deadAnimationComplete) {
             if (animationManager.isAnimationFinished(currentState)) {
                 // Transition back to idle state
                 deadAnimationComplete = true; // Reset the flag
             }
         }
+
     }
 
     /**
@@ -407,8 +428,10 @@ public class MetalRobot implements Enemy {
             return true;
         }
 
-        return mapModel.isCollisionWithScaledObjects(x+8, y+6, HitBoxWidht+15, HitBoxHeight+15);
+        if(!isTestRunning)
+            return mapModel.isCollisionWithScaledObjects(x+8, y+6, HitBoxWidht+15, HitBoxHeight+15);
 
+        return false;
     }
 
     /**
@@ -418,27 +441,35 @@ public class MetalRobot implements Enemy {
      */
     @Override
     public void takeDamage(int damage) {
-        if(!enemyDeadStates.contains(currentState, true)) {
-            health -= damage;
-            // Check if the enemy is still alive
-            if (health <= 0) {
-                // Implement logic for enemy death or removal from the game
-                // For example, set the enemy state to a death state and stop animations
-                deathSound.play(0.1f);
-                deadAnimationComplete = false;
-                currentState = (flip == 'a') ? MetalRobotState.DEAD1 : MetalRobotState.DEAD2;
-                animationManager.resetDamage();
-                gameScreen.shakeCamera(0.3f, 4);
+        if(damage < 0){
+            throw new IllegalArgumentException("Can't do nagative damage!");
+        }else {
+            if (!enemyDeadStates.contains(currentState, true)) {
+                health -= damage;
+                // Check if the enemy is still alive
+                if (health <= 0) {
+                    // Implement logic for enemy death or removal from the game
+                    // For example, set the enemy state to a death state and stop animations
+                    currentState = (flip == 'a') ? MetalRobotState.DEAD1 : MetalRobotState.DEAD2;
+                    deadAnimationComplete = false;
+                    if (!isTestRunning) {
+                        deathSound.play(0.1f);
+                        animationManager.resetDamage();
+                        gameScreen.shakeCamera(0.3f, 4);
+                    }
 
-            } else {
-                // If the enemy is still alive, play the damage animation
-                currentState = (flip == 'a') ? MetalRobotState.HIT1 : MetalRobotState.HIT2;
-                animationManager.resetDamage();
-                damageAnimationComplete = false;
-                gameScreen.shakeCamera(0.3f, 4);
-                damageSound.play(0.1f);
-                //TODO aggiungere knowback
+                } else {
+                    // If the enemy is still alive, play the damage animation
+                    currentState = (flip == 'a') ? MetalRobotState.HIT1 : MetalRobotState.HIT2;
+                    damageAnimationComplete = false;
+                    if (!isTestRunning) {
+                        animationManager.resetDamage();
+                        gameScreen.shakeCamera(0.3f, 4);
+                        damageSound.play(0.1f);
+                    }
+                    //TODO aggiungere knowback
 
+                }
             }
         }
     }
@@ -531,5 +562,28 @@ public class MetalRobot implements Enemy {
      */
     public MetalRobotState getCurrentState() {
         return this.currentState;
+    }
+
+    /***
+     * Restituisce la velocità di movimento del nemico MetalMonster
+     * @return La velocità di movimento
+     */
+    public int getMovementSpeed(){
+        return this.movementSpeed;
+    }
+
+    public void setEnemyX(int enemyX){
+        this.enemyX = enemyX;
+    }
+    public void setEnemyY(int enemyY) {
+        this.enemyY = enemyY;
+    }
+
+    public int getEnemyHealth(){
+        return this.health;
+    }
+
+    public void setEnemyHealth(int health){
+        this.health = health;
     }
 }

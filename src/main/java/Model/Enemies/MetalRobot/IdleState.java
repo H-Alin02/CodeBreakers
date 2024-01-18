@@ -1,5 +1,7 @@
 package Model.Enemies.MetalRobot;
 
+import Model.SoundPlayer;
+
 /**
  * La classe {@code IdleState} rappresenta lo stato di inattività di un nemico di tipo MetalRobot.
  * Durante questo stato, il nemico può cambiare direzione casualmente e, se rileva il giocatore
@@ -11,6 +13,7 @@ public class IdleState implements RobotState {
     private char currentDirection = 'w';
     private float movementTimer = 0f;
     private final float movementDuration = 2f;
+    private SoundPlayer alertSound;
 
     /**
      * Esegue le azioni associate allo stato di inattività del nemico.
@@ -26,7 +29,7 @@ public class IdleState implements RobotState {
         // Implementare logica per passare allo stato chasing altrimenti rimanere in questo stato
         // se il nemico vede il player ed è nel suo range di chasing allora passa allo stato di Chasing
         if (metalRobot.isChasing()) {
-            MetalRobot.alertSound.play(0.1f);
+            //alertSound.play(0.1f);
             return new ChasingState();
         } else {
             movementTimer += delta;
