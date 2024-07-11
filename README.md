@@ -1,52 +1,46 @@
 # CodeBreakers : The Revenge
 
-## Descrizione
+## Description
+The project was developed as part of the Software Engineering and Security course for the academic year 2023-2024.
 
-Il progetto è stato sviluppato come parte del corso di Ingegneria e Sicurezza del Software per l'anno accademico 2023-2024. 
+Its main objective is to apply and consolidate the concepts learned during the course through the development of a game in Java, for which we chose to use the LibGDX library to facilitate the implementation of some game mechanics.
 
-Il suo obiettivo principale è applicare e consolidare i concetti appresi durante il corso attraverso lo sviluppo di un gioco in Java, in cui abbiamo voluto utilizzare la libreria LibGDX , per facilitare l'implementazione di alcune meccaniche di gioco .
+We look to the future with enthusiasm and intend to continue working on this project as it has provided us with much satisfaction.
 
-Guardiamo al futuro con entusiasmo e intendiamo continuare a lavorare su questo progetto in quanto ci ha fornito molte soddisfazioni. 
+We are also open to contributions from the community and further developments to improve and enrich the game.
 
-Siamo inoltre aperti a contributi dalla community e a ulteriori sviluppi per migliorare e arricchire il gioco.
+## System Requirements
+Java JDK <!---version X.X or higher-->
+Maven <!---version X.X or higher-->
+LibGDX <!---version X.X or higher-->
 
-## Requisiti di Sistema
+## Installation Instructions
 
-- Java JDK (versione X.X o superiore)
-- Maven (versione X.X o superiore)
-- LibGDX (versione Y.Y o superiore)
-
-## Istruzioni per l'Installazione
-
-1. Clona il repository sul tuo computer.
+1. Clone the repository to your computer.
    ```bash
-   git clone https://github.com/tuonome/nomeprogetto.git
+   git clone https://github.com/H-Alin02/CodeBreakers.git
 
-## Come Eseguire il Gioco
+## How to Run the Game
 
-Il gioco è stato sviluppato utilizzando IntelliJ IDEA e Maven per la gestione delle dipendenze e la creazione del package. Per eseguire il gioco, segui i seguenti passaggi:
+The game was developed using IntelliJ IDEA and Maven for dependency management and packaging. To run the game, follow these steps:
 
-### Da IntelliJ IDEA
+### From IntelliJ IDEA
 
-1. Assicurati di avere IntelliJ IDEA installato sul tuo sistema.
-2. Apri il progetto nel tuo IDE.
-3. Utilizza Maven per creare il package del gioco. Puoi farlo eseguendo il goal `package` o `install` da IntelliJ.
-4. Dopo la creazione del package, cerca il file JAR con le dipendeze nella directory target.
-5. Esegui il gioco direttamente da IntelliJ o dalla linea di comando con il comando classico di Java per eseguire un JAR:
+1. Make sure you have IntelliJ IDEA installed on your system.
+2. Open the project in your IDE.
+3. Use Maven to package the game. You can do this by running the package or install goal from IntelliJ.
+4. After packaging, locate the JAR file with dependencies in the target directory.
+5. Run the game directly from IntelliJ or from the command line with the classic Java command to run a JAR:
    ```bash
    java -jar Progetto_ISS_2023-jar-with-dependencies.jar
-6. Per sistema operativo macOS di siamo accorti che per eseguire correttamente il JAR bisogna seguire questi passaggi :
-   - Direttamente da IntelliJ clicca su `Run` ---> `Edit Configurations` e in `VM options` inserisci il comando `-XstartOnFirstThread`.
-   - In questo modo potrai seguire i passaggi precedenti ed eseguire il Jar direttamente da IntelliJ oppure eseguendo il seguente comando da terminale :
+6. For macOS, we found that to correctly run the JAR, follow these steps:
+Directly from IntelliJ, click on `Run` ---> `Edit Configurations` and in `VM options` insert the command `-XstartOnFirstThread`.
+This way, you can follow the previous steps and run the JAR directly from IntelliJ or by executing the following command from the terminal:
    ```bash
    java -XstartOnFirstThread -jar Progetto_ISS_2023-jar-with-dependencies.jar
 
-## Struttura della Directory
+## Game Screenshots
 
-## Esempi di Utilizzo 
+## Project Status
+Currently, the game is in a DEMO stage. There was active development during the Software Engineering and Security course, but we are not actively working on it at the moment. However, future improvements and updates are not ruled out, including story expansion and the addition of English language support.
 
-## Stato del Progetto
-
-## Licenza
-
-## Contatti
