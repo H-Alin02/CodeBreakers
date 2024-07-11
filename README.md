@@ -41,6 +41,11 @@ This way, you can follow the previous steps and run the JAR directly from Intell
 
 ## Game Screenshots
 
+<div style="display: flex; justify-content: space-around;">
+    <img src="GameScreenshots/Menu1.png?raw=true" alt="Menu 1" title="Optional Title" style="width: 45%;">
+    <img src="GameScreenshots/Menu2.png?raw=true" alt="Menu 2" title="Optional Title" style="width: 45%;">
+</div>
+
 ## Project Status
 Currently, the game is in a DEMO stage. There was active development during the Software Engineering and Security course, but we are not actively working on it at the moment. However, future improvements and updates are not ruled out, including story expansion and the addition of English language support.
 
